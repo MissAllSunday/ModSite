@@ -35,11 +35,30 @@
 
 	db_extend('packages');
 
-	if (empty($context['uninstalling'])){
-
+	if (empty($context['uninstalling']))
+	{
 		$table = array(
-			'table_name' => 'post_limit',
+			'table_name' => 'mod_site',
 			'columns' => array(
+				array(
+					'name' => 'id',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+					'auto' => true
+				),
+				array(
+					'name' => 'name',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'github',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
 				array(
 					'name' => 'id_user',
 					'type' => 'int',
@@ -47,28 +66,34 @@
 					'null' => false,
 				),
 				array(
-					'name' => 'id_boards',
-					'type' => 'varchar',
-					'size' => 255,
+					'name' => 'topic_id',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+				),
+				array(
+					'name' => 'downloads',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+				),
+				array(
+					'name' => 'info',
+					'type' => 'text',
+					'size' => '',
 					'default' => '',
 				),
 				array(
-					'name' => 'post_limit',
-					'type' => 'int',
-					'size' => 5,
-					'null' => false,
-				),
-				array(
-					'name' => 'post_count',
-					'type' => 'int',
-					'size' => 5,
-					'null' => false,
+					'name' => 'description',
+					'type' => 'text',
+					'size' => '',
+					'default' => '',
 				),
 			),
 			'indexes' => array(
 				array(
 					'type' => 'primary',
-					'columns' => array('id_user')
+					'columns' => array('id')
 				),
 			),
 			'if_exists' => 'ignore',
@@ -77,22 +102,5 @@
 		);
 
 		$smcFunc['db_create_table']($db_prefix . $table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
-
-		/* Add the Scheduled Task */
-		$smcFunc['db_insert']('ignore',
-			'{db_prefix}scheduled_tasks',
-			array(
-				'id_task' => 'int',
-				'next_time' => 'int',
-				'time_offset' => 'int',
-				'time_regularity' => 'int',
-				'time_unit' => 'string',
-				'disabled' => 'int',
-				'task' => 'string',
-			),
-			array(0,0,0,1,'d',0,'ModSite'
-			),
-			array('task')
-		);
 	}
  

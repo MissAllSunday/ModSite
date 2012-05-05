@@ -36,7 +36,7 @@ function __autoload($class_name)
 	if(file_exists($sourcedir.ModSite::$folder.$class_name . '.php'))
 		require_once($file_path);
 
-	if(file_exists($sourcedir.ModSite::$api_folder.$class_name . '.php'))
+	elseif(file_exists($sourcedir.ModSite::$api_folder.$class_name . '.php'))
 		require_once($file_path);
 
 	else
