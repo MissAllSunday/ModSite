@@ -8,7 +8,7 @@
  * @copyright 2012 Jessica González
  * @license http://www.mozilla.org/MPL/ MPL 2.0
  *
- * @version 1.0 Beta
+ * @version 1.0 Alpha 1
  */
 
 /*

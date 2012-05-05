@@ -8,7 +8,7 @@
  * @copyright 2011 Suki http://missallsunday.com
  * @license http://www.mozilla.org/MPL/ MPL 2.0
  *
- * @version 1.0 Beta
+ * @version 1.0 Alpha 1
  */
 
 /*
@@ -90,7 +90,7 @@
 				'disabled' => 'int',
 				'task' => 'string',
 			),
-			array(0,0,0,1,'d',0,'postLimit'
+			array(0,0,0,1,'d',0,'ModSite'
 			),
 			array('task')
 		);
