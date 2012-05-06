@@ -40,9 +40,6 @@ class ModSiteTools
 	{
 		$this->_pattern = '/'. ModSite::$name .'_/';
 		$this->doExtract();
-
-		/* globals */
-		$this->setGlobals();
 	}
 
 	public static function getInstance()
@@ -54,39 +51,16 @@ class ModSiteTools
 		return self::$_instance;
 	}
 
-	protected function setGlobals()
-	{
-		global $sourcedir, $smcFunc, $context, $modSettings, $txt;
-
-		$this->_globals = array(
-			'sourcedir' => $sourcedir,
-			'smcFunc' => $smcFunc,
-			'context' => $context,
-			'modSettings' => $modSettings,
-			'txt' => $txt;
-		);
-	}
-
-	public function getGlobal($var)
-	{
-		if (empty($this->_globals))
-			$this->setGlobals();
-
-		if (empty($var))
-			return false;
-
-		else
-			return $this->_globals[$var];
-	}
-
 	public function doExtract()
 	{
+		global $modSettings, $txt;
+
 		loadLanguage(ModSite::$name);
 
 		$this->matchesSettings = array();
 
 		/* Get only the settings that we need */
-		foreach ($this->getGlobal('modSettings') as $km => $vm)
+		foreach ($modSettings as $km => $vm)
 			if (preg_match($this->_pattern, $km))
 			{
 				$km = str_replace(''. ModSite::$name .'_', '', $km);
@@ -98,7 +72,7 @@ class ModSiteTools
 		$this->_settings = $this->matchesSettings;
 
 		/* Again, this time for $txt. */
-		foreach ($this->getGlobal('txt') as $kt => $vt)
+		foreach ($txt as $kt => $vt)
 			if (preg_match($this->_pattern, $kt))
 			{
 				$kt = str_replace(''. ModSite::$name .'_', '', $kt);

@@ -48,27 +48,26 @@ class ModSite
 	public static $name = 'ModSite';
 	public static $folder = '/ModSite/';
 	public static $api_folder = '/githubAPI/';
+	public static $downloads_folder = '/Downloads/';
 	protected $_tableName = 'mod_site';
-	protected $_globals;
+	protected $_tools;
 
-	public function __construct()
-	{
-		$this->_tools = ModSiteTools::getInstance();
-	}
+	public function __construct(){}
 
 	public function tools()
 	{
-		return $this->_tools;
+		return ModSiteTools::getInstance();
 	}
 
-	public static function globals($var, $value = false)
+	public function db()
 	{
-		$_globals = ModSiteTools::getInstance();
-
-		if (!$value)
-			return $_globals->getGlobal[$var];
-
-		else
-			return $_globals->getGlobal[$var][$value];
+		return new ModSiteDB(self::$_tableName);
 	}
+
+	public function download()
+	{
+
+	}
+
+	public function __destruct() {}
 }
