@@ -66,7 +66,7 @@
 					'null' => false,
 				),
 				array(
-					'name' => 'topic_id',
+					'name' => 'id_topic',
 					'type' => 'int',
 					'size' => 5,
 					'null' => false,
