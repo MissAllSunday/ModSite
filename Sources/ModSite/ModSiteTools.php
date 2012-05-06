@@ -48,6 +48,7 @@ class ModSiteTools
 		{
 			self::$_instance = new ModSiteTools();
 		}
+
 		return self::$_instance;
 	}
 

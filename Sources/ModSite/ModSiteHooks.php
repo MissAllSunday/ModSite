@@ -28,25 +28,18 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+/* Wrapper functions */
+function wrapper_admin_dispatch(){ ModSiteHooks::settingsDispatch(); }
+function wrapper_admin_settings() { ModSiteHooks::settings(); }
 
 abstract class ModSiteHooks
 {
 	protected static $_tools;
 
-	/* Permissions */
-	public static function permissions(&$permissionGroups, &$permissionList)
-	{
-		$permissionList['membergroup'][''. ModSite::$name .'_can_see'] = array(false, ''. ModSite::$name .'_per_classic', ''. ModSite::$name .'_per_simple');
-		$permissionList['membergroup'][''. ModSite::$name .'_can_add'] = array(false, ''. ModSite::$name .'_per_classic', ''. ModSite::$name .'_per_simple');
-		$permissionList['membergroup'][''. ModSite::$name .'_can_delete'] = array(false, ''. ModSite::$name .'_per_classic', ''. ModSite::$name .'_per_simple');
-		$permissionGroups['membergroup']['simple'] = array(''. ModSite::$name .'_per_simple');
-		$permissionGroups['membergroup']['classic'] = array(''. ModSite::$name .'_per_classic');
-	}
-
 	/* Admin menu hook */
 	public static function admin(&$admin_areas)
 	{
-		if (!$_tools)
+		if (!empty($_tools))
 			$_tools = ModSiteTools::getInstance();
 
 		$admin_areas['config']['areas'][ModSite::$name] = array(
@@ -67,7 +60,7 @@ abstract class ModSiteHooks
 
 		require_once($sourcedir.'/ManageSettings.php');
 
-		if (!$_tools)
+		if (!empty($_tools))
 			$_tools = ModSiteTools::getInstance();
 
 		$subActions = array(
@@ -78,8 +71,8 @@ abstract class ModSiteHooks
 
 		// Load up all the tabs...
 		$context[$context['admin_menu_name']]['tab_data'] = array(
-			'title' => $_tools->->getText('admin_panel'),
-			'description' => $_tools->->getText('admin_panel_desc'),
+			'title' => $_tools()->getText('admin_panel'),
+			'description' => $_tools()->getText('admin_panel_desc'),
 			'tabs' => array(
 				'general' => array(),
 			),
@@ -95,7 +88,7 @@ abstract class ModSiteHooks
 
 		require_once($sourcedir.'/ManageServer.php');
 
-		if (!$_tools)
+		if (!empty($_tools))
 			$_tools = ModSiteTools::getInstance();
 
 		$config_vars = array(

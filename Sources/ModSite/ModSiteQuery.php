@@ -35,6 +35,7 @@ class ModSiteQuery extends ModSite
 	protected $_params = array();
 	protected $_data = array();
 	protected $_db;
+	protected $_values;
 
 
 	public function __construct()
@@ -51,6 +52,9 @@ class ModSiteQuery extends ModSite
 			'info' => 'info',
 			'desc' => 'description',
 		);
+
+		foreach ($this->_rows as $k => $v)
+			$this->_values[$k] = '';
 	}
 
 	public static function getInstance()
@@ -100,5 +104,16 @@ class ModSiteQuery extends ModSite
 
 		else
 			return false;
+	}
+
+	getRow($row)
+	{
+		if (($this->_values[$row] = cache_get_data(''. Modsite::$name .':'. $row .'', 120)) == null)
+		{
+			$this->_values[$row] = $this->getValue($row);
+			cache_put_data(''. Modsite::$name .':'. $row .'', $this->_values[$row], 120);
+		}
+
+		return $this->_values[$row];
 	}
 }
