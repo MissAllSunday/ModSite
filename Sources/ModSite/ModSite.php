@@ -69,5 +69,10 @@ class ModSite
 
 	}
 
+	public function queryString($var)
+	{
+		return new ModSiteQuery($var);
+	}
+
 	public function __destruct() {}
 }

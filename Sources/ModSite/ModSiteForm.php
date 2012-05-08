@@ -8,7 +8,7 @@
  * @copyright 2012 Jessica González
  * @license http://www.mozilla.org/MPL/ MPL 2.0
  *
- * @version 1.0 Alpha 1 Beta
+ * @version 1.0 Alpha 1
  */
 
 /*
@@ -112,7 +112,7 @@ if (!defined('SMF'))
 			$element['html_end'] = '</'. $element['type'] .'>';
 
 			foreach($values as $k => $v)
-				$element['values'][$k] = '<option value="' .$k. '" '. (isset($v[1]) && $v[1] == 'selected' ? 'selected="selected"' : '') .'>'. $this->text['ModSiteMod_user_settings_'.$v[0]] .'</option>';
+				$element['values'][$k] = '<option value="' .$k. '" '. (isset($v[1]) && $v[1] == 'selected' ? 'selected="selected"' : '') .'>'. $this->text[ModSite::$name.'form_'.$v[0]] .'</option>';
 
 			return $this->addElement($element);
 		}
@@ -194,8 +194,8 @@ if (!defined('SMF'))
 					case 'checkbox':
 					case 'text':
 						$this->buffer .= '<dt>
-							<span style="font-weight:bold;">'. $this->text['ModSiteMod_user_settings_'. $el['text'][0]] .'</span>
-							<br /><span class="smalltext">'. $this->text['ModSiteMod_user_settings_'.$el['text'][1]] .'</span>
+							<span style="font-weight:bold;">'. $this->text[ModSite::$name.'form_'. $el['text'][0]] .'</span>
+							<br /><span class="smalltext">'. $this->text[ModSite::$name.'form_'.$el['text'][1]] .'</span>
 						</dt>
 						<dd>
 							'. $el['html'] .'
@@ -203,8 +203,8 @@ if (!defined('SMF'))
 						break;
 					case 'select':
 						$this->buffer .= '<dt>
-							<span style="font-weight:bold;">'. $this->text['ModSiteMod_user_settings_'.$el['text'][0]] .'</span>
-							<br /><span class="smalltext">'. $this->text['ModSiteMod_user_settings_'.$el['text'][1]] .'</span>
+							<span style="font-weight:bold;">'. $this->text[ModSite::$name.'form_'.$el['text'][0]] .'</span>
+							<br /><span class="smalltext">'. $this->text[ModSite::$name.'form_'.$el['text'][1]] .'</span>
 						</dt>
 						<dd>
 							'. $el['html_start'] .'';

@@ -68,11 +68,7 @@ class ModSiteQuery extends ModSite
 
 	public function killCache($type)
 	{
-		if (!is_array($type))
-			$type = array($type);
-
-		foreach ($type as $t)
-			cache_put_data('ModSite:'. $t, null);
+		cache_put_data(Modsite::$name, null);
 	}
 
 	protected function setDB()
@@ -85,19 +81,18 @@ class ModSiteQuery extends ModSite
 		return $this->_db;
 	}
 
-	protected function getValue($row)
+	protected function getAll()
 	{
-		if (empty($row))
-			return false;
+		if (($this->_values[$row] = cache_get_data(''. Modsite::$name .'', 120)) == null)
+		{
+			$this->_params['rows'] = implode(',', $this->_rows);
+			$this->db()->params($this->_params, $this->_data);
+			$this->db()->getData(null, false);
 
-		if (!in_array($row, $this->_rows))
-			return false;
+			$return = $this->_db->dataResult();
 
-		$this->_params['rows'] = implode(',', $this->_rows);
-		$this->db()->params($this->_params, $this->_data);
-		$this->db()->getData($this->_rows[$row], false);
-
-		$return = $this->_db->dataResult();
+			cache_put_data(''. Modsite::$name .'', $return, 120);
+		}
 
 		if (!empty($return))
 			return $return;
@@ -106,14 +101,4 @@ class ModSiteQuery extends ModSite
 			return false;
 	}
 
-	getRow($row)
-	{
-		if (($this->_values[$row] = cache_get_data(''. Modsite::$name .':'. $row .'', 120)) == null)
-		{
-			$this->_values[$row] = $this->getValue($row);
-			cache_put_data(''. Modsite::$name .':'. $row .'', $this->_values[$row], 120);
-		}
-
-		return $this->_values[$row];
-	}
 }
