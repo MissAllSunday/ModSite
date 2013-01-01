@@ -3,7 +3,23 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>Suki:ModSite</id>
 	<name>ModSite</name>
-	<version>1.0</version>
+	<version>1.0 Alpha 1</version>
 	<type>modification</type>
+
+	<install for="2.0 - 2.0.99">
+		<database>database.php</database>
+		<code>hooks.php</code>
+		<require-dir name="Themes" destination="$boarddir">Source files</require-dir>
+		<require-dir name="Sources" destination="$boarddir">Source files</require-dir>
+		<redirect url="$scripturl?action=mods" timeout="3000">redirect.txt</redirect>
+	</install>
+
+	<uninstall for="2.0 - 2.0.99">
+		<code>remove.php</code>
+		<database>database.php</database>
+		<remove-dir name="$sourcedir/ModSite" />
+		<remove-file name="$themedir/Modsite.template.php" />
+		<remove-file name="$languagedir/Modsite.english.php" />
+	</uninstall>
 
 </package-info>
