@@ -27,3 +27,38 @@
 
 if (!defined('SMF'))
 	die('No direct access...');
+
+class ModeSiteContainer
+{
+	protected $values = array();
+
+	function __set($id, $value)
+	{
+		$this->values[$id] = $value
+	}
+
+	function __get($id)
+	{
+		if (!isset($this->values[$id]))
+			fatal_lang_error ('some text here');
+
+		if (is_callable($this->values[$id]))
+			return $this->values[$id]($this);
+
+		else
+			return $this->values[$id];
+	}
+
+	function asShared($callable)
+	{
+		return function ($c) use ($callable)
+		{
+			static $object;
+
+			if (is_null($object))
+				$object = $callable($c)
+
+			return $object;
+		};
+	}
+}
