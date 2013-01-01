@@ -53,8 +53,12 @@ abstract class ModSitePage
 		);
 
 		/* Does the subaction even exist? */
-		if (in_array(self::_modSite->queryString()->getRawValue('sa'), array_keys($subActions)))
-			$subActions[self::_modSite->queryString()->getRawValue('sa')]();
+		if (in_array($this->globals->getValue('sa'), array_keys($subActions)))
+		{
+			/* construct the method name */
+			$method = 'do'. ucfirst($this->globals->getValue('sa'));
+			$this->$method();
+		}
 
 		/* No?  redirect them to the main page */
 		else
@@ -71,8 +75,8 @@ abstract class ModSitePage
 
 		/* Set all the page stuff */
 		$context['sub_template'] = ModSite::$name.'_main';
-		$context['page_title'] = self::_modSite->tools->getText('title_main');
-		$context['canonical_url'] = $scripturl . '?action='. ModSite::$name;
+		$context['page_title'] = $this->text->getText('title_main');
+		$context['canonical_url'] = $scripturl . '?action=mods';
 
 		/* Set the pagination stuff */
 
@@ -80,7 +84,7 @@ abstract class ModSitePage
 
 	}
 
-	public static function post()
+	public static function doPost()
 	{
 		global $context, $scripturl;
 
