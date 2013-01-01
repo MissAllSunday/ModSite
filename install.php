@@ -38,7 +38,7 @@
 	if (empty($context['uninstalling']))
 	{
 		$table = array(
-			'table_name' => 'mod_site',
+			'table_name' => 'modsite',
 			'columns' => array(
 				array(
 					'name' => 'id',
@@ -78,13 +78,7 @@
 					'null' => false,
 				),
 				array(
-					'name' => 'info',
-					'type' => 'text',
-					'size' => '',
-					'default' => '',
-				),
-				array(
-					'name' => 'description',
+					'name' => 'file',
 					'type' => 'text',
 					'size' => '',
 					'default' => '',
