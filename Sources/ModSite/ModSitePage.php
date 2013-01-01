@@ -37,12 +37,13 @@ abstract class ModSitePage
 		/* Load stuff */
 		loadtemplate(ModSite::$name);
 
-		self::$_modSite = new Modsite();
-
 		$subActions = array(
 			'post',
 			'single',
-			'download'
+			'download',
+			'delete',
+			'all'
+			'categories',
 		);
 
 		/* Does the subaction even exist? */
@@ -51,7 +52,7 @@ abstract class ModSitePage
 
 		/* No?  redirect them to the main page */
 		else
-			self::main();
+			$this->main();
 	}
 
 	public static function main()

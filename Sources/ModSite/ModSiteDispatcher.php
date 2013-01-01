@@ -66,7 +66,7 @@ abstract class ModsiteDispatcher
 		});
 
 		$actions = array(
-			'mods' => array(ModSite::$name .'Page' , 'call'),
+			'mods' => array(ModSite::$name .'Page' , 'call', array($container->query, $container->settings, $container->text)),
 		);
 
 		if (in_array($container->globals->getValue('action'), array_keys($actions)))
@@ -76,7 +76,7 @@ abstract class ModsiteDispatcher
 
 			/* Lets call the method */
 			$method_name = $actions[$container->globals->getValue('action')][1];
-			call_user_func_array(array($controller, $method_name), array());
+			call_user_func_array(array($controller, $method_name), $container->globals->getValue('action')][2]);
 		}
 	}
 }
