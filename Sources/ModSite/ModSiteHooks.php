@@ -26,7 +26,7 @@
  */
 
 if (!defined('SMF'))
-	die('Hacking attempt...');
+	die('No direct access...');
 
 /* Wrapper functions */
 function wrapper_admin_dispatch(){ ModSiteHooks::settingsDispatch(); }

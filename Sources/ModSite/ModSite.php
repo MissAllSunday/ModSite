@@ -26,7 +26,7 @@
  */
 
 if (!defined('SMF'))
-	die('Hacking attempt...');
+	die('No direct access...');
 
 /* Autoload */
 function __autoload($class_name)
