@@ -56,7 +56,7 @@ class ModeSiteContainer
 			static $object;
 
 			if (is_null($object))
-				$object = $callable($c)
+				$object = $callable($c);
 
 			return $object;
 		};

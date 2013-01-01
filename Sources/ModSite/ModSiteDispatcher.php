@@ -28,37 +28,21 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-class ModeSiteContainer
+abstract class ModsiteDispatcher
 {
-	protected $values = array();
+	/**
+	 * ModSiteDispatcher::__construct()
+	 *
+	 * @return
+	 */
+	private function __construct(){}
 
-	function __set($id, $value)
+	static function dispatch()
 	{
-		$this->values[$id] = $value
-	}
-
-	function __get($id)
-	{
-		if (!isset($this->values[$id]))
-			fatal_lang_error ('some text here');
-
-		if (is_callable($this->values[$id]))
-			return $this->values[$id]($this);
-
-		else
-			return $this->values[$id];
-	}
-
-	function asShared($callable)
-	{
-		return function ($c) use ($callable)
+		$container = new BreezeContainer();
+		$container->settings = $container->asShared( function ($c)
 		{
-			static $object;
-
-			if (is_null($object))
-				$object = $callable($c)
-
-			return $object;
-		};
+			return new BreezeSettings();
+		});
 	}
 }
