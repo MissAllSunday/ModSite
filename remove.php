@@ -33,10 +33,8 @@
 
 	$hooks = array(
 		'integrate_pre_include' => '$sourcedir/ModSite/ModSite.php',
-		'integrate_admin_areas' => 'ModSite::admin',
 		'integrate_menu_buttons' => 'ModSite::menu',
 		'integrate_actions' => 'ModSite::action',
-		'integrate_load_permissions' => 'ModSite::permissions',
 	);
 
 		$call = 'remove_integration_function';
