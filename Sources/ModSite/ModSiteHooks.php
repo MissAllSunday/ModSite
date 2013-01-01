@@ -28,90 +28,8 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-/* Wrapper functions */
-function wrapper_admin_dispatch(){ ModSiteHooks::settingsDispatch(); }
-function wrapper_admin_settings() { ModSiteHooks::settings(); }
-
 abstract class ModSiteHooks
 {
-	protected static $_tools;
-
-	/* Admin menu hook */
-	public static function admin(&$admin_areas)
-	{
-		if (!empty($_tools))
-			$_tools = ModSiteTools::getInstance();
-
-		$admin_areas['config']['areas'][ModSite::$name] = array(
-			'label' => $_tools->getText('admin_panel'),
-			'file' => ModSite::$name.'.php',
-			'function' => 'wrapper_admin_dispatch',
-			'icon' => 'posts.gif',
-			'subsections' => array(
-				'general' => array($_tools->getText('admin_panel_settings')),
-			),
-		);
-	}
-
-	/* The settings hook */
-	public static function settingsDispatch($return_config = false)
-	{
-		global $sourcedir;
-
-		require_once($sourcedir.'/ManageSettings.php');
-
-		if (!empty($_tools))
-			$_tools = ModSiteTools::getInstance();
-
-		$subActions = array(
-			'general' => 'wrapper_admin_settings',
-		);
-
-		loadGeneralSettingParameters($subActions, 'general');
-
-		// Load up all the tabs...
-		$context[$context['admin_menu_name']]['tab_data'] = array(
-			'title' => $_tools()->getText('admin_panel'),
-			'description' => $_tools()->getText('admin_panel_desc'),
-			'tabs' => array(
-				'general' => array(),
-			),
-		);
-
-		$subActions[$_REQUEST['sa']]();
-	}
-
-	/* Settings */
-	static function settings()
-	{
-		global $scripturl, $context, $sourcedir;
-
-		require_once($sourcedir.'/ManageServer.php');
-
-		if (!empty($_tools))
-			$_tools = ModSiteTools::getInstance();
-
-		$config_vars = array(
-			array('check', ''. ModSite::$name .'_enable','subtext' => $_tools()->getText('enable_sub')),
-		);
-
-		$context['post_url'] = $scripturl . '?action=admin;area='. ModSite::$name .';sa=general;save';
-
-		/* Saving? */
-		if (isset($_GET['save']))
-		{
-			checkSession();
-
-			/* Force a new instance */
-			$_tools->__destruct();
-
-			saveDBSettings($config_vars);
-			redirectexit('action=admin;area='. ModSite::$name .';sa=general');
-		}
-
-		prepareDBSettingContext($config_vars);
-	}
-
 	/**
 	 * ModsiteHooks::actions()
 	 *
@@ -121,7 +39,6 @@ abstract class ModSiteHooks
 	 */
 	public static function actions(&$actions)
 	{
-		/* A whole new action just for some ajax calls... */
 		$actions['mods'] = array(Modsite::$folder . 'ModsiteDispatcher.php', 'ModSiteDispatcher::dispatch');
 	}
 }

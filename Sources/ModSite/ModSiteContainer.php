@@ -40,7 +40,7 @@ class ModeSiteContainer
 	function __get($id)
 	{
 		if (!isset($this->values[$id]))
-			fatal_lang_error ('some text here');
+			fatal_lang_error('some text here');
 
 		if (is_callable($this->values[$id]))
 			return $this->values[$id]($this);
