@@ -111,4 +111,17 @@ abstract class ModSiteHooks
 
 		prepareDBSettingContext($config_vars);
 	}
+
+	/**
+	 * ModsiteHooks::actions()
+	 *
+	 * Insert the actions needed by this mod
+	 * @param array $actions An array containing all possible SMF actions.
+	 * @return void
+	 */
+	public static function actions(&$actions)
+	{
+		/* A whole new action just for some ajax calls... */
+		$actions['mods'] = array(Modsite::$folder . 'ModsiteDispatcher.php', 'ModSiteDispatcher::dispatch');
+	}
 }
