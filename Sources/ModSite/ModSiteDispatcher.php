@@ -5,7 +5,7 @@
  *
  * @package SMF
  * @author Suki <suki@missallsunday.com>
- * @copyright 2013 Jessica González
+ * @copyright 2012 Jessica González
  * @license http://www.mozilla.org/MPL/ MPL 2.0
  *
  * @version 1.0 Alpha 1
@@ -25,20 +25,40 @@
  *
  */
 
-	if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
-		require_once(dirname(__FILE__) . '/SSI.php');
+if (!defined('SMF'))
+	die('No direct access...');
 
-	elseif (!defined('SMF'))
-		exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
+class ModeSiteContainer
+{
+	protected $values = array();
 
-	$hooks = array(
-		'integrate_pre_include' => '$sourcedir/ModSite::$name/ModSite.php',
-		'integrate_admin_areas' => 'ModSiteHooks::admin',
-		'integrate_menu_buttons' => 'ModSiteHooks::menu',
-		'integrate_actions' => 'ModSiteHooks::action',
-	);
+	function __set($id, $value)
+	{
+		$this->values[$id] = $value
+	}
 
-		$call = 'remove_integration_function';
+	function __get($id)
+	{
+		if (!isset($this->values[$id]))
+			fatal_lang_error ('some text here');
 
-	foreach ($hooks as $hook => $function)
-		$call($hook, $function);
+		if (is_callable($this->values[$id]))
+			return $this->values[$id]($this);
+
+		else
+			return $this->values[$id];
+	}
+
+	function asShared($callable)
+	{
+		return function ($c) use ($callable)
+		{
+			static $object;
+
+			if (is_null($object))
+				$object = $callable($c)
+
+			return $object;
+		};
+	}
+}
