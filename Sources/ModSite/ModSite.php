@@ -29,19 +29,20 @@ if (!defined('SMF'))
 	die('No direct access...');
 
 /* Autoload */
-function __autoload($class_name)
+function modsite_autoloader($class_name)
 {
 	global $sourcedir;
 
-	if(file_exists($sourcedir.ModSite::$folder.$class_name . '.php'))
-		require_once($file_path);
+	$file_path = $sourcedir . ModSite::$folder . $class_name . '.php';
 
-	elseif(file_exists($sourcedir.ModSite::$api_folder.$class_name . '.php'))
-		require_once($file_path);
+	if (file_exists($file_path))
+		require_once ($file_path);
 
 	else
 		return false;
 }
+
+spl_autoload_register('modsite_autoloader');
 
 class ModSite
 {
@@ -53,26 +54,4 @@ class ModSite
 	protected $_tools;
 
 	public function __construct(){}
-
-	public function tools()
-	{
-		return ModSiteTools::getInstance();
-	}
-
-	public function db()
-	{
-		return new ModSiteDB(self::$_tableName);
-	}
-
-	public function download()
-	{
-
-	}
-
-	public function queryString($var)
-	{
-		return new ModSiteQuery($var);
-	}
-
-	public function __destruct() {}
 }
