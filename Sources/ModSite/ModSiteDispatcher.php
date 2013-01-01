@@ -5,7 +5,7 @@
  *
  * @package SMF
  * @author Suki <suki@missallsunday.com>
- * @copyright 2012 Jessica González
+ * @copyright 2013 Jessica González
  * @license http://www.mozilla.org/MPL/ MPL 2.0
  *
  * @version 1.0 Alpha 1
@@ -40,9 +40,43 @@ abstract class ModsiteDispatcher
 	static function dispatch()
 	{
 		$container = new BreezeContainer();
-		$container->settings = $container->asShared( function ($c)
+
+		/* Globals */
+		$container->globals = $container->asShared(function ($c)
 		{
-			return new BreezeSettings();
+			return new ModSiteGlobals();
 		});
+
+		/* Settings */
+		$container->settings = $container->asShared(function ($c)
+		{
+			return new ModSiteSettings();
+		});
+
+		/* Text */
+		$container->text = $container->asShared(function ($c)
+		{
+			return new ModSiteText();
+		});
+
+		/* Query */
+		$container->query = $container->asShared(function ($c)
+		{
+			return new ModSiteQuery($c->settings, $c->globals, $c->text);
+		});
+
+		$actions = array(
+			'mods' => array(ModSite::$name .'Page' , 'call'),
+		);
+
+		if (in_array($container->globals->getValue('action'), array_keys($actions)))
+		{
+			$controller_name = $actions[$container->globals->getValue('action')][0];
+			$controller = new $controller_name();
+
+			/* Lets call the method */
+			$method_name = $actions[$sglobals->getValue('action')][1];
+			call_user_func_array(array($controller, $method_name), array());
+		}
 	}
 }
