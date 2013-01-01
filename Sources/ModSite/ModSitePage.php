@@ -45,6 +45,7 @@ abstract class ModSitePage
 	{
 		$subActions = array(
 			'post',
+			'post2',
 			'single',
 			'download',
 			'delete',
@@ -94,17 +95,18 @@ abstract class ModSitePage
 
 		/* Set all the page stuff */
 		$context['sub_template'] = ModSite::$name.'_post';
-		$context['page_title'] = self::_modSite->tools->getText('title_post');
-		$context['canonical_url'] = $scripturl . '?action='. ModSite::$name . ';sa=post';
+		$context['page_title'] = $this->text->getText('title_post');
+		$context['canonical_url'] = $scripturl . '?action=mods;sa=post';
 
 		/* Build the form */
 
 		/* Pass it to the template */
+		$context['something'] = 'Some text to test things out...';
 
 
 	}
 
-	public static function download()
+	public static function doDownload()
 	{
 		global $context;
 
@@ -113,7 +115,7 @@ abstract class ModSitePage
 
 	}
 
-	public static function single()
+	public static function doSingle()
 	{
 		/* meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
