@@ -54,4 +54,16 @@ class ModSite
 	protected $_tools;
 
 	public function __construct(){}
+
+	/**
+	 * ModsiteHooks::actions()
+	 *
+	 * Insert the actions needed by this mod
+	 * @param array $actions An array containing all possible SMF actions.
+	 * @return void
+	 */
+	public static function actions(&$actions)
+	{
+		$actions['mods'] = array(Modsite::$folder . 'ModsiteDispatcher.php', 'ModSiteDispatcher::dispatch');
+	}
 }
