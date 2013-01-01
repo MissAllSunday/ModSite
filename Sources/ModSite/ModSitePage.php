@@ -30,18 +30,19 @@ if (!defined('SMF'))
 
 abstract class ModSitePage
 {
-	public function __construct($query, $settings, $text)
-	{
-		$this->text  = $text;
-		$this->settings = $settings;
-		$this->query = $query;
-	}
-
-	public function call()
+	public function __construct($query, $settings, $text, $globals)
 	{
 		/* Load stuff */
 		loadtemplate(ModSite::$name);
 
+		$this->text  = $text;
+		$this->settings = $settings;
+		$this->query = $query;
+		$this->globals = $globals;
+	}
+
+	public function call()
+	{
 		$subActions = array(
 			'post',
 			'single',

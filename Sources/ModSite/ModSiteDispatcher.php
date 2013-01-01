@@ -67,7 +67,7 @@ abstract class ModsiteDispatcher
 
 		/* array($class, $method, (array) $parameters) */
 		$actions = array(
-			'mods' => array(ModSite::$name .'Page' , 'call', array($container->query, $container->settings, $container->text)),
+			'mods' => array(ModSite::$name .'Page' , 'call', array($container->query, $container->settings, $container->text, $container->globals)),
 		);
 
 		if (in_array($container->globals->getValue('action'), array_keys($actions)))
