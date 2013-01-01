@@ -30,9 +30,14 @@ if (!defined('SMF'))
 
 abstract class ModSitePage
 {
-	protected static $_modsite;
+	public function __construct($query, $settings, $text)
+	{
+		$this->text  = $text;
+		$this->settings = $settings;
+		$this->query = $query;
+	}
 
-	public static function function call()
+	public function call()
 	{
 		/* Load stuff */
 		loadtemplate(ModSite::$name);
@@ -55,7 +60,7 @@ abstract class ModSitePage
 			$this->main();
 	}
 
-	public static function main()
+	public function main()
 	{
 		global $context, $scripturl;
 
