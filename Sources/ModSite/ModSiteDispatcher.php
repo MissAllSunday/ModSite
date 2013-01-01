@@ -75,7 +75,7 @@ abstract class ModsiteDispatcher
 			$controller = new $controller_name();
 
 			/* Lets call the method */
-			$method_name = $actions[$sglobals->getValue('action')][1];
+			$method_name = $actions[$container->globals->getValue('action')][1];
 			call_user_func_array(array($controller, $method_name), array());
 		}
 	}
