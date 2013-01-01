@@ -75,7 +75,7 @@ abstract class ModSitePage
 			redirectexit();
 
 		/* Set all the page stuff */
-		$context['sub_template'] = ModSite::$name.'_main';
+		$context['sub_template'] = 'main';
 		$context['page_title'] = $this->text->getText('title_main');
 		$context['canonical_url'] = $scripturl . '?action=mods';
 

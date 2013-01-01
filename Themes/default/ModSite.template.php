@@ -3,16 +3,9 @@
 
 	function template_main(){
 
-		global $txt, $context, $scripturl, $modSettings;
+		/* mod_sidebar(); */
 
-		// load the post variables
-		loadLanguage('Post');
-		
-		mod_sidebar();
-
-		
 		// No FAQs ? :(
-		if (empty($context['GetMods']))
 			echo '
 				<span class="clear upperframe">
 					<span></span>
@@ -20,124 +13,33 @@
 				<div class="roundframe rfix">
 					<div class="innerframe">
 						<div class="content">
-							',$txt['Mod_no_mod'],'
+							LOL
 						</div>
 					</div>
 				</div>
 				<span class="lowerframe">
 					<span></span>
 				</span><br />';
-
-		else {
-		
-			//So... we need to define some variables first...
-			$mod_javascript = '';
-			$mod_display = '';
-
-			// Lets show the FAQs...		
-			foreach($context['GetMods'] as $mod){
-
-				if (!empty($modSettings['mod_use_javascript'])){
-					$mod_javascript = 'onmousedown="toggleDiv(\'content'.$mod['id'].'\');"';
-					$mod_display = 'style="display:none;"';
-				}
-
-				if($mod['approved'] || $context['modperedit']){
-				
-					echo '
-				<div class="topleftpost">
-					<div class="topright">
-						<div class="bottomleft">
-							<div class="bottomright">
-								<div class="hpost">
-									<h2 class="center"><a href="',(!empty($modSettings['mod_use_javascript']) ? 'javascript:void(0)' : $scripturl.'?action=mods;sa=show;modid='.$mod['id']),'" ',$mod_javascript,' > ',$mod['name'],'</a>';
-						
-								echo '<span style="float:right;"> 
-										<a href="',$scripturl,'?action=mods;sa=download;modid=',$mod['id'],'">',$txt['mod_download'],'</a>';
-
-									if($context['modperedit'])
-									echo' |<a href="',$scripturl,'?action=mods;sa=edit;modid=',$mod['id'],'">',$txt['mod_edit_edit'],'</a> | <a href="',$scripturl,'?action=mods;sa=delete;modid=',$mod['id'],'">',$txt['mod_edit_delete'],'</a> ',($mod['approved'] == 0 ? ' | <a href="'.$scripturl.'?action=mods;sa=approve;modid='.$mod['id']
-										.'">'.$txt['mod_approve_edit'].'</a>' : ''),'';
-
-						echo '</span></h2>
-									<div class="headerlist">
-										<span class="editlink"> ', $mod['user']['link'], '</span>
-										<div class="entry content',$mod['id'],'" id="content',$mod['id'],'" ',$mod_display,'>
-											<div class="mod_des">
-												<ul>
-													<li>',$mod['category']['smf_download'],'</li>
-													<li>',$txt['mod_edit_category'],': ',$mod['category']['link'],' </li>
-													<li>',$txt['mod_demo'],': ',$mod['mod']['demo_link'],'</li>
-													<li>',$txt['Mod_version_edit'],' : ',$mod['mod']['version'],'</li>
-													<li>',$txt['Mod_for_smf_version'],' : ',$mod['mod']['smf_version'],'</li>
-													<li>',$txt['Mod_support_topic'],' : ',$mod['mod']['topic_url'],'</li>
-													<li>',$txt['mod_smf_download'],' : ',$mod['file']['descargas'],'</li>
-													<li>',$txt['mod_file_type'],' : ',$mod['file']['type'],'</li>
-													<li>',$txt['mod_file_size'],' : ',$mod['file']['size'],'',$txt['mod_file_kb'],'</li>
-													<li>',$txt['mod_issues'],':
-														<ul>';
-														if(!empty($mod['tracker']))
-															foreach($mod['tracker'] as $issue)
-																echo '<li class="issue_', $issue['status']['name'], '">',$issue['tracker']['image'],' ', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', '<a href="',$issue['href'],'" title="', $issue['status']['name'], '">',$issue['name'],'</a></li>';
-													
-													echo'</ul></li>
-												</ul>
-											</div>
-											',parse_bbc($mod['description']),'
-										</div>
-										<div class="clear"></div>
-											<p class="tags">
-											<g:plusone size="small" href="', $mod['mod']['href'], '"></g:plusone>
-											</p>	
-									</div>	
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>';
-				}	
-			}
-		}
-		
-		echo '<div class="clear" />';
-		
-		if(!empty($modSettings['num_mods']) && !empty($context['GetMods']))	
-			echo '<div style="text-align:center;">',$context['page_index'],'</div>';
-			
-		// Add a  new FAQ
-		if($context['modperedit'])
-		echo '
-			<div id="confirm_buttons">
-				<form action="', $scripturl, '?action=mods;sa=add" method="post" target="_self">
-					<input type="submit" name="send" class="sbtn" value="',$txt['Mod_add_send'],'" />
-				</form>	
-			</div>';			
-
-		if(!empty($modSettings['mod_care']))
-			ModCare();
-				
-
-
 	}
 
 	function template_delete(){
 
 		global $txt, $context, $scripturl;
-		
+
 		if(empty($context['delete']['current']) && !empty($context['deletecat']['current'])){
-		
+
 			$sub_delete = 'deletecat2';
 			$modid = 'catid='.$context['deletecat']['current']['category_id'];
 			$name_delete = $context['deletecat']['current']['category_name'];
 		}
 
 		elseif(!empty($context['delete']['current']) && empty($context['deletecat']['current'])){
-		
+
 			$sub_delete = 'delete2';
 			$modid = 'modid='.$context['delete']['current']['id'];
 			$name_delete = $context['delete']['current']['name'];
 		}
-		
+
 		echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
@@ -158,7 +60,7 @@
 						<form action="', $scripturl, '?action=mods;sa=',$sub_delete,';',$modid,'" method="post" target="_self">
 							<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="submit" name="send" class="sbtn" value="',$txt['Mod_delete_send'],'" />
-						</form>	
+						</form>
 					</div>
 				</div>
 			</div>
@@ -215,47 +117,47 @@
 						<dd>
 							<input type="text" name="smf_version" size="15" tabindex="1" maxlength="15" value="',($mod_edit == 1 ? $context['edit']['current']['smf_version'] : ''),'" class="input_text" />
 						</dd>
-						
-						
+
+
 						<dt>
 							<span id="caption_version">',$txt['Mod_version_edit'],'</span>
 						</dt>
 						<dd>
 							<input type="text" name="version" size="10" tabindex="1" maxlength="10" value="',($mod_edit == 1 ? $context['edit']['current']['version'] : ''),'" class="input_text" />
 						</dd>
-						
-						
+
+
 						<dt>
 							<span id="caption_id_project">',$txt['Mod_id_project_edit'],'</span>
 						</dt>
 						<dd>
 							<input type="text" name="id_project" size="10" tabindex="1" maxlength="10" value="',($mod_edit == 1 ? $context['edit']['current']['id_project'] : ''),'" class="input_text" />
 						</dd>
-							
-												
-						
+
+
+
 						<dt>
 							<span id="caption_category">',$txt['mod_edit_category'],'</span>
 						</dt>
 						<dd>';
-						
+
 						if($context['mod_getcats']){
-						
-							echo'<select name="category_id">';						
+
+							echo'<select name="category_id">';
 							foreach($context['mod_getcats'] as $cats)
 								echo '<option value="',$cats['category_id'],'">',$cats['category_name'],'</option>';
 
 								echo '</select>';
 						}
-						
+
 						else {
-						
+
 						echo '<div class="mod_warning">
 								',$txt['Mod_no_cat_admin'],'
 								</div>';
-						
+
 						}
-					
+
 					echo'</dd></dl>';
 
 						if ($context['show_bbc'])
@@ -263,10 +165,10 @@
 
 						if (!empty($context['smileys']['postform']) || !empty($context['smileys']['popup']))
 							echo '<div id="smileyBox_message"></div>';
-									
+
 						echo template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message');
-					
-						
+
+
 					// lets show the upload thingy
 						echo '
 						<p /><input id="myfile" name="myfile" type="file" size="30" />';
@@ -288,7 +190,7 @@
 	function template_show_edit(){
 
 		global $context, $txt, $scripturl, $GetCats;
-		
+
 		echo '<div class="cat_bar">
 				<h3 class="catbg">',$txt['mod_manage'],'</h3>
 			</div>
@@ -321,11 +223,11 @@
 					<tr class="catbg">
 						<th scope="col" class="first_th">',$txt['mod_edit_id'],'</th>
 						<th scope="col">',$txt['mod_edit_name'],'</th>
-						<th scope="col">',$txt['mod_edit_category'],'</th>						
-						<th scope="col">',$txt['mod_smf_download'],'</th>					
-						<th scope="col">',$txt['mod_edit_last_edit_by'],'</th>						
+						<th scope="col">',$txt['mod_edit_category'],'</th>
+						<th scope="col">',$txt['mod_smf_download'],'</th>
+						<th scope="col">',$txt['mod_edit_last_edit_by'],'</th>
 						<th scope="col">',$txt['mod_edit_edit'],'</th>
-						<th scope="col">',$txt['mod_approve_edit'],'</th>						
+						<th scope="col">',$txt['mod_approve_edit'],'</th>
 						<th scope="col" class="last_th">',$txt['mod_edit_delete'],'</th>
 					</tr>
 				</thead>
@@ -346,16 +248,16 @@
 							</td>
 							<td>
 							',$mod_edit['file']['descargas'],'
-							</td>							
+							</td>
 							<td>
 							',$mod_edit['user']['link'],'
-							</td>							
+							</td>
 							<td>
 							<a href="',$scripturl,'?action=mods;sa=edit;modid=',$mod_edit['id'],'">',$txt['mod_edit_edit'],'</a>
 							</td>
 							<td>
 							',($mod_edit['approved'] == 0 ? '<a href="'.$scripturl.'?action=mods;sa=approve;modid='.$mod_edit['id'].'">'.$txt['mod_approve_edit'].'</a>' : 'approved'),'
-							</td>							
+							</td>
 							<td>
 							<a href="',$scripturl,'?action=mods;sa=delete;modid=',$mod_edit['id'],'">',$txt['mod_edit_delete'],'</a>
 							</td>
@@ -365,27 +267,27 @@
 			echo '</tdescription>
 			</table><br />';
 		}
-		
+
 		// Add a  new FAQ
 		if($context['modperedit'])
 		echo '
 			<div id="confirm_buttons">
 				<form action="', $scripturl, '?action=mods;sa=add" method="post" target="_self">
 					<input type="submit" name="send" class="sbtn" value="',$txt['Mod_add_send'],'" />
-				</form>	
+				</form>
 			</div>';
 	}
-	
+
 	function template_show_edit_cat(){
 
 		global $context, $txt, $scripturl;
-		
+
 		echo '<div class="cat_bar">
 				<h3 class="catbg">',$txt['mod_manage_category'],'</h3>
 			</div>
 			<div class="windowbg description">
 				',$txt['mod_manage_category_desc'],'
-			</div>';		
+			</div>';
 
 		// No Cats ? :(
 		if (empty($context['GetCats']))
@@ -411,7 +313,7 @@
 				<thead>
 					<tr class="catbg">
 						<th scope="col" class="first_th">',$txt['mod_edit_id'],'</th>
-						<th scope="col">',$txt['mod_edit_name'],'</th>						
+						<th scope="col">',$txt['mod_edit_name'],'</th>
 						<th scope="col">',$txt['mod_edit_edit'],'</th>
 						<th scope="col" class="last_th">',$txt['mod_edit_delete'],'</th>
 					</tr>
@@ -427,7 +329,7 @@
 							</td>
 							<td>
 							',$cat_edit['category_name'],'
-							</td>							
+							</td>
 							<td>
 							<a href="',$scripturl,'?action=mods;sa=editcat;catid=',$cat_edit['category_id'],'">',$txt['mod_edit_edit'],'</a>
 							</td>
@@ -438,29 +340,29 @@
 			}
 
 			echo '</tdescription>
-			</table><br />';			
+			</table><br />';
 		}
-		
+
 		// Add a  new Category
 		if($context['modperedit'])
 		echo '
 			<div id="confirm_buttons">
 				<form action="', $scripturl, '?action=mods;sa=addcat" method="post" target="_self">
 					<input type="submit" name="send" class="sbtn" value="',$txt['Mod_addcat_send'],'" />
-				</form>	
+				</form>
 			</div>';
-		
+
 	}
 
 	function template_addcat(){
-		
+
 		global $scripturl, $txt, $context;
-		
+
 		$edit_catid = '';
-		
+
 		if(!empty($context['editcat']['current']))
 			$edit_catid = ';catid='.$context['editcat']['current']['category_id'];
-		
+
 				echo '
 		<form action="', $scripturl, '?action=mods;sa=',(empty($context['editcat']['current']) ? 'addcat2' : 'editcat2'),'',$edit_catid,'" method="post" target="_self" id="postmodify" class="flow_hidden">
 			<div class="cat_bar">
@@ -488,19 +390,19 @@
 				<span class="lowerframe">
 					<span></span>
 				</span><br />
-		</form>';	
-		
-		
+		</form>';
+
+
 	}
-	
+
 	function template_show(){
 
 		global $txt, $context, $scripturl, $modSettings;
-		
+
 		mod_sidebar();
-		
-		echo '<div class="mods">';		
-		
+
+		echo '<div class="mods">';
+
 		// No FAQs ? :(
 		if (empty($context['show']))
 			echo '
@@ -519,12 +421,12 @@
 				</span><br />';
 
 		else {
-		
+
 			//So... we need to define some variables first...
 			$show_javascript = '';
 			$show_display = '';
 
-			// Lets show the FAQs...		
+			// Lets show the FAQs...
 			foreach($context['show'] as $show){
 
 				if (!empty($showSettings['mod_use_javascript'])){
@@ -533,7 +435,7 @@
 				}
 
 				if($show['approved'] || $context['modperedit']){
-				
+
 					echo '
 				<div class="topleftpost">
 					<div class="topright">
@@ -541,8 +443,8 @@
 							<div class="bottomright">
 								<div class="hpost">
 									<h2 class="center"><a href="',(!empty($showSettings['mod_use_javascript']) ? 'javascript:void(0)' : $scripturl.'?action=mods;sa=show;modid='.$show['id']),'" ',$show_javascript,' > ',$show['name'],'</a>';
-						
-								echo '<span style="float:right;"> 
+
+								echo '<span style="float:right;">
 										<a href="',$scripturl,'?action=mods;sa=download;modid=',$show['id'],'">',$txt['mod_download'],'</a>';
 
 									if($context['modperedit'])
@@ -569,7 +471,7 @@
 														if(!empty($show['tracker']))
 															foreach($show['tracker'] as $issue)
 																echo '<li class="issue_', $issue['status']['name'], '">',$issue['tracker']['image'],' ', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', '<a href="',$issue['href'],'" title="', $issue['status']['name'], '">',$issue['name'],'</a></li>';
-													
+
 													echo'</ul></li>
 												</ul>
 											</div>
@@ -578,33 +480,33 @@
 										<div class="clear"></div>
 											<p class="tags">
 											<g:plusone size="small" href="', $show['mod']['href'], '"></g:plusone>
-											</p>	
-									</div>	
+											</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>';
-				}	
+				}
 			}
-		}		
-		
-		echo'</div><div class="clear"></div>';		
-		
+		}
+
+		echo'</div><div class="clear"></div>';
+
 		if(!empty($modSettings['mod_care']))
 			ModCare();
-			
+
 
 	}
-	
+
 	function template_categoryshow(){
 
 		global $txt, $context, $scripturl, $modSettings;
-		
+
 		mod_sidebar();
-		
-		echo '<div class="mods">';		
-		
+
+		echo '<div class="mods">';
+
 		// No FAQs ? :(
 		if (empty($context['mod_category']))
 			echo '
@@ -623,12 +525,12 @@
 				</span><br />';
 
 		else {
-		
+
 			//So... we need to define some variables first...
 			$mod_category_javascript = '';
 			$mod_category_display = '';
 
-			// Lets show the FAQs...		
+			// Lets show the FAQs...
 			foreach($context['mod_category'] as $mod_category){
 
 				if (!empty($mod_categorySettings['mod_use_javascript'])){
@@ -637,7 +539,7 @@
 				}
 
 				if($mod_category['approved'] || $context['modperedit']){
-				
+
 					echo '
 				<div class="topleftpost">
 					<div class="topright">
@@ -645,8 +547,8 @@
 							<div class="bottomright">
 								<div class="hpost">
 									<h2 class="center"><a href="',(!empty($mod_categorySettings['mod_use_javascript']) ? 'javascript:void(0)' : $scripturl.'?action=mods;sa=show;modid='.$mod_category['id']),'" ',$mod_category_javascript,' > ',$mod_category['name'],'</a>';
-						
-								echo '<span style="float:right;"> 
+
+								echo '<span style="float:right;">
 										<a href="',$scripturl,'?action=mods;sa=download;modid=',$mod_category['id'],'">',$txt['mod_download'],'</a>';
 
 									if($context['modperedit'])
@@ -673,7 +575,7 @@
 														if(!empty($mod_category['tracker']))
 															foreach($mod_category['tracker'] as $issue)
 																echo '<li class="issue_', $issue['status']['name'], '">',$issue['tracker']['image'],' ', !empty($issue['category']['link']) ? '[' . $issue['category']['link'] . '] ' : '', '<a href="',$issue['href'],'" title="', $issue['status']['name'], '">',$issue['name'],'</a></li>';
-													
+
 													echo'</ul></li>
 												</ul>
 											</div>
@@ -682,66 +584,45 @@
 										<div class="clear"></div>
 											<p class="tags">
 											<g:plusone size="small" href="', $mod_category['mod']['href'], '"></g:plusone>
-											</p>	
-									</div>	
+											</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>';
-				}	
+				}
 			}
 		}
-		
-		if(!empty($modSettings['mod_care']))
-			ModCare();
-			
+
 		echo'</div><div class="clear"></div>';
 
-	}	
-	
+	}
+
 	function mod_sidebar(){
-	
+
 		global $context, $scripturl, $modSettings, $txt;
-	
+
 			echo '<div id="sidebar">';
-			
+
 			echo'<div class="sidebar-top">
 					<div class="sidebar-bottom">
-						<h2 class="widgettitle">',$txt['mod_show_categories'],'</h2>';
-							
+						<h2 class="widgettitle">title</h2>';
+
 			if(empty($context['mod_getcats']))
 				echo '<div class="mod_categories mod_warning">
-						',$txt['Mod_no_cat'],'
-					</div>';	
+						no categories
+					</div>';
 			else{
-		
+
 				echo '<ul>';
-			
-				foreach($context['mod_getcats'] as $category)
-					echo '<li><a href="',$scripturl,'?action=mods;sa=category;catid=',$category['category_id'],'">',$category['category_name'],'</a></li>';
-					
+
+				/* foreach($context['mod_getcats'] as $category) */
+					echo '<li>lol</li>';
+
 				echo'</ul></div></div>';
 			}
 
-		
-		//Show a list of all FAQs
-		if(!empty($modSettings['mod_show_all']) && !empty($context['getallmods'])){
-		
-			echo'<div class="sidebar-top">
-					<div class="sidebar-bottom">
-						<h2 class="widgettitle">',$txt['mod_show_mod_list'],'</h2>
-						<ul>';
-			
-			foreach($context['getallmods'] as $mod)
-				echo '<li><a href="',$scripturl,'?action=mods;sa=show;modid=',$mod['id'],'">',$mod['name'],'</a></li>';
-					
-			echo'</ul></div></div>';
-		}
-		
 		// side bar end
 		echo '</div>';
-	
 	}
-
-?>

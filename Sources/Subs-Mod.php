@@ -678,4 +678,3 @@
 	}	
 	
 	// Believe in you.
-?>
