@@ -34,7 +34,7 @@
 	$hooks = array(
 		'integrate_pre_include' => '$sourcedir/ModSite/ModSite.php',
 		'integrate_menu_buttons' => 'ModSite::menu',
-		'integrate_actions' => 'ModSite::action',
+		'integrate_actions' => 'ModSite::actions',
 	);
 
 	$call = 'add_integration_function';

@@ -141,28 +141,5 @@
 		// Loop through each defined table and do whats needed, update existing or add as new
 		foreach ($tables as $table)
 			$smcFunc['db_create_table']($db_prefix . $table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
-
-		// Give them a default category for good measure
-		$rows = array();
-		$rows[] = array(
-			'method' => 'ignore',
-			'table_name' => '{db_prefix}mod_categories',
-			'columns' => array(
-				'category_name' => 'string',
-				'category_id' => 'int'
-			),
-			'data' => array(
-				'New Feature',
-				1
-			),
-			'keys' => array(
-				'id'
-			)
-		);
-
-		// Add rows to any existing tables
-		foreach ($rows as $row)
-			$smcFunc['db_insert']($row['method'], $row['table_name'], $row['columns'], $row['data'], $row['keys']);
-
 	}
 ?>

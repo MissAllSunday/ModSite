@@ -51,7 +51,7 @@ class ModSite
 	public static $api_folder = '/githubAPI/';
 	public static $downloads_folder = '/Downloads/';
 	protected $_tableName = 'mod_site';
-	protected $_tools;
+
 
 	public function __construct(){}
 

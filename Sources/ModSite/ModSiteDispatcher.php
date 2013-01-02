@@ -39,7 +39,7 @@ abstract class ModsiteDispatcher
 
 	static function dispatch()
 	{
-		$container = new BreezeContainer();
+		$container = new ModSiteContainer();
 
 		/* Globals */
 		$container->globals = $container->asShared(function ($c)
@@ -73,7 +73,7 @@ abstract class ModsiteDispatcher
 		if (in_array($container->globals->getValue('action'), array_keys($actions)))
 		{
 			$controller_name = $actions[$container->globals->getValue('action')][0];
-			$controller = new $controller_name(implode(',', $container->globals->getValue('action')][2]));
+			$controller = new $controller_name(implode(',', $container->globals->getValue('action')[2]));
 
 			/* Lets call the method */
 			$method_name = $actions[$container->globals->getValue('action')][1];
