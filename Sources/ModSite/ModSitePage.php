@@ -28,9 +28,9 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-abstract class ModSitePage
+class ModSitePage
 {
-	public function __construct($query, $settings, $text, $globals)
+	public function __construct($query, $settings, $text)
 	{
 		/* Load stuff */
 		loadtemplate(ModSite::$name);
@@ -38,7 +38,9 @@ abstract class ModSitePage
 		$this->text  = $text;
 		$this->settings = $settings;
 		$this->query = $query;
-		$this->globals = $globals;
+
+		/* We need a brand new globals object */
+		$this->globals = new BreezeGlobals('get');
 	}
 
 	public function call()
@@ -49,7 +51,7 @@ abstract class ModSitePage
 			'single',
 			'download',
 			'delete',
-			'all'
+			'all',
 			'categories',
 		);
 
@@ -110,21 +112,14 @@ abstract class ModSitePage
 	{
 		global $context;
 
-
-
-
 	}
 
 	public static function doSingle()
 	{
-		/* meh... I haz all tha powerz */
-		if (!$context['user']['is_admin'])
-			redirectexit();
-
 		/* Set all the page stuff */
-		$context['sub_template'] = ModSite::$name.'_single';
-		$context['page_title'] = self::_modSite->tools->getText('title_single');
-		$context['canonical_url'] = $scripturl . '?action='. ModSite::$name . ';sa=single;mid=';
+		$context['sub_template'] = 'single';
+		$context['page_title'] = $this->text->getText('title_single');
+		$context['canonical_url'] = $scripturl . '?action=mods;sa=single;mid=';
 
 
 	}

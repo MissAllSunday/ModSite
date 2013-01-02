@@ -67,16 +67,19 @@ abstract class ModsiteDispatcher
 
 		/* array($class, $method, (array) $parameters) */
 		$actions = array(
-			'mods' => array(ModSite::$name .'Page' , 'call', array($container->query, $container->settings, $container->text, $container->globals)),
+			'mods' => array(
+				'class' => ModSite::$name .'Page',
+				'method' => 'call',
+			),
 		);
 
 		if (in_array($container->globals->getValue('action'), array_keys($actions)))
 		{
-			$controller_name = $actions[$container->globals->getValue('action')][0];
-			$controller = new $controller_name(implode(',', $container->globals->getValue('action')[2]));
+			$controller_name = $actions[$container->globals->getValue('action')]['class'];
+			$controller = new $controller_name($container->query, $container->settings, $container->text);
 
 			/* Lets call the method */
-			$method_name = $actions[$container->globals->getValue('action')][1];
+			$method_name = $actions[$container->globals->getValue('action')]['method'];
 			call_user_func_array(array($controller, $method_name), array());
 		}
 	}

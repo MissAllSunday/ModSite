@@ -33,13 +33,13 @@ class ModSiteSettings
 	protected $_settings;
 	protected $_pattern;
 
-	private function __construct()
+	public function __construct()
 	{
 		$this->_pattern = '/'. ModSite::$name .'_/';
 		$this->doExtract();
 	}
 
-	public function extract()
+	public function doExtract()
 	{
 		global $modSettings;
 

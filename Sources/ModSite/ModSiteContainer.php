@@ -28,16 +28,16 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-class ModeSiteContainer
+class ModSiteContainer
 {
 	protected $values = array();
 
-	function __set($id, $value)
+	public function __set($id, $value)
 	{
-		$this->values[$id] = $value
+		$this->values[$id] = $value;
 	}
 
-	function __get($id)
+	public function __get($id)
 	{
 		if (!isset($this->values[$id]))
 			fatal_lang_error('some text here');
@@ -49,7 +49,7 @@ class ModeSiteContainer
 			return $this->values[$id];
 	}
 
-	function asShared($callable)
+	public function asShared($callable)
 	{
 		return function ($c) use ($callable)
 		{

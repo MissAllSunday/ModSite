@@ -28,12 +28,12 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-class ModSiteSettings
+class ModSiteText
 {
 	protected $_text;
 	protected $_pattern;
 
-	private function __construct()
+	public function __construct()
 	{
 		$this->_pattern = '/'. ModSite::$name .'_/';
 		$this->doExtract();

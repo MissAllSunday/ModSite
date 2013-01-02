@@ -28,20 +28,11 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-class ModSiteQuery extends ModSite
+class ModSiteQuery
 {
-	private static $_instance;
-	protected $_rows = array();
-	protected $_params = array();
-	protected $_data = array();
-	protected $_db;
-	protected $_values;
-
 
 	public function __construct()
 	{
-		$this->setDB();
-
 		$this->_rows = array(
 			'id' => 'id',
 			'name' => 'name',
@@ -57,48 +48,8 @@ class ModSiteQuery extends ModSite
 			$this->_values[$k] = '';
 	}
 
-	public static function getInstance()
-	{
-		if (!self::$_instance)
-		{
-			self::$_instance = new ModSiteQuery();
-		}
-		return self::$_instance;
-	}
-
 	public function killCache($type)
 	{
-		cache_put_data(Modsite::$name, null);
+		cache_put_data(Modsite::$name . $type, null);
 	}
-
-	protected function setDB()
-	{
-		$this->_db = new ModSiteDB($this->_tableName);
-	}
-
-	protected function db()
-	{
-		return $this->_db;
-	}
-
-	protected function getAll()
-	{
-		if (($this->_values[$row] = cache_get_data(''. Modsite::$name .'', 120)) == null)
-		{
-			$this->_params['rows'] = implode(',', $this->_rows);
-			$this->db()->params($this->_params, $this->_data);
-			$this->db()->getData(null, false);
-
-			$return = $this->_db->dataResult();
-
-			cache_put_data(''. Modsite::$name .'', $return, 120);
-		}
-
-		if (!empty($return))
-			return $return;
-
-		else
-			return false;
-	}
-
 }
