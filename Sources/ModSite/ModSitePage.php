@@ -32,12 +32,15 @@ class ModSitePage
 {
 	public function __construct($query, $settings, $text)
 	{
+		global $scripturl;
+
 		/* Load stuff */
 		loadtemplate(ModSite::$name);
 
 		$this->text  = $text;
 		$this->settings = $settings;
 		$this->query = $query;
+		$this->scripturl = $scripturl;
 
 		/* We need a brand new globals object */
 		$this->globals = new BreezeGlobals('get');
@@ -46,22 +49,18 @@ class ModSitePage
 	public function call()
 	{
 		$subActions = array(
-			'post',
-			'post2',
-			'single',
-			'download',
-			'delete',
-			'all',
-			'categories',
+			'post' => 'doPost',
+			'post2' => 'doPost2',
+			'single' => 'doSingle',
+			'download' => 'doDownload',
+			'delete' => 'doDelete',
+			'all' => 'doAll',
+			'categories' => 'doCategories',
 		);
 
 		/* Does the subaction even exist? */
 		if (in_array($this->globals->getValue('sa'), array_keys($subActions)))
-		{
-			/* construct the method name */
-			$method = 'do'. ucfirst($this->globals->getValue('sa'));
-			$this->$method();
-		}
+			$this->$subActions[$this->globals->getValue('sa')]();
 
 		/* No?  redirect them to the main page */
 		else
@@ -70,7 +69,7 @@ class ModSitePage
 
 	public function main()
 	{
-		global $context, $scripturl;
+		global $context;
 
 		/* meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
@@ -79,7 +78,7 @@ class ModSitePage
 		/* Set all the page stuff */
 		$context['sub_template'] = 'main';
 		$context['page_title'] = $this->text->getText('title_main');
-		$context['canonical_url'] = $scripturl . '?action=mods';
+		$context['canonical_url'] = $this->scripturl . '?action=mods';
 
 		/* Set the pagination stuff */
 
@@ -89,7 +88,7 @@ class ModSitePage
 
 	public static function doPost()
 	{
-		global $context, $scripturl;
+		global $context;
 
 		/* meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
@@ -98,7 +97,7 @@ class ModSitePage
 		/* Set all the page stuff */
 		$context['sub_template'] = ModSite::$name.'_post';
 		$context['page_title'] = $this->text->getText('title_post');
-		$context['canonical_url'] = $scripturl . '?action=mods;sa=post';
+		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=post';
 
 		/* Build the form */
 
@@ -108,18 +107,18 @@ class ModSitePage
 
 	}
 
-	public static function doDownload()
+	public function doDownload()
 	{
 		global $context;
 
 	}
 
-	public static function doSingle()
+	public function doSingle()
 	{
 		/* Set all the page stuff */
 		$context['sub_template'] = 'single';
 		$context['page_title'] = $this->text->getText('title_single');
-		$context['canonical_url'] = $scripturl . '?action=mods;sa=single;mid=';
+		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=single;mid=';
 
 
 	}
