@@ -103,6 +103,30 @@ class ModSitePage
 		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=post';
 
 		/* Build the form */
+		$form = $this->buildForm();
+
+		/* Pass it to the template */
+		$context['ModSite']['Form'] = $form;
+		$context['page_desc'] = 'Some description here...';
+	}
+
+	public function doDownload()
+	{
+		global $context;
+
+	}
+
+	public function doSingle()
+	{
+		/* Set all the page stuff */
+		$context['sub_template'] = 'single';
+		$context['page_title'] = $this->text->getText('title_single');
+		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=single;mid=';
+	}
+
+	protected function buildForm($editing = false)
+	{
+		/* Build the form */
 		$form = new ModSiteForm($this->text);
 
 		/* Common text entries */
@@ -133,22 +157,6 @@ class ModSitePage
 				'LOL'
 			);
 
-		/* Pass it to the template */
-		$context['ModSite']['Form'] = $form->display();
-		$context['page_desc'] = 'Some description here...';
-	}
-
-	public function doDownload()
-	{
-		global $context;
-
-	}
-
-	public function doSingle()
-	{
-		/* Set all the page stuff */
-		$context['sub_template'] = 'single';
-		$context['page_title'] = $this->text->getText('title_single');
-		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=single;mid=';
+		return $form->display();
 	}
 }
