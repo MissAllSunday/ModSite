@@ -114,9 +114,9 @@ class ModSitePage
 
 		if (!empty($categories) && is_array($categories))
 			$form->addSelect(
-				'Breeze_visits_timeframe',
-				'visits_module_timeframe',
-				$categories,
+				'category',
+				'mod_category',
+				$categories
 			);
 
 		/* Pass it to the template */

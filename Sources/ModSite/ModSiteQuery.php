@@ -45,8 +45,8 @@ class ModSiteQuery
 			'demo' => 'demo',
 			'version' => 'version',
 			'topic' => 'id_topic',
-			'smf' => 'smf_version'
-			'smfd' => 'smf_download'
+			'smf' => 'smf_version',
+			'smfd' => 'smf_download',
 			'desc' => 'description',
 			'github' => 'github',
 			'info' => 'info',
@@ -65,14 +65,14 @@ class ModSiteQuery
 	{
 		if (($return = cache_get_data(ModSite::$name .'-cats', 120)) == null)
 		{
-			$query = $smcFunc['db_query']('', '
+			$query = $this->smcFunc['db_query']('', '
 				SELECT id, name
 				FROM {db_prefix}mod_categories',
 				array(
 				)
 			);
 
-			while($row = $smcFunc['db_fetch_assoc']($query))
+			while($row = $this->smcFunc['db_fetch_assoc']($query))
 				$return[$row['id']] = $row['name'];
 
 			$this->smcFunc['db_free_result']($query);
