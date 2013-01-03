@@ -94,9 +94,6 @@ class ModSitePage
 		if (!$context['user']['is_admin'])
 			redirectexit();
 
-		/* Get all categories */
-		$categories = $this->query->getAllCategories();
-
 		/* Set all the page stuff */
 		$context['sub_template'] = ModSite::$name.'_post';
 		$context['page_title'] = $this->text->getText('title_post');
@@ -126,6 +123,16 @@ class ModSitePage
 
 	protected function buildForm($editing = false)
 	{
+		/* Get all categories */
+		$categories = $this->query->getAllCategories();
+
+		/* The form loves multidimensional arrays... */
+		foreach($categories as $k => $v)
+			$categories[$k] = array(
+				$v,
+				!empty($editing['cat']) && $editing['cat'] == $v ? true : false,
+			);
+
 		/* Build the form */
 		$form = new ModSiteForm($this->text);
 
@@ -139,7 +146,7 @@ class ModSitePage
 			$form->addText(
 				$c,
 				$c,
-				'',
+				$editing ? $editing[$c] : '',
 				55,55
 			);
 
@@ -154,7 +161,7 @@ class ModSitePage
 			$form->addTextArea(
 				$c,
 				$c,
-				'LOL'
+				$editing ? $editing[$c] : ''
 			);
 
 		return $form->display();
