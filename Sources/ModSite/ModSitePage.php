@@ -43,7 +43,7 @@ class ModSitePage
 		$this->scripturl = $scripturl;
 
 		/* We need a brand new globals object */
-		$this->globals = new BreezeGlobals('get');
+		$this->globals = new ModSiteGlobals('get');
 	}
 
 	public function call()
@@ -76,7 +76,7 @@ class ModSitePage
 			redirectexit();
 
 		/* Set all the page stuff */
-		$context['sub_template'] = 'main';
+		$context['sub_template'] = ModSite::$name.'_main';
 		$context['page_title'] = $this->text->getText('title_main');
 		$context['canonical_url'] = $this->scripturl . '?action=mods';
 
@@ -100,6 +100,7 @@ class ModSitePage
 		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=post';
 
 		/* Build the form */
+		$form = new ModSiteForm();
 
 		/* Pass it to the template */
 		$context['something'] = 'Some text to test things out...';
@@ -119,7 +120,5 @@ class ModSitePage
 		$context['sub_template'] = 'single';
 		$context['page_title'] = $this->text->getText('title_single');
 		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=single;mid=';
-
-
 	}
 }

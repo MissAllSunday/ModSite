@@ -35,45 +35,27 @@ if (!defined('SMF'))
 		public $name;
 		public $id_css;
 		public $class;
-		public $elements;
-		public $status;
-		public $buffer;
+		public $elements = array();
+		public $status = 0;
+		public $buffer = '';
 		public $onsubmit;
 		public $text;
 
-		function __construct($form = array())
+		function __construct($text)
 		{
-			global $scripturl, $txt;
-
-			LoadLanguage(ModSite::$name);
-
-			if (empty($form) || !is_array($form))
-				return;
-
-			/* Load the text strings */
-			$this->text = $txt;
-
-			$this->action = $scripturl . '?action=' . $form['action'];
-			$this->method = $form['method'];
-			$this->id_css= $form['id_css'];
-			$this->name = $form['name'];
-			$this->onsubmit = empty($form['onsubmit']) ? '' : 'onsubmit="'. $form['onsubmit'] .'"';
-			$this->class_css = $form['class_css'];
-			$elements = array();
-			$this->status = 0;
-			$this->buffer = '';
+			$this->text = $text;
 		}
 
 		public function returnElementNames()
 		{
-			$this->returnElementsNames = array();
+			$this->returnelementsnames = array();
 
 			if (!empty($this->elements))
 				foreach ($this->elements as $e)
 					if (isset($e['name']) && !empty($e['name']))
-						$this->returnElementsNames[$e['name']] = $e['name'];
+						$this->returnelementsnames[$e['name']] = $e['name'];
 
-			return $this->returnElementsNames;
+			return $this->returnelementsnames;
 		}
 
 		private function addElement($element)
@@ -108,28 +90,28 @@ if (!defined('SMF'))
 			$element['name'] = $name;
 			$element['values'] = $values;
 			$element['text']  = $text;
-			$element['html_start'] = '<'. $element['type'] .' name="' .$element['name']. '">';
+			$element['html_start'] = '<'. $element['type'] .' name="default_options['. $element['name'] .']">';
 			$element['html_end'] = '</'. $element['type'] .'>';
 
 			foreach($values as $k => $v)
-				$element['values'][$k] = '<option value="' .$k. '" '. (isset($v[1]) && $v[1] == 'selected' ? 'selected="selected"' : '') .'>'. $this->text[ModSite::$name.'form_'.$v[0]] .'</option>';
+				$element['values'][$k] = '<option value="' .$k. '" '. (isset($v[1]) && $v[1] == 'selected' ? 'selected="selected"' : '') .'>'. $this->text->getText('user_settings_'. $v[0]) .'</option>';
 
 			return $this->addElement($element);
 		}
 
-		function addCheckBox($name,$value, $text, $checked = false)
+		function addCheckBox($name, $text, $checked = false)
 		{
 			$element['type'] = 'checkbox';
 			$element['name'] = $name;
-			$element['value'] = $value;
+			$element['value'] = 1;
 			$element['checked'] = empty($checked) ? '' : 'checked="checked"';
 			$element['text'] = $text;
-			$element['html'] = '<input type="'. $element['type'] .'" name="'. $element['name'] .'" id="'. $element['name'] .'" value="'. (int)$element['value'] .'" '. $element['checked'] .' class="input_check" />';
+			$element['html'] = '<input type="'. $element['type'] .'" name="default_options['. $element['name'] .']" id="default_options['. $element['name'] .']" value="'. (int)$element['value'] .'" '. $element['checked'] .' class="input_check" />';
 
 			return $this->addElement($element);
 		}
 
-		function addText($name,$value, $text, $size = false, $maxlength = false)
+		function addText($name, $text, $value, $size = false, $maxlength = false)
 		{
 			$element['type'] = 'text';
 			$element['name'] = $name;
@@ -137,37 +119,28 @@ if (!defined('SMF'))
 			$element['text'] = $text;
 			$element['size'] = empty($size) ? 'size="20"' : 'size="' .$size. '"';
 			$element['maxlength'] = empty($maxlength) ? 'maxlength="20"' : 'maxlength="' .$maxlength. '"';
-			$element['html'] = '<input type="'. $element['type'] .'" name="'. $element['name'] .'" id="'. $element['name'] .'" value="'. $element['value'] .'" '. $element['size'] .' '. $element['maxlength'] .' class="input_text" />';
+			$element['html'] = '<input type="'. $element['type'] .'" name="default_options['. $element['name'] .']" id="'. $element['name'] .'" value="'. $element['value'] .'" '. $element['size'] .' '. $element['maxlength'] .' class="input_text" />';
 
 			return $this->addElement($element);
 		}
 
-		function addTextArea($name,$value, $text)
+		function addTextArea($name, $text, $value)
 		{
 			$element['type'] = 'textarea';
 			$element['name'] = $name;
 			$element['value'] = empty($value) ? '' : $value;
 			$element['text'] = $text;
-			$element['html'] = '<'. $element['type'] .' name="'. $element['name'] .'" id="'. $element['name'] .'">'. $element['value'] .'</'. $element['type'] .'>';
+			$element['html'] = '<'. $element['type'] .' name="default_options['. $element['name'] .']" id="'. $element['name'] .'">'. $element['value'] .'</'. $element['type'] .'>';
 
 			return $this->addElement($element);
 		}
 
-		function addHiddenField($name,$value)
+		function addHiddenField($name, $value)
 		{
 			$element['type'] = 'hidden';
 			$element['name'] = $name;
 			$element['value'] = $value;
-			$element['html'] = '<input type="'. $element['type'] .'" name="'. $element['name'] .'" id="'. $element['name'] .'" value="'. $element['value'] .'" />';
-
-			return $this->addElement($element);
-		}
-
-		function addSubmitButton($value)
-		{
-			$element['type'] = 'submit';
-			$element['value']= $this->text[$value];
-			$element['html'] = '<input class="button_submit" type="'. $element['type'] .'"  value="'. $element['value'] .'" />';
+			$element['html'] = '<input type="'. $element['type'] .'" name="default_options['. $element['name'] .']" id="'. $element['name'] .'" value="'. $element['value'] .'" />';
 
 			return $this->addElement($element);
 		}
@@ -182,9 +155,8 @@ if (!defined('SMF'))
 
 		function display()
 		{
-			$this->buffer = '<form action="'. $this->action .'" method="'. $this->method .'" id="'. $this->id_css .'" class="'. $this->class_css .'"  '. $this->onsubmit .' >';
 			$this->buffer .= '<dl class="settings">';
-			$element = $this->GetNextElement();
+			$element = $this->getNextElement();
 
 			foreach($this->elements as $el)
 			{
@@ -194,20 +166,20 @@ if (!defined('SMF'))
 					case 'checkbox':
 					case 'text':
 						$this->buffer .= '<dt>
-							<span style="font-weight:bold;">'. $this->text[ModSite::$name.'form_'. $el['text'][0]] .'</span>
-							<br /><span class="smalltext">'. $this->text[ModSite::$name.'form_'.$el['text'][1]] .'</span>
+							<span style="font-weight:bold;">'. $this->text->getText('user_settings_'. $el['text']) .'</span>
+							<br /><span class="smalltext">'. $this->text->getText('user_settings_'. $el['text'] .'_sub') .'</span>
 						</dt>
 						<dd>
-							'. $el['html'] .'
+							<input type="hidden" name="default_options['. $el['name'] .']" value="0" />'. $el['html'] .'
 						</dd>';
 						break;
 					case 'select':
 						$this->buffer .= '<dt>
-							<span style="font-weight:bold;">'. $this->text[ModSite::$name.'form_'.$el['text'][0]] .'</span>
-							<br /><span class="smalltext">'. $this->text[ModSite::$name.'form_'.$el['text'][1]] .'</span>
+							<span style="font-weight:bold;">'. $this->text->getText('user_settings_'. $el['text']) .'</span>
+							<br /><span class="smalltext">'. $this->text->getText('user_settings_'.$el['text'] .'_sub') .'</span>
 						</dt>
 						<dd>
-							'. $el['html_start'] .'';
+							<input type="hidden" name="default_options['. $el['name'] .']" value="0" />'. $el['html_start'] .'';
 
 						foreach($el['values'] as $k => $v)
 							$this->buffer .= $v .'';
@@ -230,7 +202,7 @@ if (!defined('SMF'))
 				}
 			}
 
-			$this->buffer .= '</dl></form>';
+			$this->buffer .= '</dl>';
 
 			return $this->buffer;
 		}

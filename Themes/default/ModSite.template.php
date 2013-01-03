@@ -25,7 +25,7 @@
  *
  */
 
-function template_main()
+function template_ModSite_main()
 {
 	echo '
 <span class="clear upperframe">
@@ -42,4 +42,38 @@ function template_main()
 	<span></span>
 </span>
 <br />';
+}
+
+function template_ModSite_post()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	// The main containing header.
+	echo '
+		<form action="', $scripturl, '?action=profile;area=breezesettings;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
+			<h3 class="catbg">
+				<span class="left"></span>
+				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
+				', $context['page_desc'] , '
+			</h3>
+			<p class="windowbg description">
+				', $context['page_desc'] , '
+			</p>
+			<div class="windowbg2">
+				<span class="topslice"><span></span></span>
+					<div class="content">';
+
+		/* Print the form */
+		echo $context['Breeze']['UserSettings']['Form'];
+
+
+	// Show the standard "Save Settings" profile button.
+	template_profile_save();
+
+	echo '
+					</div>
+				<span class="botslice"><span></span></span>
+			</div>
+			<br />
+		</form>';
 }
