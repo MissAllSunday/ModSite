@@ -33,6 +33,8 @@ class ModSiteQuery
 
 	public function __construct()
 	{
+		global $smcFunc;
+
 		$this->_rows = array(
 			'id' => 'id',
 			'cat' => 'id_category',
@@ -50,10 +52,34 @@ class ModSiteQuery
 			'info' => 'info',
 			'time' => 'time',
 		);
+
+		$this->smcFunc = $smcFunc;
 	}
 
 	public function killCache($type)
 	{
 		cache_put_data(Modsite::$name . $type, null);
+	}
+
+	public function getAllCategories()
+	{
+		if (($return = cache_get_data(ModSite::$name .'-cats', 120)) == null)
+		{
+			$query = $smcFunc['db_query']('', '
+				SELECT id, name
+				FROM {db_prefix}mod_categories',
+				array(
+				)
+			);
+
+			while($row = $smcFunc['db_fetch_assoc']($query))
+				$return[$row['id']] = $row['name'];
+
+			$this->smcFunc['db_free_result']($query);
+
+			cache_put_data(ModSite::$name .'-cats', $return, 120);
+		}
+
+		return $return;
 	}
 }
