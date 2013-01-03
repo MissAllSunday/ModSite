@@ -105,12 +105,16 @@ class ModSitePage
 		/* Build the form */
 		$form = new ModSiteForm($this->text);
 
-		$form->addText(
-			'name',
-			'mod_title',
-			'',
-			55,55
-		);
+		/* Common text entries */
+		$commonText = array('title', 'file', 'demo', 'version', 'topic',);
+
+		foreach ($commonText as $c)
+			$form->addText(
+				$c,
+				'mod_'. $c,
+				'',
+				55,55
+			);
 
 		if (!empty($categories) && is_array($categories))
 			$form->addSelect(
