@@ -35,17 +35,21 @@ class ModSiteQuery
 	{
 		$this->_rows = array(
 			'id' => 'id',
-			'name' => 'name',
-			'github' => 'github',
+			'cat' => 'id_category',
 			'user' => 'id_user',
-			'topic' => 'id_topic',
 			'down' => 'downloads',
-			'info' => 'info',
+			'name' => 'name',
+			'file' => 'file',
+			'demo' => 'demo',
+			'version' => 'version',
+			'topic' => 'id_topic',
+			'smf' => 'smf_version'
+			'smfd' => 'smf_download'
 			'desc' => 'description',
+			'github' => 'github',
+			'info' => 'info',
+			'time' => 'time',
 		);
-
-		foreach ($this->_rows as $k => $v)
-			$this->_values[$k] = '';
 	}
 
 	public function killCache($type)
