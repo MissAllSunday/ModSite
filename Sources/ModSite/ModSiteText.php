@@ -35,7 +35,7 @@ class ModSiteText
 
 	public function __construct()
 	{
-		$this->_pattern = '/'. ModSite::$name .'_/';
+		$this->_pattern = ModSite::$name .'_';
 		$this->doExtract();
 	}
 
@@ -45,7 +45,9 @@ class ModSiteText
 
 		loadLanguage(ModSite::$name);
 
-		$this->_text = $txt;
+		foreach ($txt as $key => $value)
+			if (strstr($key, $this->_pattern) != false)
+				$this->_text[$key] = $txt[$key];
 	}
 
 	/**
@@ -61,7 +63,7 @@ class ModSiteText
 			return false;
 
 		if (empty($this->_text))
-			$this->extract();
+			$this->doExtract();
 
 		if (!empty($this->_text[$this->_pattern . $var]))
 			return $this->_text[$this->_pattern . $var];

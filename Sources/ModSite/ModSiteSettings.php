@@ -35,7 +35,7 @@ class ModSiteSettings
 
 	public function __construct()
 	{
-		$this->_pattern = '/'. ModSite::$name .'_/';
+		$this->_pattern = ModSite::$name .'_';
 		$this->doExtract();
 	}
 
@@ -43,7 +43,9 @@ class ModSiteSettings
 	{
 		global $modSettings;
 
-		$this->_settings = $modSettings;
+		foreach ($modSettings as $key => $value)
+			if (strstr($key, $this->_pattern) != false)
+				$this->_settings[$key] = $modSettings[$key];
 	}
 
 	/* Return true if the value do exist, false otherwise, O RLY? */

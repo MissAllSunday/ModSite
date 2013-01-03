@@ -154,7 +154,7 @@ if (!defined('SMF'))
 		}
 
 		function display()
-		{print_r($this->text);die;
+		{
 			$this->buffer .= '<dl class="settings">';
 			$element = $this->getNextElement();
 
