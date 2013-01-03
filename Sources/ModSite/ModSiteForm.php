@@ -106,7 +106,7 @@ if (!defined('SMF'))
 			$element['value'] = 1;
 			$element['checked'] = empty($checked) ? '' : 'checked="checked"';
 			$element['text'] = $text;
-			$element['html'] = '<input type="'. $element['type'] .'" name="default_options['. $element['name'] .']" id="default_options['. $element['name'] .']" value="'. (int)$element['value'] .'" '. $element['checked'] .' class="input_check" />';
+			$element['html'] = '<input type="'. $element['type'] .'" name="'. $element['name'] .'" id="default_options['. $element['name'] .']" value="'. (int)$element['value'] .'" '. $element['checked'] .' class="input_check" />';
 
 			return $this->addElement($element);
 		}
@@ -119,7 +119,7 @@ if (!defined('SMF'))
 			$element['text'] = $text;
 			$element['size'] = empty($size) ? 'size="20"' : 'size="' .$size. '"';
 			$element['maxlength'] = empty($maxlength) ? 'maxlength="20"' : 'maxlength="' .$maxlength. '"';
-			$element['html'] = '<input type="'. $element['type'] .'" name="default_options['. $element['name'] .']" id="'. $element['name'] .'" value="'. $element['value'] .'" '. $element['size'] .' '. $element['maxlength'] .' class="input_text" />';
+			$element['html'] = '<input type="'. $element['type'] .'" name="'. $element['name'] .'" id="'. $element['name'] .'" value="'. $element['value'] .'" '. $element['size'] .' '. $element['maxlength'] .' class="input_text" />';
 
 			return $this->addElement($element);
 		}
@@ -130,7 +130,7 @@ if (!defined('SMF'))
 			$element['name'] = $name;
 			$element['value'] = empty($value) ? '' : $value;
 			$element['text'] = $text;
-			$element['html'] = '<'. $element['type'] .' name="default_options['. $element['name'] .']" id="'. $element['name'] .'">'. $element['value'] .'</'. $element['type'] .'>';
+			$element['html'] = '<'. $element['type'] .' name="'. $element['name'] .'" id="'. $element['name'] .'" cols="60" rows="10">'. $element['value'] .'</'. $element['type'] .'>';
 
 			return $this->addElement($element);
 		}
@@ -140,7 +140,7 @@ if (!defined('SMF'))
 			$element['type'] = 'hidden';
 			$element['name'] = $name;
 			$element['value'] = $value;
-			$element['html'] = '<input type="'. $element['type'] .'" name="default_options['. $element['name'] .']" id="'. $element['name'] .'" value="'. $element['value'] .'" />';
+			$element['html'] = '<input type="'. $element['type'] .'" name="'. $element['name'] .'" id="'. $element['name'] .'" value="'. $element['value'] .'" />';
 
 			return $this->addElement($element);
 		}

@@ -106,12 +106,15 @@ class ModSitePage
 		$form = new ModSiteForm($this->text);
 
 		/* Common text entries */
-		$commonText = array('title', 'file', 'demo', 'version', 'topic',);
+		$commonText = array('title', 'file', 'demo', 'version', 'topic', 'github', 'smf', 'smfd');
+
+		/* CommonTextArea */
+		$commonTextArea = array('desc', 'info',);
 
 		foreach ($commonText as $c)
 			$form->addText(
 				$c,
-				'mod_'. $c,
+				$c,
 				'',
 				55,55
 			);
@@ -121,6 +124,13 @@ class ModSitePage
 				'category',
 				'mod_category',
 				$categories
+			);
+
+		foreach ($commonTextArea  as $c)
+			$form->addTextArea(
+				$c,
+				$c,
+				'LOL'
 			);
 
 		/* Pass it to the template */
