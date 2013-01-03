@@ -14,7 +14,7 @@
 		$query = $smcFunc['db_query']('', '
 			SELECT m.id, m.description, m.category_id, m.approved, m.user, m.descargas, m.name, m.file_name, m.file_url, m.file_path, m.file_type, m.file_size, m.demo, m.version, m.id_topic, m.smf_version, m.smf_download, m.id_project, m.timestamp, cat.category_id, cat.category_name, mem.id_member, mem.real_name
 			FROM {db_prefix}mod AS m
-			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.user)			
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.user)
 			LEFT JOIN {db_prefix}mod_categories AS cat ON (cat.category_id = m.category_id)
 			ORDER BY {raw:sort}
 			LIMIT {int:start}, {int:maxindex}',
@@ -36,28 +36,28 @@
 				'id' => $row['id'],
 				'name' => $row['name'],
 				'description' => ModGetClean($row['description']),
-				'approved' => $row['approved'],				
+				'approved' => $row['approved'],
 				'category' => array(
 					'name' => $row['category_name'],
 					'href' => $scripturl.'?action=mods;sa=category;catid='.$row['category_id'].'',
 					'link' => '<a href="'.$scripturl.'?action=mods;sa=category;catid='.$row['category_id'].'">'.$row['category_name'].'</a>',
-					'smf_download' => !empty($row['smf_download']) ? '<a href="'.$row['smf_download'].'">'.$txt['mod_download_at_smf'].'</a>' : $txt['mod_download_at_smf'],	
+					'smf_download' => !empty($row['smf_download']) ? '<a href="'.$row['smf_download'].'">'.$txt['mod_download_at_smf'].'</a>' : $txt['mod_download_at_smf'],
 				),
 				'mod' => array (
 					'demo_link' => !empty($row['demo']) ? '<a href="'.$row['demo'].'">'.$row['name'].'</a>' : $row['name'],
 					'version' => $row['version'],
 					'smf_version' => $row['smf_version'],
 					'href' => $scripturl.'?topic='.$row['id_topic'],
-					'topic_url' => empty($row['id_topic']) ? $row['name'] : '<a href="'.$scripturl.'?topic='.$row['id_topic'].'">'.$row['name'].'</a>',	
+					'topic_url' => empty($row['id_topic']) ? $row['name'] : '<a href="'.$scripturl.'?topic='.$row['id_topic'].'">'.$row['name'].'</a>',
 				),
 				'file' => array (
 					'descargas' => $row['descargas'],
 					'name' => $row['file_name'],
 					'size' => $row['file_size'],
 					'type' => $row['file_type'],
-					'path' => $row['file_path'],					
+					'path' => $row['file_path'],
 					'url' => $row['file_url'],
-					'link' => '<a href="'.$row['file_url'].'">'.$row['file_name'].'</a>',	
+					'link' => '<a href="'.$row['file_url'].'">'.$row['file_name'].'</a>',
 				),
 				'user' => array (
 					'id' => $row['id_member'],
@@ -66,7 +66,7 @@
 				),
 				'tracker' => GetIssues($row['id_project']),
 
-			);			
+			);
 		}
 
 		$smcFunc['db_free_result']($query);
@@ -101,7 +101,7 @@
 			$query = $smcFunc['db_query']('', '
 				SELECT m.id, m.description, m.category_id, m.approved, m.user, m.descargas, m.name, m.file_name, m.file_url, m.file_path, m.file_type, m.file_size, m.demo, m.version, m.id_topic, m.smf_version, m.smf_download, m.id_project, m.timestamp, cat.category_id, cat.category_name, mem.id_member, mem.real_name
 				FROM {db_prefix}mod AS m
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.user)			
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.user)
 				LEFT JOIN {db_prefix}mod_categories AS cat ON (cat.category_id = m.category_id)
 				'.(!empty($where) ? 'WHERE m.id ={int:id} LIMIT {int:limit}' : '').'
 				',
@@ -117,17 +117,17 @@
 			while($row = $smcFunc['db_fetch_assoc']($query)){
 
 				$GetModsEdit[$row['id']] = $row;
-				$GetModsEdit[$row['id']]['description'] = ModGetClean($GetModsEdit[$row['id']]['description']);	
+				$GetModsEdit[$row['id']]['description'] = ModGetClean($GetModsEdit[$row['id']]['description']);
 				$return[] = array(
 					'id' => $row['id'],
 					'name' => $row['name'],
 					'description' => ModGetClean($row['description']),
-					'approved' => $row['approved'],				
+					'approved' => $row['approved'],
 					'category' => array(
 						'name' => $row['category_name'],
 						'href' => $scripturl.'?action=mods;sa=category;catid='.$row['category_id'].'',
 						'link' => '<a href="'.$scripturl.'?action=mods;sa=category;catid='.$row['category_id'].'">'.$row['category_name'].'</a>',
-						'smf_download' => !empty($row['smf_download']) ? '<a href="'.$row['smf_download'].'">'.$txt['mod_download_at_smf'].'</a>' : $txt['mod_download_at_smf'],	
+						'smf_download' => !empty($row['smf_download']) ? '<a href="'.$row['smf_download'].'">'.$txt['mod_download_at_smf'].'</a>' : $txt['mod_download_at_smf'],
 					),
 					'mod' => array (
 						'demo_link' => !empty($row['demo']) ? '<a href="'.$row['demo'].'">'.$row['name'].'</a>' : $row['name'],
@@ -141,9 +141,9 @@
 						'name' => $row['file_name'],
 						'size' => $row['file_size'],
 						'type' => $row['file_type'],
-						'path' => $row['file_path'],					
+						'path' => $row['file_path'],
 						'url' => $row['file_url'],
-						'link' => '<a href="'.$row['file_url'].'">'.$row['file_name'].'</a>',	
+						'link' => '<a href="'.$row['file_url'].'">'.$row['file_name'].'</a>',
 					),
 					'user' => array (
 						'id' => $row['id_member'],
@@ -156,26 +156,26 @@
 			}
 
 		$smcFunc['db_free_result']($query);
-		
+
 		return $return;
-	
+
 	}
-	
-	// Get the FAQs by category,  
+
+	// Get the FAQs by category,
 	function GetModsbyCat($CatID = ''){
 
 		global $smcFunc, $context, $modsettings, $GetModsbyCat, $scripturl, $txt;
-		
-		$num_mods = empty($modSettings['num_mods']) ? 100 : (int) $modSettings['num_mods'];		
+
+		$num_mods = empty($modSettings['num_mods']) ? 100 : (int) $modSettings['num_mods'];
 
 			$query = $smcFunc['db_query']('', '
 				SELECT m.id, m.description, m.category_id, m.approved, m.user, m.descargas, m.name, m.file_name, m.file_url, m.file_path, m.file_type, m.file_size, m.demo, m.version, m.id_topic, m.smf_version, m.smf_download, m.id_project, m.timestamp, cat.category_id, cat.category_name, mem.id_member, mem.real_name
 				FROM {db_prefix}mod AS m
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.user)			
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.user)
 				LEFT JOIN {db_prefix}mod_categories AS cat ON (cat.category_id = m.category_id)
 				WHERE cat.category_id={int:category_id}',
 				array(
-				'category_id' => $CatID,				
+				'category_id' => $CatID,
 				)
 			);
 
@@ -186,17 +186,17 @@
 
 				$GetModsbyCat[$row['id']] = $row;
 				$GetModsbyCat[$row['id']]['description'] = ModGetClean($GetModsbyCat[$row['id']]['description']);
-				$GetModsbyCat[$row['id']]['description'] = parse_bbc($GetModsbyCat[$row['id']]['description']);				
+				$GetModsbyCat[$row['id']]['description'] = parse_bbc($GetModsbyCat[$row['id']]['description']);
 				$return[] = array(
 					'id' => $row['id'],
 					'name' => $row['name'],
 					'description' => ModGetClean($row['description']),
-					'approved' => $row['approved'],				
+					'approved' => $row['approved'],
 					'category' => array(
 						'name' => $row['category_name'],
 						'href' => $scripturl.'?action=mods;sa=category;catid='.$row['category_id'].'',
 						'link' => '<a href="'.$scripturl.'?action=mods;sa=category;catid='.$row['category_id'].'">'.$row['category_name'].'</a>',
-						'smf_download' => !empty($row['smf_download']) ? '<a href="'.$row['smf_download'].'">'.$txt['mod_download_at_smf'].'</a>' : $txt['mod_download_at_smf'],	
+						'smf_download' => !empty($row['smf_download']) ? '<a href="'.$row['smf_download'].'">'.$txt['mod_download_at_smf'].'</a>' : $txt['mod_download_at_smf'],
 					),
 					'mod' => array (
 						'demo_link' => !empty($row['demo']) ? '<a href="'.$row['demo'].'">'.$row['name'].'</a>' : $row['name'],
@@ -204,15 +204,15 @@
 						'smf_version' => $row['smf_version'],
 						'href' => $scripturl.'?topic='.$row['id_topic'],
 						'topic_url' => empty($row['id_topic']) ? $row['name'] : '<a href="'.$scripturl.'?topic='.$row['id_topic'].'">'.$row['name'].'</a>',
-					),	
+					),
 					'file' => array (
 						'descargas' => $row['descargas'],
 						'name' => $row['file_name'],
 						'size' => $row['file_size'],
 						'type' => $row['file_type'],
-						'path' => $row['file_path'],					
+						'path' => $row['file_path'],
 						'url' => $row['file_url'],
-						'link' => '<a href="'.$row['file_url'].'">'.$row['file_name'].'</a>',	
+						'link' => '<a href="'.$row['file_url'].'">'.$row['file_name'].'</a>',
 					),
 					'user' => array (
 						'id' => $row['id_member'],
@@ -224,11 +224,11 @@
 				);
 			}
 
-		$smcFunc['db_free_result']($query);		
-		
+		$smcFunc['db_free_result']($query);
+
 		return $return;
-	
-	}	
+
+	}
 
 	// Editing.
 	function editMod2($ModID = ''){
@@ -238,7 +238,7 @@
 		// No name/description/no category no cookie...
 		if (empty($_POST['name']))
 			fatal_lang_error('Mod_no_name', false);
-			
+
 		if (empty($_POST['description1']))
 			fatal_lang_error('Mod_no_description', false);
 
@@ -247,7 +247,7 @@
 
 		if (empty($_POST['demo']))
 			$demo = $txt['no_demo_url'];
-			
+
 		if (empty($_POST['version']))
 			$version = '1.0';
 
@@ -269,11 +269,11 @@
 		$file_path = $boarddir.'/'.$modSettings['mod_folder'].'/'.$_FILES['myfile']['name'];
 		}
 
-		//Cleaning up the mess	
+		//Cleaning up the mess
 		$mod_description = ModClean($_POST['description1'], true);
 		$mod_name = ModClean($_POST['name'], false);
 		$mod_category = (int) $_POST['category_id'];
-		$user = $user_info['id'];		
+		$user = $user_info['id'];
 		$demo = ModClean($_POST['demo'], false);
 		$version = ModClean($_POST['version'], false);
 		$smf_version =ModClean( $_POST['smf_version'], false);
@@ -322,13 +322,13 @@
 	}
 
 	function add2(){
-	
+
 		global $context, $smcFunc, $user_info, $boarddir, $modSettings, $scripturl, $boardurl, $txt;
 
 		// No name/description/no category no cookie...
 		if (empty($_POST['name']))
 			fatal_lang_error('Mod_no_name', false);
-			
+
 		if (empty($_POST['description1']))
 			fatal_lang_error('Mod_no_description', false);
 
@@ -337,7 +337,7 @@
 
 		if (empty($_POST['demo']))
 			$demo = $txt['no_demo_url'];
-			
+
 		if (empty($_POST['version']))
 			$version = '1.0';
 
@@ -351,7 +351,7 @@
 			$id_project = 0;
 
 		else if(!isset($_FILES['myfile']))
-			fatal_lang_error('need_file', false);			
+			fatal_lang_error('need_file', false);
 
 
 		// Get the file info
@@ -361,11 +361,11 @@
 		$file_url =  $boardurl.'/'.$modSettings['mod_folder'].'/'.$_FILES['myfile']['name'];
 		$file_path = $boarddir.'/'.$modSettings['mod_folder'].'/'.$_FILES['myfile']['name'];
 
-		//Cleaning up the mess	
+		//Cleaning up the mess
 		$mod_description = ModClean($_POST['description1'], true);
 		$mod_name = ModClean($_POST['name'], false);
 		$mod_category = (int) $_POST['category_id'];
-		$user = $user_info['id'];		
+		$user = $user_info['id'];
 		$demo = ModClean($_POST['demo'], false);
 		$version = ModClean($_POST['version'], false);
 		$smf_version =ModClean( $_POST['smf_version'], false);
@@ -374,7 +374,7 @@
 		$id_topic = 0;
 		$approved = 0;
 
-		if(move_uploaded_file($_FILES['myfile']['tmp_name'], $file_path)){	
+		if(move_uploaded_file($_FILES['myfile']['tmp_name'], $file_path)){
 
 			$smcFunc['db_insert']('replace',
 				'{db_prefix}mod',
@@ -387,18 +387,18 @@
 				array('id')
 			);
 		}
-		
+
 	}
 
 	// It's categories time!
-	
+
 	// Get all the Cats! just don't hurt them please :P
 	function GetCats(){
 
 		global $smcFunc, $context, $GetCats;
 
 			$query = $smcFunc['db_query']('', '
-				SELECT category_id, category_name 
+				SELECT category_id, category_name
 				FROM {db_prefix}mod_categories',
 				array(
 				)
@@ -409,16 +409,16 @@
 
 			while($row = $smcFunc['db_fetch_assoc']($query)){
 
-				$GetCats[$row['category_id']] = $row;				
+				$GetCats[$row['category_id']] = $row;
 				$return[] = $GetCats[$row['category_id']];
 			}
 
 		$smcFunc['db_free_result']($query);
-		
+
 		return $return;
-	
-	}	
-	
+
+	}
+
 	// Edit a cat!
 	function editCat2($CatID = ''){
 
@@ -428,8 +428,8 @@
 		if (empty($_POST['category_name']))
 			fatal_lang_error('Mod_no_category_name', false);
 
-		// Cleaning up the mess	
-		$cat_name = ModClean($_POST['category_name'],false);		
+		// Cleaning up the mess
+		$cat_name = ModClean($_POST['category_name'],false);
 
 		// Time to update the Cat...maybe into a Lion... wait, that's an upgrade!
 		$smcFunc['db_query']('', '
@@ -445,7 +445,7 @@
 
 	// We never get enough cats...
 	function addCat2(){
-	
+
 		global $context, $smcFunc, $user_info;
 
 		// No name no cookie...
@@ -464,7 +464,7 @@
             ),
             array('category_id')
         );
-	}	
+	}
 
 	// No comments... you murderer...
 	function deleteCat2($CatID = ''){
@@ -482,11 +482,11 @@
 
 	// Get the last 5 issues for this mod
 	function GetIssues($id_project){
-		
+
 	global $smcFunc, $scripturl, $settings, $context;
-	
+
 	$limit = 5;
-	
+
 		// Status
 	$context['issue_status'] = array(
 		1 => array(
@@ -530,8 +530,8 @@
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = i.id_assigned)
 			LEFT JOIN {db_prefix}project_trackers AS p ON (p.id_tracker = i.id_tracker)
 			LEFT JOIN {db_prefix}issue_category AS cat ON (cat.id_category = i.id_category)
-		WHERE i.id_project={int:id_project}	
-		ORDER BY i.id_issue DESC		
+		WHERE i.id_project={int:id_project}
+		ORDER BY i.id_issue DESC
 		LIMIT {int:limit}',
 			array(
 				'limit' => (int) $limit,
@@ -543,7 +543,7 @@
 	$return = array();
 
 	while($row = $smcFunc['db_fetch_assoc']($request)){
-	
+
 		// Prepare issue array
 		$return[] = array(
 			'id' => $row['id_issue'],
@@ -570,22 +570,22 @@
 			),
 		);
 	}
-	
+
 	$smcFunc['db_free_result']($request);
-	
+
 	return $return;
 
 	}
-	
+
 	// We must approve this awesome mod...
 	function ApproveMod($ModID = ''){
-	
+
 		global $smcFunc;
-	
+
 		$approved = 1;
 		$last_topic = CountTopics();
 		$id_topic = $last_topic + 1;
-	
+
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}mod
 			SET approved={string:approved}, id_topic={int:id_topic}
@@ -595,14 +595,14 @@
 				'id_topic' => $id_topic,
 				'id' => $ModID
 			)
-		);	
+		);
 	}
-	
+
 	// Someone downloaded this mod?  MADNESSSSS!
 	function DownMod($ModID = ''){
-	
+
 		global $smcFunc;
-	
+
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}mod
 			SET descargas = descargas + 1
@@ -610,60 +610,60 @@
 			array(
 				'id' => $ModID
 			)
-		);	
-	}	
-	
+		);
+	}
+
 	// Lets count all the topics and get the very last one...
 	function CountTopics(){
 
 		global $smcFunc;
 
 		$request = $smcFunc['db_query']('', '
-			SELECT id_topic 
-			FROM {db_prefix}topics ORDER BY id_topic DESC 
+			SELECT id_topic
+			FROM {db_prefix}topics ORDER BY id_topic DESC
 			LIMIT 1',
 			array(
 			)
 		);
 
 		while($row = $smcFunc['db_fetch_assoc']($request)){
-		
+
 			$last_topic = $row['id_topic'];
-		
+
 		}
 		$smcFunc['db_free_result']($request);
 
 		return $last_topic;
 
-	}	
+	}
 
 	// Cleaning
 	function ModClean($toclean, $description = false){
- 
+
 		global $smcFunc, $sourcedir;
- 
+
 		$toclean = $smcFunc['htmlspecialchars']($toclean, ENT_QUOTES);
 		$toclean = $smcFunc['htmltrim']($toclean, ENT_QUOTES);
-	
+
 		if ($description){
-		
+
 			require_once($sourcedir . '/Subs-Post.php');
-			preparsecode($toclean);	
+			preparsecode($toclean);
 		}
-	
+
 		return $toclean;
 	}
-	
+
 	function ModGetClean($togetclean){
-	
+
 		global $sourcedir;
-	
+
 		require_once($sourcedir . '/Subs-Post.php');
-	
+
 		$togetclean = un_preparsecode($togetclean);
-		
+
 		return $togetclean;
-	
+
 	}
 
 	// Show me that you care
@@ -675,6 +675,6 @@
 
 		echo $mod_care;
 
-	}	
-	
+	}
+
 	// Believe in you.
