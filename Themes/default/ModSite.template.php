@@ -50,7 +50,7 @@ function template_ModSite_post()
 
 	// The main containing header.
 	echo '
-		<form action="', $scripturl, '?action=profile;area=breezesettings;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
+		<form action="', $scripturl, '?action=mods;sa=post2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
 			<h3 class="catbg">
 				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
@@ -64,13 +64,10 @@ function template_ModSite_post()
 					<div class="content">';
 
 		/* Print the form */
-		echo $context['Breeze']['UserSettings']['Form'];
+		echo $context['ModSite']['Form'];
 
-
-	// Show the standard "Save Settings" profile button.
-	template_profile_save();
-
-	echo '
+	echo '<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+						<input type="submit" name="send" class="sbtn" value="Create" />
 					</div>
 				<span class="botslice"><span></span></span>
 			</div>

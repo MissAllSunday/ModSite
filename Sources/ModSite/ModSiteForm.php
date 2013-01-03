@@ -154,7 +154,7 @@ if (!defined('SMF'))
 		}
 
 		function display()
-		{
+		{print_r($this->text);die;
 			$this->buffer .= '<dl class="settings">';
 			$element = $this->getNextElement();
 
@@ -166,8 +166,8 @@ if (!defined('SMF'))
 					case 'checkbox':
 					case 'text':
 						$this->buffer .= '<dt>
-							<span style="font-weight:bold;">'. $this->text->getText('user_settings_'. $el['text']) .'</span>
-							<br /><span class="smalltext">'. $this->text->getText('user_settings_'. $el['text'] .'_sub') .'</span>
+							<span style="font-weight:bold;">'. $this->text->getText($el['text']) .'</span>
+							<br /><span class="smalltext">'. $this->text->getText($el['text'] .'_sub') .'</span>
 						</dt>
 						<dd>
 							<input type="hidden" name="default_options['. $el['name'] .']" value="0" />'. $el['html'] .'
@@ -175,7 +175,7 @@ if (!defined('SMF'))
 						break;
 					case 'select':
 						$this->buffer .= '<dt>
-							<span style="font-weight:bold;">'. $this->text->getText('user_settings_'. $el['text']) .'</span>
+							<span style="font-weight:bold;">'. $this->text->getText($el['text']) .'</span>
 							<br /><span class="smalltext">'. $this->text->getText('user_settings_'.$el['text'] .'_sub') .'</span>
 						</dt>
 						<dd>

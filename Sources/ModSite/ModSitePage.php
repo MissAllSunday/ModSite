@@ -37,7 +37,7 @@ class ModSitePage
 		/* Load stuff */
 		loadtemplate(ModSite::$name);
 
-		$this->text  = $text;
+		$this->text = $text;
 		$this->settings = $settings;
 		$this->query = $query;
 		$this->scripturl = $scripturl;
@@ -86,7 +86,7 @@ class ModSitePage
 
 	}
 
-	public static function doPost()
+	public function doPost()
 	{
 		global $context;
 
@@ -100,12 +100,18 @@ class ModSitePage
 		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=post';
 
 		/* Build the form */
-		$form = new ModSiteForm();
+		$form = new ModSiteForm($this->text);
+
+		$form->addText(
+			'ModSite_title',
+			'mod_title',
+			'',
+			20,45
+		);
 
 		/* Pass it to the template */
-		$context['something'] = 'Some text to test things out...';
-
-
+		$context['ModSite']['Form'] = $form->display();
+		$context['page_desc'] = 'Some description here...';
 	}
 
 	public function doDownload()
