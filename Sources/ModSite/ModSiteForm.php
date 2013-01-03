@@ -90,11 +90,11 @@ if (!defined('SMF'))
 			$element['name'] = $name;
 			$element['values'] = $values;
 			$element['text']  = $text;
-			$element['html_start'] = '<'. $element['type'] .' name="default_options['. $element['name'] .']">';
+			$element['html_start'] = '<'. $element['type'] .' name="'. $element['name'] .'">';
 			$element['html_end'] = '</'. $element['type'] .'>';
 
 			foreach($values as $k => $v)
-				$element['values'][$k] = '<option value="' .$k. '" '. (isset($v[1]) && $v[1] == 'selected' ? 'selected="selected"' : '') .'>'. $this->text->getText('user_settings_'. $v[0]) .'</option>';
+				$element['values'][$k] = '<option value="'. $k .'">'. $v .'</option>';
 
 			return $this->addElement($element);
 		}
@@ -159,7 +159,7 @@ if (!defined('SMF'))
 			$element = $this->getNextElement();
 
 			foreach($this->elements as $el)
-			{
+			{print_r($this->text->getText('_title'));
 				switch($el['type'])
 				{
 					case 'textarea':
@@ -170,7 +170,7 @@ if (!defined('SMF'))
 							<br /><span class="smalltext">'. $this->text->getText($el['text'] .'_sub') .'</span>
 						</dt>
 						<dd>
-							<input type="hidden" name="default_options['. $el['name'] .']" value="0" />'. $el['html'] .'
+							<input type="hidden" name="'. $el['name'] .'" value="0" />'. $el['html'] .'
 						</dd>';
 						break;
 					case 'select':
@@ -179,7 +179,7 @@ if (!defined('SMF'))
 							<br /><span class="smalltext">'. $this->text->getText('user_settings_'.$el['text'] .'_sub') .'</span>
 						</dt>
 						<dd>
-							<input type="hidden" name="default_options['. $el['name'] .']" value="0" />'. $el['html_start'] .'';
+							<input type="hidden" name="'. $el['name'] .'" value="0" />'. $el['html_start'] .'';
 
 						foreach($el['values'] as $k => $v)
 							$this->buffer .= $v .'';

@@ -94,6 +94,9 @@ class ModSitePage
 		if (!$context['user']['is_admin'])
 			redirectexit();
 
+		/* Get all categories */
+		$categories = $this->query->getAllCategories();
+
 		/* Set all the page stuff */
 		$context['sub_template'] = ModSite::$name.'_post';
 		$context['page_title'] = $this->text->getText('title_post');
@@ -103,11 +106,18 @@ class ModSitePage
 		$form = new ModSiteForm($this->text);
 
 		$form->addText(
-			'ModSite_title',
+			'name',
 			'mod_title',
 			'',
-			20,45
+			55,55
 		);
+
+		if (!empty($categories) && is_array($categories))
+			$form->addSelect(
+				'Breeze_visits_timeframe',
+				'visits_module_timeframe',
+				$categories,
+			);
 
 		/* Pass it to the template */
 		$context['ModSite']['Form'] = $form->display();
