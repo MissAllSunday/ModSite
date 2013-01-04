@@ -94,7 +94,7 @@ if (!defined('SMF'))
 			$element['html_end'] = '</'. $element['type'] .'>';
 
 			foreach($values as $k => $v)
-				$element['values'][$k] = '<option value="'. $k .'" '. (isset($v[1]) && $v[1] == true ? 'selected="selected"' : '') .'>'. $v .'</option>';
+				$element['values'][$k] = '<option value="'. $k .'" '. (isset($v[1]) && $v[1] == true ? 'selected="selected"' : '') .'>'. $v[0] .'</option>';
 
 			return $this->addElement($element);
 		}

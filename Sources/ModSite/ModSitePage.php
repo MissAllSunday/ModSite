@@ -107,6 +107,46 @@ class ModSitePage
 		$context['page_desc'] = 'Some description here...';
 	}
 
+	public function doPost2()
+	{
+		global $context, $boarddir;
+
+		/* Safety first! */
+		checkSession('post', '', false);
+
+		/* Set what we need */
+		$file = array();
+
+		/* We need a new instance for globals... */
+		$globals = new ModSiteGlobals('post');
+
+		/* meh... I haz all tha powerz */
+		if (!$context['user']['is_admin'])
+			redirectexit();
+
+		$file['name'] = $globals->getValue('file') . '.zip';
+
+		/* first,lets handle the file... */
+		if (!empty($file['name']))
+		{
+			$file['path'] = $boarddir . Modsite::$downloads_folder . $file['name'];
+
+			/* Get info about it */
+			$fileStats = stat($file['path']);
+			$file['sha1'] = sha1_file($file['path']);
+
+			if (!empty($fileStats))
+			{
+				$file['size'] = $this->formatBytes($fileStats['size']);
+				$file['changed'] = $this->timeElapsed($fileStats['atime']);
+				$file['accessed'] = $this->timeElapsed($fileStats['mtime']);
+			}
+		}
+
+		/* Thank you for your services... */
+		unset($file['path']);
+	}
+
 	public function doDownload()
 	{
 		global $context;
@@ -137,7 +177,7 @@ class ModSitePage
 		$form = new ModSiteForm($this->text);
 
 		/* Common text entries */
-		$commonText = array('title', 'file', 'demo', 'version', 'topic', 'github', 'smf', 'smfd');
+		$commonText = array('name', 'file', 'demo', 'version', 'topic', 'github', 'smf', 'smfd');
 
 		/* CommonTextArea */
 		$commonTextArea = array('desc', 'info',);
@@ -165,5 +205,62 @@ class ModSitePage
 			);
 
 		return $form->display();
+	}
+
+	protected function formatBytes($a_bytes)
+	{
+		 if ($a_bytes < 1024)
+			 return $a_bytes .' B';
+
+		 elseif ($a_bytes < 1048576)
+			return round($a_bytes / 1024, 2) .' KiB';
+
+		 elseif ($a_bytes < 1073741824)
+			 return round($a_bytes / 1048576, 2) . ' MiB';
+
+		elseif ($a_bytes < 1099511627776)
+			 return round($a_bytes / 1073741824, 2) . ' GiB';
+
+		elseif ($a_bytes < 1125899906842624)
+			 return round($a_bytes / 1099511627776, 2) .' TiB';
+
+		elseif ($a_bytes < 1152921504606846976)
+			 return round($a_bytes / 1125899906842624, 2) .' PiB';
+
+		elseif ($a_bytes < 1180591620717411303424)
+			 return round($a_bytes / 1152921504606846976, 2) .' EiB';
+
+		elseif ($a_bytes < 1208925819614629174706176)
+			 return round($a_bytes / 1180591620717411303424, 2) .' ZiB';
+
+		else
+			 return round($a_bytes / 1208925819614629174706176, 2) .' YiB';
+	}
+
+	public function timeElapsed($ptime)
+	{
+		$etime = time() - $ptime;
+
+		if ($etime < 1)
+			return $this->text->getText('time_just_now');
+
+		$a = array(
+			12 * 30 * 24 * 60 * 60	=> $this->text->getText('time_year'),
+			30 * 24 * 60 * 60		=> $this->text->getText('time_month'),
+			24 * 60 * 60			=> $this->text->getText('time_day'),
+			60 * 60					=> $this->text->getText('time_hour'),
+			60						=> $this->text->getText('time_minute'),
+			1						=> $this->text->getText('time_second')
+		);
+
+		foreach ($a as $secs => $str)
+		{
+			$d = $etime / $secs;
+			if ($d >= 1)
+			{
+				$r = round($d);
+				return $r . ' ' . $str . ($r > 1 ? 's ' : ' '). $this->text->getText('time_ago');
+			}
+		}
 	}
 }
