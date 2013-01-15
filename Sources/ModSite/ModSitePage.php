@@ -118,7 +118,7 @@ class ModSitePage
 		$file = array();
 
 		/* We need a new instance for globals... */
-		$globals = new ModSiteGlobals('post');
+		$globals = new ModSiteGlobals('post');var_dump($globals);die;
 
 		/* meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])

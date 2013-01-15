@@ -106,4 +106,30 @@ class ModSiteQuery
 
 		return $return;
 	}
+
+	public function insertMod($array = array())
+	{
+		if (empty($array) || !is_array($array))
+			return false;
+
+		/* No logic, just action! */
+		$this->_smcFunc['db_insert']('replace', '{db_prefix}'. ModSite::$_tableName['mod'], array(
+			'id' => 'int',
+			'id_category' => 'int',
+			'id_user' => 'int',
+			'downloads' => 'int',
+			'name' => 'string',
+			'file' => 'string',
+			'demo' => 'string',
+			'version' => 'string',
+			'id_topic' => 'int',
+			'smf_version' => 'string',
+			'smf_download' => 'string',
+			'description' => 'string',
+			'github' => 'string',
+			'info' => 'string',
+			'time' => 'int',
+			), $array, array('id')
+		);
+	}
 }
