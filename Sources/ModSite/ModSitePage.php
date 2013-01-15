@@ -176,6 +176,34 @@ class ModSitePage
 		redirectexit('action=mods');
 	}
 
+	public function doSingle()
+	{
+		global $context;
+
+		/* We need a new instance for globals... */
+		$globals = new ModSiteGlobals('get');
+
+		/* Get all of them, MADNESS! MADNESS I SAY! */
+		$all = $this->query->getAllMods();
+
+		/* But bro, do you even lift? */
+		if (in_array($sglobals->getValue('modid'), array_keys($all)))
+			redirectexit('action=mods');
+
+		/* Set all the page stuff */
+		$context['sub_template'] = ModSite::$name.'_single';
+		$context['page_title'] = $this->text->getText('title_single');
+		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=single;modid='. $sglobals->getValue('modid');
+
+		/* Prepare anything the trmplate will need */
+		$context['Modsite']['Single'] = array(
+			'' => '',
+			'' => '',
+			'' => '',
+			'' => '',
+		);
+	}
+
 	public function doDownload()
 	{
 		global $context, $boarddir;
@@ -232,14 +260,6 @@ class ModSitePage
 
 		/* The end */
 		exit;
-	}
-
-	public function doSingle()
-	{
-		/* Set all the page stuff */
-		$context['sub_template'] = 'single';
-		$context['page_title'] = $this->text->getText('title_single');
-		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=single;mid=';
 	}
 
 	protected function buildForm($editing = false)
