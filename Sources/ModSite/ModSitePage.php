@@ -178,8 +178,60 @@ class ModSitePage
 
 	public function doDownload()
 	{
-		global $context;
+		global $context, $boarddir;
 
+		/* We need a new instance for globals... */
+		$globals = new ModSiteGlobals('get');
+
+		/* Get all of them, MADNESS! MADNESS I SAY! */
+		$all = $this->query->getAllMods();
+
+		/* But bro, do you even lift? */
+		if (in_array($sglobals->getValue('modid'), array_keys($all)))
+			redirectexit('action=mods');
+
+		/* Path? */
+		$file_path = $boarddir . Modsite::$downloads_folder . $all[$sglobals->getValue('modid')]['file']->name;
+
+		/* Sorry, I'm an elitist bastard... */
+		if(!file_exists($file_path))
+		{
+			header('HTTP/1.0 404 - Not found');
+			header('Content-Type: text/plain; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
+			die('404 - Not found');
+		}
+
+		/* Turn off gzip for IE browsers */
+		if(ini_get('zlib.output_compression'))
+			ini_set('zlib.output_compression', 'Off');
+
+		/* Clear anything that is in the buffers */
+		while (@ob_get_level() > 0)
+			@ob_end_clean();
+
+		/* Set headers to force file download */
+		header('Pragma: ');
+
+		if (!$context['browser']['is_gecko'])
+			header('Content-Transfer-Encoding: binary');
+
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($file_path)) . ' GMT');
+		header('Accept-Ranges: bytes');
+		header('Content-Length: ' . filesize($file_path));
+		header('Content-Encoding: none');
+		header('Connection: close');
+		header('ETag: ' . md5_file($file_path));
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="' . basename($file_path) .'"');
+
+		/* Read the file and write it to the output buffer */
+		readfile($file_path);
+
+		/* Update the database */
+		$query->updateDownloads($sglobals->getValue('modid'));
+
+		/* The end */
+		exit;
 	}
 
 	public function doSingle()
