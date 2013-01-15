@@ -190,18 +190,13 @@ class ModSitePage
 		if (in_array($sglobals->getValue('modid'), array_keys($all)))
 			redirectexit('action=mods');
 
+		/* Easier to handle */
+		$context['Modsite']['Single'] = $all[$sglobals->getValue('modid')];
+
 		/* Set all the page stuff */
 		$context['sub_template'] = ModSite::$name.'_single';
 		$context['page_title'] = $this->text->getText('title_single');
 		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=single;modid='. $sglobals->getValue('modid');
-
-		/* Prepare anything the trmplate will need */
-		$context['Modsite']['Single'] = array(
-			'' => '',
-			'' => '',
-			'' => '',
-			'' => '',
-		);
 	}
 
 	public function doDownload()
@@ -229,6 +224,9 @@ class ModSitePage
 			die('404 - Not found');
 		}
 
+		/* Update the database */
+		$query->updateDownloads($sglobals->getValue('modid'));
+
 		/* Turn off gzip for IE browsers */
 		if(ini_get('zlib.output_compression'))
 			ini_set('zlib.output_compression', 'Off');
@@ -254,9 +252,6 @@ class ModSitePage
 
 		/* Read the file and write it to the output buffer */
 		readfile($file_path);
-
-		/* Update the database */
-		$query->updateDownloads($sglobals->getValue('modid'));
 
 		/* The end */
 		exit;

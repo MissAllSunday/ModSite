@@ -55,7 +55,6 @@ class ModSite
 		'cat' => 'mod_categories',
 	);
 
-
 	public function __construct(){}
 
 	/**

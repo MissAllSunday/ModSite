@@ -76,7 +76,7 @@ abstract class ModsiteDispatcher
 		if (in_array($container->globals->getValue('action'), array_keys($actions)))
 		{
 			$controller_name = $actions[$container->globals->getValue('action')]['class'];
-			$controller = new $controller_name($container->query, $container->settings, $container->text);
+			$controller = new $controller_name($container->settings, $container->text, $container->query);
 
 			/* Lets call the method */
 			$method_name = $actions[$container->globals->getValue('action')]['method'];
