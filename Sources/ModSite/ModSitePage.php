@@ -71,7 +71,7 @@ class ModSitePage
 	{
 		global $context;
 
-		/* meh... I haz all tha powerz */
+		/* Meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
 			redirectexit();
 
@@ -90,7 +90,7 @@ class ModSitePage
 	{
 		global $context;
 
-		/* meh... I haz all tha powerz */
+		/* Meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
 			redirectexit();
 
@@ -120,7 +120,7 @@ class ModSitePage
 		/* We need a new instance for globals... */
 		$globals = new ModSiteGlobals('post');var_dump($globals);die;
 
-		/* meh... I haz all tha powerz */
+		/* Meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
 			redirectexit();
 
@@ -131,7 +131,7 @@ class ModSitePage
 		/* Hardcoded zip extension FTW! rar files are for douches! */
 		$file['name'] = $globals->getValue('file') . '.zip';
 
-		/* first,lets handle the file... */
+		/* First,lets handle the file... */
 		if (!empty($file['name']))
 		{
 			$file['path'] = $boarddir . Modsite::$downloads_folder . $file['name'];
