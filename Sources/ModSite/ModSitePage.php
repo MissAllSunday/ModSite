@@ -118,7 +118,7 @@ class ModSitePage
 		$file = array();
 
 		/* We need a new instance for globals... */
-		$globals = new ModSiteGlobals('post');var_dump($globals);die;
+		$globals = new ModSiteGlobals('post');
 
 		/* Meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
@@ -171,6 +171,9 @@ class ModSitePage
 
 		/* Thank you for your services... */
 		unset($file['path']);
+
+		/* Back to the main page we go! */
+		redirectexit('action=mods');
 	}
 
 	public function doDownload()
