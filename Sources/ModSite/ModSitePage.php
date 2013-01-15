@@ -109,7 +109,7 @@ class ModSitePage
 
 	public function doPost2()
 	{
-		global $context, $boarddir;
+		global $context, $boarddir, $user_info;
 
 		/* Safety first! */
 		checkSession('post', '', false);
@@ -147,6 +147,24 @@ class ModSitePage
 				$file['accessed'] = $this->timeElapsed($fileStats['mtime']);
 			}
 		}
+
+		/* Format the array */
+		$data = array(
+			'id_category' => $globals->getValue('category'),
+			'id_user' => $user_info['id'],
+			'downloads' => 0,
+			'name' => $globals->getValue('name'),
+			'file' => json_encode($file),
+			'demo' => !$globals->getValue('demo') ? '' : $globals->getValue('demo'),
+			'version' => !$globals->getValue('version') ? '' : $globals->getValue('version'),
+			'id_topic' => !$globals->getValue('topic') ? 0 : $globals->getValue('topic'),
+			'smf_version' => !$globals->getValue('smf') ? '' : $globals->getValue('smf'),
+			'smf_download' => !$globals->getValue('smfd') ? '' : $globals->getValue('smfd'),
+			'description' => !$globals->getValue('desc') ? '' : $globals->getValue('desc'),
+			'github' => !$globals->getValue('github') ? '' : $globals->getValue('github'),
+			'info' => !$globals->getValue('info') ? '' : $globals->getValue('info'),
+			'time' => time(),
+		);
 
 		/* Store this already! */
 		$this->query->insertMod($data);
