@@ -30,7 +30,7 @@ if (!defined('SMF'))
 
 class ModSitePage
 {
-	public function __construct($query, $settings, $text)
+	public function __construct($settings, $text, $query)
 	{
 		global $scripturl;
 
@@ -124,6 +124,11 @@ class ModSitePage
 		if (!$context['user']['is_admin'])
 			redirectexit();
 
+		/* Old fashined checks... */
+		if (!$globals->getValue('name') || !$globals->getValue('file'))
+			redirectexit('action=mods;sa=post');
+
+		/* Hardcoded zip extension FTW! rar files are for douches! */
 		$file['name'] = $globals->getValue('file') . '.zip';
 
 		/* first,lets handle the file... */
@@ -142,6 +147,9 @@ class ModSitePage
 				$file['accessed'] = $this->timeElapsed($fileStats['mtime']);
 			}
 		}
+
+		/* Store this already! */
+		$this->query->insertMod($data);
 
 		/* Thank you for your services... */
 		unset($file['path']);
