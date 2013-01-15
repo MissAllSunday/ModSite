@@ -62,7 +62,7 @@ abstract class ModsiteDispatcher
 		/* Query */
 		$container->query = $container->asShared(function ($c)
 		{
-			return new ModSiteQuery($c->settings, $c->globals, $c->text);
+			return new ModSiteQuery($c->settings, $c->text);
 		});
 
 		/* array($class, $method, (array) $parameters) */

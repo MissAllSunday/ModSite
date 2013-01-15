@@ -82,4 +82,28 @@ class ModSiteQuery
 
 		return $return;
 	}
+
+	public function getAllMods()
+	{
+		if (($return = cache_get_data(ModSite::$name .'-mods', 120)) == null)
+		{
+			$query = $this->smcFunc['db_query']('', '
+				SELECT c.id, c.name, m.id, m.id_category, m.id_user, m.downloads, m.name, m.file, m.demo, m.version, m.id_topic, m.smf_version, m.smf_download, m.github, m.description, m.info, m.time
+				FROM {db_prefix}mod_site
+					LEFT JOIN {db_prefix}mod_categories AS c ON (c.id = m.id_category)
+				ORDER BY m.time DESC',
+				array(
+				)
+			);
+
+			while($row = $this->smcFunc['db_fetch_assoc']($query))
+				$return = $row;
+
+			$this->smcFunc['db_free_result']($query);
+
+			cache_put_data(ModSite::$name .'-mods', $return, 120);
+		}
+
+		return $return;
+	}
 }
