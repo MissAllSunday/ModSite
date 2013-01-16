@@ -118,18 +118,18 @@ class ModSitePage
 		$file = array();
 
 		/* We need a new instance for globals... */
-		$globals = new ModSiteGlobals('post');
+		$sGlobals = new ModSiteGlobals('post');
 
 		/* Meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
 			redirectexit();
 
 		/* Old fashined checks... */
-		if (!$globals->getValue('name') || !$globals->getValue('file'))
+		if (!$sGlobals->getValue('name') || !$sGlobals->getValue('file'))
 			redirectexit('action=mods');
-
+var_dump($sGlobals);die;
 		/* Hardcoded zip extension FTW! rar files are for douches! */
-		$file['name'] = $globals->getValue('file') . '.zip';
+		$file['name'] = $sGlobals->getValue('file') . '.zip';
 
 		/* First,lets handle the file... */
 		if (!empty($file['name']))
@@ -150,19 +150,19 @@ class ModSitePage
 
 		/* Format the array */
 		$data = array(
-			'id_category' => $globals->getValue('category'),
+			'id_category' => $sGlobals->getValue('category'),
 			'id_user' => $user_info['id'],
 			'downloads' => 0,
-			'name' => $globals->getValue('name'),
+			'name' => $sGlobals->getValue('name'),
 			'file' => json_encode($file),
-			'demo' => !$globals->getValue('demo') ? '' : $globals->getValue('demo'),
-			'version' => !$globals->getValue('version') ? '' : $globals->getValue('version'),
-			'id_topic' => !$globals->getValue('topic') ? 0 : $globals->getValue('topic'),
-			'smf_version' => !$globals->getValue('smf') ? '' : $globals->getValue('smf'),
-			'smf_download' => !$globals->getValue('smfd') ? '' : $globals->getValue('smfd'),
-			'description' => !$globals->getValue('desc') ? '' : $globals->getValue('desc'),
-			'github' => !$globals->getValue('github') ? '' : $globals->getValue('github'),
-			'info' => !$globals->getValue('info') ? '' : $globals->getValue('info'),
+			'demo' => !$sGlobals->getValue('demo') ? '' : $sGlobals->getValue('demo'),
+			'version' => !$sGlobals->getValue('version') ? '' : $sGlobals->getValue('version'),
+			'id_topic' => !$sGlobals->getValue('topic') ? 0 : $sGlobals->getValue('topic'),
+			'smf_version' => !$sGlobals->getValue('smf') ? '' : $sGlobals->getValue('smf'),
+			'smf_download' => !$sGlobals->getValue('smfd') ? '' : $sGlobals->getValue('smfd'),
+			'description' => !$sGlobals->getValue('desc') ? '' : $sGlobals->getValue('desc'),
+			'github' => !$sGlobals->getValue('github') ? '' : $sGlobals->getValue('github'),
+			'info' => !$sGlobals->getValue('info') ? '' : $sGlobals->getValue('info'),
 			'time' => time(),
 		);
 
@@ -181,7 +181,7 @@ class ModSitePage
 		global $context;
 
 		/* We need a new instance for globals... */
-		$globals = new ModSiteGlobals('get');
+		$sGlobals = new ModSiteGlobals('get');
 
 		/* Get all of them, MADNESS! MADNESS I SAY! */
 		$all = $this->query->getAllMods();
@@ -204,7 +204,7 @@ class ModSitePage
 		global $context, $boarddir;
 
 		/* We need a new instance for globals... */
-		$globals = new ModSiteGlobals('get');
+		$sGlobals = new ModSiteGlobals('get');
 
 		/* Get all of them, MADNESS! MADNESS I SAY! */
 		$all = $this->query->getAllMods();
