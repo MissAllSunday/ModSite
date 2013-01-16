@@ -44,13 +44,13 @@ function template_ModSite_main()
 <br />';
 }
 
-function template_ModSite_post()
+function template_ModSite_add()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	// The main containing header.
 	echo '
-		<form action="', $scripturl, '?action=mods;sa=post2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
+		<form action="', $scripturl, '?action=mods;sa=add2" method="add" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
 			<h3 class="catbg">
 				<span class="left"></span>
 				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />

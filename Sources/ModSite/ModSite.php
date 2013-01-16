@@ -50,7 +50,7 @@ class ModSite
 	public static $folder = '/ModSite/';
 	public static $api_folder = '/githubAPI/';
 	public static $downloads_folder = '/Downloads/';
-	protected $_tableName = array(
+	public static $tableName = array(
 		'mod' => 'mod_site',
 		'cat' => 'mod_categories',
 	);

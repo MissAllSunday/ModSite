@@ -113,7 +113,7 @@ class ModSiteQuery
 			return false;
 
 		/* No logic, just action! */
-		$this->_smcFunc['db_insert']('replace', '{db_prefix}'. ModSite::$_tableName['mod'], array(
+		$this->smcFunc['db_insert']('replace', '{db_prefix}'. ModSite::$tableName['mod'], array(
 			'id_category' => 'int',
 			'id_user' => 'int',
 			'downloads' => 'int',

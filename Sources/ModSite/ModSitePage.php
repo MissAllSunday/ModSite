@@ -41,16 +41,13 @@ class ModSitePage
 		$this->settings = $settings;
 		$this->query = $query;
 		$this->scripturl = $scripturl;
-
-		/* We need a brand new globals object */
-		$this->globals = new ModSiteGlobals('get');
 	}
 
 	public function call()
 	{
 		$subActions = array(
-			'post' => 'doPost',
-			'post2' => 'doPost2',
+			'add' => 'doAdd',
+			'add2' => 'doAdd2',
 			'single' => 'doSingle',
 			'download' => 'doDownload',
 			'delete' => 'doDelete',
@@ -58,9 +55,11 @@ class ModSitePage
 			'categories' => 'doCategories',
 		);
 
+		$sGlobals = new ModSiteGlobals('get');
+
 		/* Does the subaction even exist? */
-		if (in_array($this->globals->getValue('sa'), array_keys($subActions)))
-			$this->$subActions[$this->globals->getValue('sa')]();
+		if (in_array($sGlobals->getValue('sa'), array_keys($subActions)))
+			$this->$subActions[$sGlobals->getValue('sa')]();
 
 		/* No?  redirect them to the main page */
 		else
@@ -86,7 +85,7 @@ class ModSitePage
 
 	}
 
-	public function doPost()
+	public function doAdd()
 	{
 		global $context;
 
@@ -95,9 +94,9 @@ class ModSitePage
 			redirectexit();
 
 		/* Set all the page stuff */
-		$context['sub_template'] = ModSite::$name.'_post';
-		$context['page_title'] = $this->text->getText('title_post');
-		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=post';
+		$context['sub_template'] = ModSite::$name.'_add';
+		$context['page_title'] = $this->text->getText('title_add');
+		$context['canonical_url'] = $this->scripturl . '?action=mods;sa=add';
 
 		/* Build the form */
 		$form = $this->buildForm();
@@ -107,18 +106,18 @@ class ModSitePage
 		$context['page_desc'] = 'Some description here...';
 	}
 
-	public function doPost2()
+	public function doAdd2()
 	{
 		global $context, $boarddir, $user_info;
 
 		/* Safety first! */
-		checkSession('post', '', false);
+		/* checkSession('add', '', false); */
 
 		/* Set what we need */
 		$file = array();
 
 		/* We need a new instance for globals... */
-		$sGlobals = new ModSiteGlobals('post');
+		$sGlobals = new ModSiteGlobals();
 
 		/* Meh... I haz all tha powerz */
 		if (!$context['user']['is_admin'])
@@ -127,7 +126,7 @@ class ModSitePage
 		/* Old fashined checks... */
 		if (!$sGlobals->getValue('name') || !$sGlobals->getValue('file'))
 			redirectexit('action=mods');
-var_dump($sGlobals);die;
+
 		/* Hardcoded zip extension FTW! rar files are for douches! */
 		$file['name'] = $sGlobals->getValue('file') . '.zip';
 
