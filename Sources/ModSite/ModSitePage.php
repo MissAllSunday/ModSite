@@ -126,7 +126,7 @@ class ModSitePage
 
 		/* Old fashined checks... */
 		if (!$globals->getValue('name') || !$globals->getValue('file'))
-			redirectexit('action=mods;sa=post');
+			redirectexit('action=mods');
 
 		/* Hardcoded zip extension FTW! rar files are for douches! */
 		$file['name'] = $globals->getValue('file') . '.zip';
