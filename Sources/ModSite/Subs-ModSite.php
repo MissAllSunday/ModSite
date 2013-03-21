@@ -32,30 +32,38 @@ class ModSite {
 	{
 		global $smcFunc;
 
+		if (empty($data))
+			return false;
+
 		/* Clear the cache */
-		cache_put_data(modsite::$name .'_latest', '', 120);
+		$this->cleanCache(array('latest', 'all'));
 
 		$smcFunc['db_insert']('',
 			'{db_prefix}modsite',
 			array(
-				'user' => 'int', 'artist' => 'string-255', 'title' => 'string-255', 'body' => 'string-65534',
+				'id' => 'int', 'name' => 'string-255', 'github' => 'string-255', 'id_user' => 'int', 'id_topic' => 'int', 'downloads' => 'int', 'desc' => 'string-65534', 'body' => 'string-65534', 'file' => 'string-65534'
 			),
 			$data,
 			array('id')
 		);
-			return $id = $smcFunc['db_insert_id']('{db_prefix}modsite', 'id');
+
+		return $id = $smcFunc['db_insert_id']('{db_prefix}modsite', 'id');
 	}
 
 	public function edit($data)
 	{
 		global $smcFunc;
 
+		if (empty($data))
+			return false;
+
 		/* Clear the cache */
 		cache_put_data(modsite::$name .'_latest', '', 120);
+		cache_put_data(modsite::$name .'_all', '', 120);
 
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}' . ($this->_table['table']) . '
-			SET artist = {string:artist}, title = {string:title}, body = {string:body}
+			SET name = {string:name}, github = {string:github}, id_user = {int:user}, id_topic = {int:topic}, downloads = {int:downloads}, desc = {string:desc}, body = {string:body}, file = {string:file}
 			WHERE id = {int:id}',
 			$data
 		);
@@ -431,5 +439,17 @@ class ModSite {
 			/* Send the result directly, we are gonna handle it on every case */
 			return fetch_web_data($url);
 		}
+	}
+
+	protected function cleanCache($type)
+	{
+		if (empty($type))
+			return;
+
+		if (!is_array($type))
+			$type = array($type);
+
+		foreach ($type as $t)
+			cache_put_data(modsite::$name .'_'. $type, '', 120);
 	}
 }
