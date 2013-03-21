@@ -66,6 +66,12 @@
 					'null' => false,
 				),
 				array(
+					'name' => 'id_cat',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+				),
+				array(
 					'name' => 'id_topic',
 					'type' => 'int',
 					'size' => 5,
@@ -111,13 +117,13 @@
 			'table_name' => 'modsite_cat',
 			'columns' => array(
 				array(
-					'name' => 'id_cat',
+					'name' => 'id',
 					'type' => 'int',
 					'size' => 11,
 					'auto' => true,
 				),
 				array(
-					'name' => 'name_cat',
+					'name' => 'name',
 					'type' => 'varchar',
 					'size' => 255,
 					'default' => '',

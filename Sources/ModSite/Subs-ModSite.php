@@ -16,11 +16,11 @@ class ModSite {
 	protected $_table = array(
 		'modsite' => array(
 			'name' => 'modsite',
-			'columns' => array('id', 'name', 'github', 'id_user', 'id_topic', 'downloads', 'desc', 'body', 'file'),
+			'columns' => array('id', 'name', 'github', 'id_user', 'id_cat', 'id_topic', 'downloads', 'desc', 'body', 'file'),
 		),
 		'cats' = array(
 			'name' => 'modsite_cat',
-			'columns' => array('id_cat', 'name_cat',),
+			'columns' => array('id', 'cat_name',),
 		),
 	);
 
@@ -58,8 +58,7 @@ class ModSite {
 			return false;
 
 		/* Clear the cache */
-		cache_put_data(modsite::$name .'_latest', '', 120);
-		cache_put_data(modsite::$name .'_all', '', 120);
+		$this->cleanCache(array('latest', 'all'));
 
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}' . ($this->_table['table']) . '
@@ -77,9 +76,10 @@ class ModSite {
 		if (($return = cache_get_data(modsite::$name .'_latest', 120)) == null)
 		{
 			$result = $smcFunc['db_query']('', '
-				SELECT '. (implode(', l.', $this->_table['columns'])) .', m.member_name, m.real_name
-				FROM {db_prefix}' . ($this->_table['table']) . ' AS l
-					LEFT JOIN {db_prefix}members AS m ON (m.id_member = l.user)
+				SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
+				FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
+					LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.id = s.id_cat)
+					LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
 				ORDER BY {raw:sort}
 				LIMIT {int:limit}',
 				array(
@@ -91,16 +91,24 @@ class ModSite {
 			while ($row = $smcFunc['db_fetch_assoc']($result))
 				$return[$row['id']] = array(
 					'id' => $row['id'],
-					'artist' => $row['artist'],
-					'title' => $row['title'],
-					'keywords' => $row['keywords'],
+					'name' => $row['name'],
+					'github' => $row['github'],
+					'topic' => $row['id_topic'],
+					'downloads' => $row['downloads'],
+					'desc' => $row['desc'],
+					'file' => !empty($row['file']) ? json_decode($row['file'], true) : array(),
 					'body' => parse_bbc($row['body']),
+					'cat' => array(
+						'id' => $row['id_cat'],
+						'name' => $row['cat_name'],
+						'link' => '<a href="' . $scripturl . '?action=modsite;sa=cat;mid=' . $row['id_cat'] . '">' . $row['cat_name'] . '</a>',
+					),
 					'user' => array(
-						'id' => $row['user'],
+						'id' => $row['id_user'],
 						'username' => $row['member_name'],
 						'name' => isset($row['real_name']) ? $row['real_name'] : '',
-						'href' => $scripturl . '?action=profile;u=' . $row['user'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
+						'href' => $scripturl . '?action=profile;u=' . $row['id_user'],
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
 					),
 				);
 
@@ -137,11 +145,11 @@ class ModSite {
 				'keywords' => $row['keywords'],
 				'body' => parse_bbc($row['body']),
 				'user' => array(
-					'id' => $row['user'],
+					'id' => $row['id_user'],
 					'username' => $row['member_name'],
 					'name' => isset($row['real_name']) ? $row['real_name'] : '',
-					'href' => $scripturl . '?action=profile;u=' . $row['user'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
+					'href' => $scripturl . '?action=profile;u=' . $row['id_user'],
+					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
 				),
 			);
 
@@ -190,11 +198,11 @@ class ModSite {
 				'keywords' => $row['keywords'],
 				'body' => parse_bbc($row['body']),
 				'user' => array(
-					'id' => $row['user'],
+					'id' => $row['id_user'],
 					'username' => $row['member_name'],
 					'name' => isset($row['real_name']) ? $row['real_name'] : '',
-					'href' => $scripturl . '?action=profile;u=' . $row['user'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
+					'href' => $scripturl . '?action=profile;u=' . $row['id_user'],
+					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
 				),
 			);
 
@@ -235,11 +243,11 @@ class ModSite {
 				'keywords' => $row['keywords'],
 				'body' => parse_bbc($row['body']),
 				'user' => array(
-					'id' => $row['user'],
+					'id' => $row['id_user'],
 					'username' => $row['member_name'],
 					'name' => isset($row['real_name']) ? $row['real_name'] : '',
-					'href' => $scripturl . '?action=profile;u=' . $row['user'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
+					'href' => $scripturl . '?action=profile;u=' . $row['id_user'],
+					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
 				),
 			);
 
