@@ -342,4 +342,86 @@ class ModSite {
 		/* Send the string */
 		return $return;
 	}
+
+	/* A function to cut-off a string */
+	protected function truncateString($string, $limit, $break = ' ', $pad = '...')
+	{
+		if(empty($limit))
+			$limit = 30;
+
+		 /* return with no change if string is shorter than $limit */
+		if(strlen($string) <= $limit)
+			return $string;
+
+		/* is $break present between $limit and the end of the string? */
+		if(false !== ($breakpoint = strpos($string, $break, $limit)))
+			if($breakpoint < strlen($string) - 1)
+				$string = substr($string, 0, $breakpoint) . $pad;
+
+		return $string;
+	}
+
+	public function status()
+	{
+		$v = json_decode($this->fetch_web_data('https://status.github.com/api/status.json'));
+
+		if (!empty($v) && trim($v->status) == 'good')
+			return true;
+
+		else
+			return false;
+	}
+
+	public function github($username)
+	{
+		global $boarddir;
+
+		require_once ($boarddir .'/vendor/autoload.php');
+
+		$this->client = new Github\Client(
+			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $boarddir .'/cache/github-api-cache'))
+		);
+		$this->username = $username;
+
+		return $this->client;
+	}
+
+	/**
+	 * Tries to fetch the content of a given url
+	 *
+	 * @access protected
+	 * @param string $url the url to call
+	 * @return mixed either the page requested or a boolean false
+	 */
+	protected function fetch_web_data($url)
+	{
+		/* Safety first! */
+		if (empty($url))
+			return false;
+
+		/* I can haz cURL? */
+		if (function_exists ('curl_init'))
+		{
+			$ch = curl_init();
+
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_HEADER, false);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$content = curl_exec($ch);
+			curl_close($ch);
+
+			/* Send the data directly, evil, I'm evil! :P */
+			return $content;
+		}
+
+		/* Good old SMF's fetch_web_data to the rescue! */
+		else
+		{
+			/* Requires a function in a source file far far away... */
+			require_once($this->_sourcedir .'/Subs-Package.php');
+
+			/* Send the result directly, we are gonna handle it on every case */
+			return fetch_web_data($url);
+		}
+	}
 }
