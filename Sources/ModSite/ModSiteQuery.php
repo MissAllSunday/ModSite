@@ -33,8 +33,6 @@ class ModSiteQuery
 
 	public function __construct()
 	{
-		global $smcFunc;
-
 		$this->_rows = array(
 			'id' => 'id',
 			'cat' => 'id_category',
@@ -52,8 +50,6 @@ class ModSiteQuery
 			'info' => 'info',
 			'time' => 'time',
 		);
-
-		$this->smcFunc = $smcFunc;
 	}
 
 	public function killCache($type)
@@ -63,19 +59,21 @@ class ModSiteQuery
 
 	public function getAllCategories()
 	{
+		global $smcFunc;
+
 		if (($return = cache_get_data(ModSite::$name .'-cats', 120)) == null)
 		{
-			$query = $this->smcFunc['db_query']('', '
+			$query = $smcFunc['db_query']('', '
 				SELECT id, name
 				FROM {db_prefix}mod_categories',
 				array(
 				)
 			);
 
-			while($row = $this->smcFunc['db_fetch_assoc']($query))
+			while($row = $smcFunc['db_fetch_assoc']($query))
 				$return[$row['id']] = $row['name'];
 
-			$this->smcFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 
 			cache_put_data(ModSite::$name .'-cats', $return, 120);
 		}
@@ -85,9 +83,11 @@ class ModSiteQuery
 
 	public function getAllMods()
 	{
+		global $smcFunc;
+
 		if (($return = cache_get_data(ModSite::$name .'-mods', 120)) == null)
 		{
-			$query = $this->smcFunc['db_query']('', '
+			$query = $smcFunc['db_query']('', '
 				SELECT c.id, c.name, m.id, m.id_category, m.id_user, m.downloads, m.name, m.file, m.demo, m.version, m.id_topic, m.smf_version, m.smf_download, m.github, m.description, m.info, m.time
 				FROM {db_prefix}mod_site
 					LEFT JOIN {db_prefix}mod_categories AS c ON (c.id = m.id_category)
@@ -96,10 +96,10 @@ class ModSiteQuery
 				)
 			);
 
-			while($row = $this->smcFunc['db_fetch_assoc']($query))
+			while($row = $smcFunc['db_fetch_assoc']($query))
 				$return = $row;
 
-			$this->smcFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
 
 			cache_put_data(ModSite::$name .'-mods', $return, 120);
 		}
@@ -109,11 +109,13 @@ class ModSiteQuery
 
 	public function insertMod($array = array())
 	{
+		global $smcFunc;
+
 		if (empty($array) || !is_array($array))
 			return false;
 
 		/* No logic, just action! */
-		$this->smcFunc['db_insert']('replace', '{db_prefix}'. ModSite::$tableName['mod'], array(
+		$smcFunc['db_insert']('replace', '{db_prefix}'. ModSite::$tableName['mod'], array(
 			'id_category' => 'int',
 			'id_user' => 'int',
 			'downloads' => 'int',
