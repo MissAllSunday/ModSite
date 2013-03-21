@@ -37,7 +37,7 @@
 
 	if (empty($context['uninstalling']))
 	{
-		$table = array(
+		$table[]  = array(
 			'table_name' => 'modsite',
 			'columns' => array(
 				array(
@@ -106,7 +106,37 @@
 			'error' => 'fatal',
 			'parameters' => array(),
 		);
+		
+		$tables[] = array (
+			'table_name' => 'modsite_cat',
+			'columns' => array(
+				array(
+					'name' => 'id_cat',
+					'type' => 'int',
+					'size' => 11,
+					'auto' => true,
+				),
+				array(
+					'name' => 'name_cat',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+			),
+			'indexes' => array(
+				array(
+					'type' => 'primary',
+					'columns' => array(
+						'category_id'
+					),
+				),
+			),
+			'if_exists' => 'ignore',
+			'error' => 'fatal',
+			'parameters' => array(),
+		);
 
-		$smcFunc['db_create_table']($db_prefix . $table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
+		foreach ($tables as $table)
+			$smcFunc['db_create_table']($db_prefix . $table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
 	}
  

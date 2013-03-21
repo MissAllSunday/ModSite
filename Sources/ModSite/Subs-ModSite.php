@@ -14,8 +14,14 @@ if (!defined('SMF'))
 class ModSite {
 
 	protected $_table = array(
-		'table' => 'modsite',
-		'columns' => array('id', 'name', 'github', 'id_user', 'id_topic', 'downloads', 'desc', 'body', 'file'),
+		'modsite' => array(
+			'name' => 'modsite',
+			'columns' => array('id', 'name', 'github', 'id_user', 'id_topic', 'downloads', 'desc', 'body', 'file'),
+		),
+		'cats' = array(
+			'name' => 'modsite_cat',
+			'columns' => array('id_cat', 'name_cat',),
+		),
 	);
 
 	public static $name = 'modsite';
@@ -395,6 +401,8 @@ class ModSite {
 	 */
 	protected function fetch_web_data($url)
 	{
+		global $sourcedir;
+
 		/* Safety first! */
 		if (empty($url))
 			return false;
@@ -418,7 +426,7 @@ class ModSite {
 		else
 		{
 			/* Requires a function in a source file far far away... */
-			require_once($this->_sourcedir .'/Subs-Package.php');
+			require_once($sourcedir .'/Subs-Package.php');
 
 			/* Send the result directly, we are gonna handle it on every case */
 			return fetch_web_data($url);
