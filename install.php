@@ -78,6 +78,18 @@
 					'null' => false,
 				),
 				array(
+					'name' => 'desc',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+				),
+				array(
+					'name' => 'body',
+					'type' => 'text',
+					'size' => '',
+					'default' => '',
+				),
+				array(
 					'name' => 'file',
 					'type' => 'text',
 					'size' => '',

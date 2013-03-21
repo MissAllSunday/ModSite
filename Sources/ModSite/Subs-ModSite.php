@@ -15,7 +15,7 @@ class ModSite {
 
 	protected $_table = array(
 		'table' => 'modsite',
-		'columns' => array('id', 'artist', 'title', 'keywords', 'body', 'user'),
+		'columns' => array('id', 'name', 'github', 'id_user', 'id_topic', 'downloads', 'desc', 'body', 'file'),
 	);
 
 	public static $name = 'modsite';
