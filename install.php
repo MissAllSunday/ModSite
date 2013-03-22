@@ -123,7 +123,7 @@
 					'auto' => true,
 				),
 				array(
-					'name' => 'name',
+					'name' => 'cat_name',
 					'type' => 'varchar',
 					'size' => 255,
 					'default' => '',

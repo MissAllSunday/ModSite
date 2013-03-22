@@ -126,9 +126,10 @@ class ModSite {
 		global $smcFunc, $scripturl, $txt;
 
 		$result = $smcFunc['db_query']('', '
-			SELECT '. (implode(', l.', $this->_table['columns'])) .', m.member_name, m.real_name
-			FROM {db_prefix}' . ($this->_table['table']) . ' AS l
-				LEFT JOIN {db_prefix}members AS m ON (m.id_member = l.user)
+			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
+			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
+				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.id = s.id_cat)
+				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
 			WHERE id = ({int:id})
 			LIMIT {int:limit}',
 			array(
@@ -175,9 +176,10 @@ class ModSite {
 		$return = array();
 
 		$result = $smcFunc['db_query']('', '
-			SELECT '. (implode(', l.', $this->_table['columns'])) .', m.member_name, m.real_name
-			FROM {db_prefix}' . ($this->_table['table']) . ' AS l
-				LEFT JOIN {db_prefix}members AS m ON (m.id_member = l.user)
+			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
+			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
+				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.id = s.id_cat)
+				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
 			WHERE '. $column .' '. (is_int($value) ? '= {int:value} ' : 'LIKE {string:value} ') .'
 			ORDER BY {raw:sort}
 			'. (!empty($limit) ? '
@@ -223,9 +225,10 @@ class ModSite {
 		$sortArray = array('title', 'artist', 'latest');
 
 		$result = $smcFunc['db_query']('', '
-			SELECT '. (implode(', ', $this->_table['columns'])) .', m.member_name, m.real_name
-			FROM {db_prefix}' . ($this->_table['table']) . ' AS l
-				LEFT JOIN {db_prefix}members AS m ON (m.id_member = l.user)
+			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
+			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
+				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.id = s.id_cat)
+				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
 			ORDER BY {raw:sort} ASC
 			LIMIT {int:start}, {int:maxindex}',
 			array(
