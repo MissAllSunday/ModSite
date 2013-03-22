@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package modsite mod
+ * @package ModSite mod
  * @version 1.0
  * @author Suki <missallsunday@simplemachines.org>
  * @copyright 2013 Suki
