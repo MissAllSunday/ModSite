@@ -160,9 +160,9 @@ function modsite_dispatch()
 		if (isset($_GET['sa']))
 			$func = $modsiteObject->clean($_GET['sa']);
 
-		$call = 'faq_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
+		$call = 'modsite_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
 
-		// Call the appropiate function
+		// Call the appropiate method
 		$call($modsiteObject);
 }
 
@@ -174,21 +174,18 @@ function modsite_main($modsiteObject)
 	$modsiteObject->permissions('view', true);
 
 	$context['sub_template'] = 'modsite_main';
-	$context['canonical_url'] = $scripturl . '?action=yrics';
+	$context['canonical_url'] = $scripturl . '?action=modsite';
 	$context['page_title'] = $txt['ModSite_title_main'];
 	$context['linktree'][] = array(
 		'url' => $scripturl. '?action=modsite',
-		'name' => $txt['modsite_title_index'],
+		'name' => $context['page_title'],
 	);
 
 	/* Pass the object to the template */
 	$context['modsite']['object'] = $modsiteObject;
 
-	/* Static content defined by the admin */
-	$context['modsite']['static_content'] = parse_bbc(empty($modSettings['modsite_static_content']) ? $txt['modsite_static_content_default'] : $modSettings['modsite_static_content']);
-
 	/* Get the latest modsite from DB */
-	$context['modsite']['latest'] = $modsiteObject->getLatest(empty($modSettings['modsite_latest_limit']) ? 10 : $modSettings['modsite_latest_limit']);
+	$context['modsite']['latest'] = $modsiteObject->getLatest(empty($modSettings['ModSite_latest_limit']) ? 10 : $modSettings['ModSite_latest_limit']);
 }
 
 function modsite_add($modsiteObject)
