@@ -117,7 +117,7 @@
 			'table_name' => 'modsite_cat',
 			'columns' => array(
 				array(
-					'name' => 'id',
+					'name' => 'category_id',
 					'type' => 'int',
 					'size' => 11,
 					'auto' => true,

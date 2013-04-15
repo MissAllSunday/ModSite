@@ -156,8 +156,14 @@ function modsite_dispatch()
 		loadLanguage('modsite');
 		loadtemplate('modsite', 'admin');
 
-		/* Call the right function and pass the object to it */
-		call_user_func_array(isset($_GET['sa']) && !empty($_GET['sa']) && in_array(trim(htmlspecialchars($_GET['sa'], ENT_QUOTES)), $subActions) ? 'modsite_'. $_GET['sa'] : 'modsite_main', array($modsiteObject));
+		/* It is faster to use $var() than use call_user_func_array */
+		if (isset($_GET['sa']))
+			$func = $modsiteObject->clean($_GET['sa']);
+
+		$call = 'faq_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
+
+		// Call the appropiate function
+		$call($modsiteObject);
 }
 
 function modsite_main($modsiteObject)
