@@ -37,7 +37,7 @@
 
 	if (empty($context['uninstalling']))
 	{
-		$table[]  = array(
+		$tables[]  = array(
 			'table_name' => 'modsite',
 			'columns' => array(
 				array(

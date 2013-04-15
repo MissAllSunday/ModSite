@@ -18,7 +18,7 @@ class ModSite {
 			'name' => 'modsite',
 			'columns' => array('id', 'name', 'github', 'id_user', 'id_cat', 'id_topic', 'downloads', 'desc', 'body', 'file'),
 		),
-		'cats' = array(
+		'cats' => array(
 			'name' => 'modsite_cat',
 			'columns' => array('id', 'cat_name',),
 		),

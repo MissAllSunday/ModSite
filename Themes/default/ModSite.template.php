@@ -27,21 +27,44 @@
 
 function template_ModSite_main()
 {
+	global $txt, $context, $scripturl, $modSettings;
+
+	modsite_header();
+
+	/* Sidebar */
+	modsite_sideBar();
+
+	/* Show a nice message if no FAQs are avaliable */
 	echo '
-<span class="clear upperframe">
-	<span></span>
-</span>
-<div class="roundframe rfix">
-	<div class="innerframe">
-		<div class="content">
-			LOL
+	<div class="floatright nopadding" style="width:80%;">
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft">Some title here</span>
+			</h3>
 		</div>
-	</div>
-</div>
-<span class="lowerframe">
-	<span></span>
-</span>
-<br />';
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+			some text here
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	</div>';
+
+	echo '
+		<div class="clear">';
+
+	/* Button for adding a new entry */
+	if ($context['Modsite']['object']->permissions('add') == true)
+		echo '
+			<div id="confirm_buttons">
+				<form action="', $scripturl, '?action=modsite;sa=add" method="post" target="_self">
+					<input type="submit" name="send" class="input_text" value="', $txt['send'] ,'" />
+				</form>
+			</div>';
+
+	echo '
+		</div>';
 }
 
 function template_ModSite_add()

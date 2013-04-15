@@ -21,7 +21,7 @@ function modsite_admin_areas(&$areas)
 
 function modsite_actions(&$actions)
 {
-	$actions['modsite'] = array('ModSite.php', 'modsite_dispatch');
+	$actions['modsite'] = array('ModSite/ModSite.php', 'modsite_dispatch');
 }
 
 function modsite_menu(&$menu_buttons)
@@ -148,7 +148,7 @@ function modsite_dispatch()
 
 		if (empty($modsiteObject))
 		{
-			require_once($sourcedir .'/Subs-Modsite.php');
+			require_once($sourcedir .'/ModSite/Subs-Modsite.php');
 			$modsiteObject = new modsite();
 		}
 
@@ -171,7 +171,7 @@ function modsite_main($modsiteObject)
 	global $context, $scripturl, $txt, $user_info, $modSettings;
 
 	/* Are you allowed to see this page? */
-	$modsiteObject->permissions('view', true);
+	/* $modsiteObject->permissions('view', true); */
 
 	$context['sub_template'] = 'modsite_main';
 	$context['canonical_url'] = $scripturl . '?action=modsite';
