@@ -33,3 +33,16 @@ $txt['ModSite_time_hour'] = 'hour';
 $txt['ModSite_time_day'] = 'day';
 $txt['ModSite_time_month'] = 'month';
 $txt['ModSite_time_year'] = 'year';
+
+$txt['ModSite_admin_desc'] = 'Some description here';
+$txt['ModSite_menu_position'] = 'Select the button position';
+$txt['ModSite_menu_position_desc'] = 'la bl bla';
+$txt['ModSite_'] = '';
+$txt['ModSite_'] = '';
+$txt['ModSite_'] = '';
+$txt['ModSite_'] = '';
+$txt['ModSite_'] = '';
+$txt['ModSite_'] = '';
+$txt['ModSite_'] = '';
+$txt['ModSite_'] = '';
+$txt['ModSite_'] = '';

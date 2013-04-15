@@ -33,8 +33,11 @@
 
 	$hooks = array(
 		'integrate_pre_include' => '$sourcedir/ModSite/ModSite.php',
-		'integrate_menu_buttons' => 'ModSite::menu',
-		'integrate_actions' => 'ModSite::actions',
+		'integrate_menu_buttons' => 'modsite_menu',
+		'integrate_actions' => 'modsite_actions',
+		'integrate_load_permissions' => 'modsite_permissions',
+		'integrate_admin_areas' => 'modsite_admin_areas',
+		'integrate_modify_modifications' => 'modsite_modify_modifications',
 	);
 
 	$call = 'add_integration_function';

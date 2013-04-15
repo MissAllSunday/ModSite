@@ -160,12 +160,6 @@ class ModSite {
 		return $return;
 	}
 
-	public function getByLetter($l)
-	{
-		if (empty($l) || strlen($l) != 1)
-			return false;
-	}
-
 	public function getBy($column, $value, $limit = false)
 	{
 		global $smcFunc, $scripturl, $txt;

@@ -10,21 +10,21 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function modsite_admin_areas($areas)
+function modsite_admin_areas(&$areas)
 {
 	global $txt;
 
 	loadLanguage('ModSite');
 
-	$areas['config']['areas']['modsettings']['subsections']['modsite'] = array($txt['modsite_title']);
+	$areas['config']['areas']['modsettings']['subsections']['modsite'] = array($txt['ModSite_title_main']);
 }
 
-function modsite_actions($actions)
+function modsite_actions(&$actions)
 {
 	$actions['modsite'] = array('ModSite.php', 'modsite_dispatch');
 }
 
-function modsite_menu($menu_buttons)
+function modsite_menu(&$menu_buttons)
 {
 		global $scripturl, $modSettings, $txt;
 
@@ -40,15 +40,15 @@ function modsite_menu($menu_buttons)
 		$menu_buttons = array_merge(
 			array_slice($menu_buttons, 0, $counter),
 			array('modsite' => array(
-			'title' => $txt['modsite_title'],
-			'href' => $scripturl . '?action=modsite',
-			'show' => empty($modSettings['modsite_enable']) ? false : true,
-		)),
+				'title' => $txt['ModSite_title_main'],
+				'href' => $scripturl . '?action=modsite',
+				'show' => empty($modSettings['modsite_enable']) ? false : true,
+			)),
 			array_slice($menu_buttons, $counter)
 		);
 }
 
-function modsite_modify_modifications($sub_actions)
+function modsite_modify_modifications(&$sub_actions)
 {
 	global $context;
 
@@ -56,19 +56,18 @@ function modsite_modify_modifications($sub_actions)
 	$context[$context['admin_menu_name']]['tab_data']['tabs']['modsite'] = array();
 }
 
-function modify_modsite_post_settings($return_config = false)
+function modify_modsite_post_settings(&$return_config = false)
 {
 	global $context, $scripturl, $txt;
 
 	$config_vars = array(
-		array('desc', 'modsite_admin_desc'),
-		array('check', 'modsite_enable', 'subtext' => $txt['modsite_enable_desc']),
-		array('int', 'modsite_latest_limit', 'subtext' => $txt['modsite_latest_limit_desc'], 'size' => 3),
-		array('int', 'modsite_pag_limit', 'subtext' => $txt['modsite_pag_limit_desc'], 'size' => 3),
-		array('large_text', 'modsite_static_content', 'subtext' => $txt['modsite_static_content_desc'], '6" style="width:95%'),
+		array('desc', 'ModSite_admin_desc'),
+		array('check', 'ModSite_enable', 'subtext' => $txt['modsite_enable_desc']),
+		array('int', 'ModSite_latest_limit', 'subtext' => $txt['modsite_latest_limit_desc'], 'size' => 3),
+		array('int', 'ModSite_pag_limit', 'subtext' => $txt['modsite_pag_limit_desc'], 'size' => 3),
 		array(
 			'select',
-			'modsite_menu_position',
+			'ModSite_menu_position',
 			array(
 				'home' => $txt['home'],
 				'help' => $txt['help'],
@@ -76,7 +75,7 @@ function modify_modsite_post_settings($return_config = false)
 				'login' => $txt['login'],
 				'register' => $txt['register']
 			),
-			'subtext' => $txt['modsite_menu_position_desc']
+			'subtext' => $txt['ModSite_menu_position_desc']
 		),
 	);
 
@@ -84,7 +83,7 @@ function modify_modsite_post_settings($return_config = false)
 		return $config_vars;
 
 	$context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=modsite';
-	$context['settings_title'] = $txt['modsite_title'];
+	$context['settings_title'] = $txt['ModSite_title_main'];
 
 	if (empty($config_vars))
 	{
@@ -104,7 +103,7 @@ function modify_modsite_post_settings($return_config = false)
 	prepareDBSettingContext($config_vars);
 }
 
-function modsite_permissions($permissionGroups, $permissionList)
+function modsite_permissions(&$permissionGroups, &$permissionList)
 {
 	$permissionGroups['membergroup']['simple'] = array('modsiteMod_per_simple');
 	$permissionGroups['membergroup']['classic'] = array('modsiteMod_per_classic');
@@ -149,7 +148,7 @@ function modsite_dispatch()
 
 		if (empty($modsiteObject))
 		{
-			require_once($sourcedir .'/Subs-modsite.php');
+			require_once($sourcedir .'/Subs-Modsite.php');
 			$modsiteObject = new modsite();
 		}
 
@@ -170,7 +169,7 @@ function modsite_main($modsiteObject)
 
 	$context['sub_template'] = 'modsite_main';
 	$context['canonical_url'] = $scripturl . '?action=yrics';
-	$context['page_title'] = $txt['modsite_title'];
+	$context['page_title'] = $txt['ModSite_title_main'];
 	$context['linktree'][] = array(
 		'url' => $scripturl. '?action=modsite',
 		'name' => $txt['modsite_title_index'],
