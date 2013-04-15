@@ -42,7 +42,7 @@ function modsite_menu(&$menu_buttons)
 			array('modsite' => array(
 				'title' => $txt['ModSite_title_main'],
 				'href' => $scripturl . '?action=modsite',
-				'show' => empty($modSettings['modsite_enable']) ? false : true,
+				'show' => empty($modSettings['ModSite_enable']) ? false : true,
 			)),
 			array_slice($menu_buttons, $counter)
 		);
@@ -62,9 +62,9 @@ function modify_modsite_post_settings(&$return_config = false)
 
 	$config_vars = array(
 		array('desc', 'ModSite_admin_desc'),
-		array('check', 'ModSite_enable', 'subtext' => $txt['modsite_enable_desc']),
-		array('int', 'ModSite_latest_limit', 'subtext' => $txt['modsite_latest_limit_desc'], 'size' => 3),
-		array('int', 'ModSite_pag_limit', 'subtext' => $txt['modsite_pag_limit_desc'], 'size' => 3),
+		array('check', 'ModSite_enable', 'subtext' => $txt['ModSite_enable_desc']),
+		array('int', 'ModSite_latest_limit', 'subtext' => $txt['ModSite_latest_limit_desc'], 'size' => 3),
+		array('int', 'ModSite_pag_limit', 'subtext' => $txt['ModSite_pag_limit_desc'], 'size' => 3),
 		array(
 			'select',
 			'ModSite_menu_position',
