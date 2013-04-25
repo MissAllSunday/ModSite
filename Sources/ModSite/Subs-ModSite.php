@@ -15,11 +15,11 @@ class ModSite {
 
 	protected $_table = array(
 		'modsite' => array(
-			'name' => 'modsite',
-			'columns' => array('id', 'name', 'github', 'id_user', 'id_cat', 'id_topic', 'downloads', 'desc', 'body', 'file'),
+			'name' => 'mod_site',
+			'columns' => array('id', 'id_category', 'id_user', 'downloads', 'name', 'file', 'demo', 'version', 'id_topic', 'smf_version' 'smf_download', 'github', 'description', 'time'),
 		),
 		'cats' => array(
-			'name' => 'modsite_cat',
+			'name' => 'mod_categories',
 			'columns' => array('cat_id', 'cat_name',),
 		),
 	);

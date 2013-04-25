@@ -129,7 +129,7 @@
 				array(
 					'type' => 'primary',
 					'columns' => array(
-						'id'
+						'cat_id'
 					),
 				),
 			),
