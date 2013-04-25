@@ -20,7 +20,7 @@ class ModSite {
 		),
 		'cats' => array(
 			'name' => 'modsite_cat',
-			'columns' => array('id', 'cat_name',),
+			'columns' => array('cat_id', 'cat_name',),
 		),
 	);
 

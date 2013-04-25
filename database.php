@@ -113,13 +113,13 @@
 			'table_name' => 'mod_categories',
 			'columns' => array(
 				array(
-					'name' => 'id',
+					'name' => 'cat_id',
 					'type' => 'int',
 					'size' => 10,
 					'auto' => true,
 				),
 				array(
-					'name' => 'name',
+					'name' => 'cat_name',
 					'type' => 'varchar',
 					'size' => 255,
 					'default' => '',
