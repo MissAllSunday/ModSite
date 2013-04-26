@@ -55,7 +55,7 @@ function template_ModSite_main()
 		<div class="clear">';
 
 	/* Button for adding a new entry */
-	if ($context['Modsite']['object']->permissions('add') == true)
+	// if ($context['Modsite']['object']->permissions('add') == true)
 		echo '
 			<div id="confirm_buttons">
 				<form action="', $scripturl, '?action=modsite;sa=add" method="post" target="_self">
