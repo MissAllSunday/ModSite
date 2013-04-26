@@ -16,7 +16,7 @@ class ModSite {
 	protected $_table = array(
 		'modsite' => array(
 			'name' => 'mod_site',
-			'columns' => array('id', 'id_category', 'id_user', 'downloads', 'name', 'file', 'demo', 'version', 'id_topic', 'smf_version' 'smf_download', 'github', 'description', 'time'),
+			'columns' => array('id', 'id_category', 'id_user', 'downloads', 'name', 'file', 'demo', 'version', 'id_topic', 'smf_version', 'smf_download', 'github', 'description', 'time'),
 		),
 		'cats' => array(
 			'name' => 'mod_categories',
@@ -78,7 +78,7 @@ class ModSite {
 			$result = $smcFunc['db_query']('', '
 				SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
 				FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
-					LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.id = s.id_cat)
+					LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.cat_id = s.id_category)
 					LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
 				ORDER BY {raw:sort}
 				LIMIT {int:limit}',
@@ -128,7 +128,7 @@ class ModSite {
 		$result = $smcFunc['db_query']('', '
 			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
 			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
-				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.id = s.id_cat)
+				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.cat_id = s.id_category)
 				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
 			WHERE id = ({int:id})
 			LIMIT {int:limit}',
@@ -172,7 +172,7 @@ class ModSite {
 		$result = $smcFunc['db_query']('', '
 			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
 			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
-				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.id = s.id_cat)
+				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.cat_id = s.id_category)
 				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
 			WHERE '. $column .' '. (is_int($value) ? '= {int:value} ' : 'LIKE {string:value} ') .'
 			ORDER BY {raw:sort}
@@ -221,7 +221,7 @@ class ModSite {
 		$result = $smcFunc['db_query']('', '
 			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
 			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
-				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.id = s.id_cat)
+				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.cat_id = s.id_category)
 				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
 			ORDER BY {raw:sort} ASC
 			LIMIT {int:start}, {int:maxindex}',
