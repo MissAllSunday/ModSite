@@ -97,3 +97,13 @@ function template_ModSite_add()
 			<br />
 		</form>';
 }
+
+function modsite_header()
+{
+
+}
+
+function modsite_sideBar()
+{
+
+}
