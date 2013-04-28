@@ -91,10 +91,10 @@ function template_modSite_add()
 		<br />';
 
 		echo '
-		<form action="', $scripturl, '?action=modsite;sa=add2;', (!empty($context['modsite']['edit']) || isset($_REQUEST['previewEdit']) ? 'fid='.  (!empty($context['modsite']['edit']['id']) ? $context['modsite']['edit']['id'] : $_REQUEST['previewEdit']) .';edit' : ''),'" method="post" target="_self" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'name\', \'body\']);" >
+		<form action="', $scripturl, '?action=modsite;sa=add2;', (!empty($context['modSite']['edit']) || isset($_REQUEST['previewEdit']) ? 'fid='.  (!empty($context['modSite']['edit']['id']) ? $context['modSite']['edit']['id'] : $_REQUEST['previewEdit']) .';edit' : ''),'" method="post" target="_self" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'name\', \'body\']);" >
 			<div class="cat_bar">
 				<h3 class="catbg">
-					',(!empty($context['modsite']['edit']) ?  $txt['modSite_edit_editing'] .' - '. $context['modsite']['edit']['name'] : $txt['modSite_edit_creating']),'
+					',(!empty($context['modSite']['edit']) ?  $txt['modSite_edit_editing'] .' - '. $context['modSite']['edit']['name'] : $txt['modSite_edit_creating']),'
 				</h3>
 			</div>
 			<span class="clear upperframe">
@@ -110,7 +110,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_name'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="name" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_name']) ? $context['preview_name'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['name'] : '') ,'" class="input_text" />
+							<input type="text" name="name" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_name']) ? $context['preview_name'] : (!empty($context['modSite']['edit']) ? $context['modSite']['edit']['name'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* File */
@@ -119,7 +119,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_file'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_file']) ? $context['preview_file'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['file'] : '') ,'" class="input_text" />
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_file']) ? $context['preview_file'] : (!empty($context['modSite']['edit']) ? $context['modSite']['edit']['file'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* Demo link */
@@ -128,7 +128,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_demo'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_demo']) ? $context['preview_demo'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['demo'] : '') ,'" class="input_text" />
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_demo']) ? $context['preview_demo'] : (!empty($context['modSite']['edit']) ? $context['modSite']['edit']['demo'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* Mod version */
@@ -137,7 +137,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_version'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_version']) ? $context['preview_version'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['version'] : '') ,'" class="input_text" />
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_version']) ? $context['preview_version'] : (!empty($context['modSite']['edit']) ? $context['modSite']['edit']['version'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* ID topic for support */
@@ -146,7 +146,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_topic'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_topic']) ? $context['preview_topic'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['topic'] : '') ,'" class="input_text" />
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_topic']) ? $context['preview_topic'] : (!empty($context['modSite']['edit']) ? $context['modSite']['edit']['topic'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* SMF version */
@@ -155,7 +155,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_smf'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_smf_version']) ? $context['preview_smf_version'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['smf_version'] : '') ,'" class="input_text" />
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_smf_version']) ? $context['preview_smf_version'] : (!empty($context['modSite']['edit']) ? $context['modSite']['edit']['smf_version'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* SMF download */
@@ -164,7 +164,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_smfd'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_smf_download']) ? $context['preview_smf_download'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['smf_download'] : '') ,'" class="input_text" />
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_smf_download']) ? $context['preview_smf_download'] : (!empty($context['modSite']['edit']) ? $context['modSite']['edit']['smf_download'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* Github repo name */
@@ -173,7 +173,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_github'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_github']) ? $context['preview_github'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['github'] : '') ,'" class="input_text" />
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_github']) ? $context['preview_github'] : (!empty($context['modSite']['edit']) ? $context['modSite']['edit']['github'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* Category select field */
@@ -184,14 +184,14 @@ function template_modSite_add()
 						<dd>';
 
 			/* Show the category select field */
-			if (!empty($context['modsite']['cats']))
+			if (!empty($context['modSite']['cats']))
 			{
 				echo '
 							<select name="category_id">';
 
-				foreach($context['modsite']['cats'] as $cats)
+				foreach($context['modSite']['cats'] as $cats)
 					echo '
-								<option value="', $cats['id'] ,'" ', isset($context['preview_cat']) && $cats['id'] == $context['preview_cat'] ? 'selected="selected"' : (isset($context['modsite']['edit']['cat']['id']) && $cats['id'] == $context['modsite']['edit']['cat']['id'] ? 'selected="selected"' : '') ,'>', $cats['name'] ,'</option>';
+								<option value="', $cats['id'] ,'" ', isset($context['preview_cat']) && $cats['id'] == $context['preview_cat'] ? 'selected="selected"' : (isset($context['modSite']['edit']['cat']['id']) && $cats['id'] == $context['modSite']['edit']['cat']['id'] ? 'selected="selected"' : '') ,'>', $cats['name'] ,'</option>';
 
 				echo '
 							</select>';
@@ -220,7 +220,7 @@ function template_modSite_add()
 			echo '
 						<div id="confirm_buttons">
 							<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-							<input type="submit" name="send" class="sbtn" value="',(!empty($context['modsite']['edit']) || !empty($_REQUEST['previewEdit']) ? $txt['modSite_edit_edit'] : $txt['modSite_edit_add']),'" />
+							<input type="submit" name="send" class="sbtn" value="',(!empty($context['modSite']['edit']) || !empty($_REQUEST['previewEdit']) ? $txt['modSite_edit_edit'] : $txt['modSite_edit_add']),'" />
 							<input type="submit" name="preview" class="sbtn" value="', $txt['preview'], '" />
 						</div>
 					</div>

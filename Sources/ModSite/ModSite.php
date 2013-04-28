@@ -182,10 +182,10 @@ function modsite_main($modsiteObject)
 	);
 
 	/* Pass the object to the template */
-	$context['modsite']['object'] = $modsiteObject;
+	$context['modSite']['object'] = $modsiteObject;
 
 	/* Get the latest modsite from DB */
-	$context['modsite']['latest'] = $modsiteObject->getLatest(empty($modSettings['modSite_latest_limit']) ? 10 : $modSettings['modSite_latest_limit']);
+	$context['modSite']['latest'] = $modsiteObject->getLatest(empty($modSettings['modSite_latest_limit']) ? 10 : $modSettings['modSite_latest_limit']);
 }
 
 function modsite_add($modsiteObject)
@@ -203,10 +203,10 @@ function modsite_add($modsiteObject)
 	);
 
 	/* Pass the object to the template */
-	$context['modsite']['object'] = $modsiteObject;
+	$context['modSite']['object'] = $modsiteObject;
 
 	/* Tell the template we are adding, not editing */
-	$context['modsite']['edit'] = false;
+	$context['modSite']['edit'] = false;
 
 	/* We need make sure we have this. */
 	require_once($sourcedir . '/Subs-Editor.php');
@@ -332,7 +332,7 @@ function modsite_edit($modsiteObject)
 	else
 	{
 		/* Pass the object to the template */
-		$context['modsite']['object'] = $modsiteObject;
+		$context['modSite']['object'] = $modsiteObject;
 
 		if (isset($_REQUEST['body']) && !empty($_REQUEST['body_mode']))
 		{
@@ -348,12 +348,12 @@ function modsite_edit($modsiteObject)
 		if (empty($temp))
 			fatal_lang_error('modSite_no_valid_id', false);
 
-		$context['modsite']['edit'] = $temp[$lid];
+		$context['modSite']['edit'] = $temp[$lid];
 		$context['sub_template'] = 'modSite_add';
-		$context['page_title'] = $txt['modSite_preview_edit'] .' - '. $context['modsite']['edit']['title'];
+		$context['page_title'] = $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite;sa=edit;lid='. $lid,
-			'name' => $txt['modSite_preview_edit'] .' - '. $context['modsite']['edit']['title'],
+			'name' => $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
 		);
 
 		require_once($sourcedir .'/Subs-Editor.php');
@@ -362,7 +362,7 @@ function modsite_edit($modsiteObject)
 
 		$editorOptions = array(
 			'id' => 'body',
-			'value' => html_to_bbc(un_htmlspecialchars($context['modsite']['edit']['body'])),
+			'value' => html_to_bbc(un_htmlspecialchars($context['modSite']['edit']['body'])),
 			'width' => '90%',
 		);
 
@@ -395,7 +395,7 @@ function modsite_success($modsiteObject)
 	if (!isset($_GET['pin']) || empty($_GET['pin']))
 		redirectexit('action=modsite');
 
-	$context['modsite']['pin'] = trim($smcFunc['htmlspecialchars']($_GET['pin']));
+	$context['modSite']['pin'] = trim($smcFunc['htmlspecialchars']($_GET['pin']));
 
 		/* Build the link tree.... */
 		$context['linktree'][] = array(
@@ -404,13 +404,13 @@ function modsite_success($modsiteObject)
 		);
 
 		$context['sub_template'] = 'modSite_success';
-		$context['modsite']['message'] = $txt['modSite_success_message_'. $context['modsite']['pin']];
+		$context['modSite']['message'] = $txt['modSite_success_message_'. $context['modSite']['pin']];
 
 		/* Set a descriptive title. */
 		$context['page_title'] = $txt['modSite_success_title'];
 
 	/* Pass the object to the template */
-	$context['modsite']['object'] = $modsiteObject;
+	$context['modSite']['object'] = $modsiteObject;
 }
 
 function modsite_single($modsiteObject)
@@ -432,23 +432,23 @@ function modsite_single($modsiteObject)
 
 	/* Does the data has been already loaded? */
 	if (!empty($context['modSite_all'][$id]))
-		$context['modsite']['single'] = $context['modSite_all'][$id];
+		$context['modSite']['single'] = $context['modSite_all'][$id];
 
 	/* No? bugger.. well, get it from the DB */
 	else
-		$context['modsite']['single'] = $modsiteObject->getSingle($id);
+		$context['modSite']['single'] = $modsiteObject->getSingle($id);
 
 	/* Set all we need */
 	$context['sub_template'] = 'modSite_single';
 	$context['canonical_url'] = $scripturl . '?action=modsite;sa=single;lid=' . $id;
-	$context['page_title'] = $context['modsite']['single']['title'] .' - '. $context['modsite']['single']['artist'];
+	$context['page_title'] = $context['modSite']['single']['title'] .' - '. $context['modSite']['single']['artist'];
 	$context['linktree'][] = array(
 		'url' => $context['canonical_url'],
 		'name' => $context['page_title'],
 	);
 
 	/* Pass the object to the template */
-	$context['modsite']['object'] = $modsiteObject;
+	$context['modSite']['object'] = $modsiteObject;
 }
 
 function modsite_artist($modsiteObject)
@@ -473,10 +473,10 @@ function modsite_artist($modsiteObject)
 	);
 
 	/* Get the latest modsite from DB */
-	$context['modsite']['artist'] = $modsiteObject->getBy('artist', $lid , false);
+	$context['modSite']['artist'] = $modsiteObject->getBy('artist', $lid , false);
 
 	/* Pass the object to the template */
-	$context['modsite']['object'] = $modsiteObject;
+	$context['modSite']['object'] = $modsiteObject;
 }
 
 function modsite_list($modsiteObject)
@@ -496,7 +496,7 @@ function modsite_list($modsiteObject)
 
 	/* No letter? then show the main page */
 	if (!isset($_GET['lidletter']) || empty($_GET['lidletter']))
-		$context['modsite']['list'] = $modsiteObject->getAll();
+		$context['modSite']['list'] = $modsiteObject->getAll();
 
 	/* Show a list of modsite starting with X letter */
 	elseif (isset($_GET['lidletter']))
@@ -510,14 +510,14 @@ function modsite_list($modsiteObject)
 			'name' => $txt['modSite_list_title_by_letter'] . $lidletter,
 		);
 
-		$context['modsite']['list'] = $modsiteObject->getBy('title', $lidletter .'%');
+		$context['modSite']['list'] = $modsiteObject->getBy('title', $lidletter .'%');
 
-		if (empty($context['modsite']['list']))
+		if (empty($context['modSite']['list']))
 			fatal_lang_error('modSite_no_modsite_with_letter', false);
 	}
 
 	/* Pass the object to the template */
-	$context['modsite']['object'] = $modsiteObject;
+	$context['modSite']['object'] = $modsiteObject;
 }
 
 function modsite_manage($modsiteObject)
@@ -537,7 +537,7 @@ function modsite_manage($modsiteObject)
 
 	/* No letter? then show the main page */
 	if (!isset($_GET['lidletter']) || empty($_GET['lidletter']))
-		$context['modsite']['list'] = $modsiteObject->getAll('manage');
+		$context['modSite']['list'] = $modsiteObject->getAll('manage');
 
 	/* Show a list of modsite starting with X letter */
 	elseif (isset($_GET['lidletter']))
@@ -551,14 +551,14 @@ function modsite_manage($modsiteObject)
 			'name' => $txt['modSite_list_title_by_letter'] . $lidletter,
 		);
 
-		$context['modsite']['list'] = $modsiteObject->getBy('title', $lidletter .'%');
+		$context['modSite']['list'] = $modsiteObject->getBy('title', $lidletter .'%');
 
-		if (empty($context['modsite']['list']))
+		if (empty($context['modSite']['list']))
 			fatal_lang_error('modSite_no_modsite_with_letter', false);
 	}
 
 	/* Pass the object to the template */
-	$context['modsite']['object'] = $modsiteObject;
+	$context['modSite']['object'] = $modsiteObject;
 }
 
 function modsite_search($modsiteObject)
@@ -583,12 +583,12 @@ function modsite_search($modsiteObject)
 		'name' => $txt['modSite_list_title_by_letter'] . $value,
 	);
 
-	$context['modsite']['list'] = $modsiteObject->getBy($column, '%'. $value .'%');
+	$context['modSite']['list'] = $modsiteObject->getBy($column, '%'. $value .'%');
 
-	if (empty($context['modsite']['list']))
+	if (empty($context['modSite']['list']))
 		fatal_lang_error('modSite_no_modsite_with_letter', false);
 
 
 	/* Pass the object to the template */
-	$context['modsite']['object'] = $modsiteObject;
+	$context['modSite']['object'] = $modsiteObject;
 }
