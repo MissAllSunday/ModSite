@@ -107,10 +107,73 @@ function template_modSite_add()
 			/* Title */
 			echo '
 						<dt>
-							<span id="caption_subject">', $txt['modSite_edit_title'] ,'</span>
+							<span id="caption_subject">', $txt['modSite_edit_name'] ,'</span>
 						</dt>
 						<dd>
 							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_title']) ? $context['preview_title'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['title'] : '') ,'" class="input_text" />
+						</dd>';
+
+			/* File */
+			echo '
+						<dt>
+							<span id="caption_subject">', $txt['modSite_edit_file'] ,'</span>
+						</dt>
+						<dd>
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_file']) ? $context['preview_file'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['file'] : '') ,'" class="input_text" />
+						</dd>';
+
+			/* Demo link */
+			echo '
+						<dt>
+							<span id="caption_subject">', $txt['modSite_edit_demo'] ,'</span>
+						</dt>
+						<dd>
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_demo']) ? $context['preview_demo'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['demo'] : '') ,'" class="input_text" />
+						</dd>';
+
+			/* Mod version */
+			echo '
+						<dt>
+							<span id="caption_subject">', $txt['modSite_edit_version'] ,'</span>
+						</dt>
+						<dd>
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_version']) ? $context['preview_version'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['version'] : '') ,'" class="input_text" />
+						</dd>';
+
+			/* ID topic for support */
+			echo '
+						<dt>
+							<span id="caption_subject">', $txt['modSite_edit_topic'] ,'</span>
+						</dt>
+						<dd>
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_topic']) ? $context['preview_topic'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['topic'] : '') ,'" class="input_text" />
+						</dd>';
+
+			/* SMF version */
+			echo '
+						<dt>
+							<span id="caption_subject">', $txt['modSite_edit_smf'] ,'</span>
+						</dt>
+						<dd>
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_smf_version']) ? $context['preview_smf_version'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['smf_version'] : '') ,'" class="input_text" />
+						</dd>';
+
+			/* SMF download */
+			echo '
+						<dt>
+							<span id="caption_subject">', $txt['modSite_edit_smfd'] ,'</span>
+						</dt>
+						<dd>
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_smf_download']) ? $context['preview_smf_download'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['smf_download'] : '') ,'" class="input_text" />
+						</dd>';
+
+			/* Github repo name */
+			echo '
+						<dt>
+							<span id="caption_subject">', $txt['modSite_edit_github'] ,'</span>
+						</dt>
+						<dd>
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_github']) ? $context['preview_github'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['github'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* Category select field */
