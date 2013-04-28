@@ -161,10 +161,10 @@ function template_modSite_add()
 							<input type="submit" name="preview" class="sbtn" value="', $txt['preview'], '" />
 						</div>
 					</div>
-				</div>
-				<span class="lowerframe">
-					<span></span>
-				</span><br />
+			</div>
+			<span class="lowerframe">
+				<span></span>
+			</span><br />
 		</form>';
 
 	echo '
