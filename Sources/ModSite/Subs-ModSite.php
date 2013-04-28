@@ -213,7 +213,7 @@ class ModSite {
 		global $smcFunc, $scripturl, $txt, $modSettings, $context;
 
 		$total = $this->getCount();
-		$maxIndex = !empty($modSettings['modsite_pag_limit']) ? $modSettings['modsite_pag_limit'] : 20;
+		$maxIndex = !empty($modSettings['modSite_pag_limit']) ? $modSettings['modSite_pag_limit'] : 20;
 
 		/* Safety first! */
 		$sortArray = array('title', 'artist', 'latest');
@@ -316,8 +316,8 @@ class ModSite {
 			return false;
 
 		/* The mod must be enable */
-		if (empty($modSettings['modsite_enable']))
-			fatal_lang_error('modsite_error_enable', false);
+		if (empty($modSettings['modSite_enable']))
+			fatal_lang_error('modSite_error_enable', false);
 
 		/* colect the permissions */
 		foreach ($type as $t)
@@ -353,10 +353,10 @@ class ModSite {
 
 		/* Let's check if you have what it takes... */
 		if ($edit == true)
-			$return .= '<a href="'. $scripturl .'?action=modsite;sa=edit;lid='. $this->clean($id) .'">'. $txt['modsite_edit'] .'</a>';
+			$return .= '<a href="'. $scripturl .'?action=modsite;sa=edit;lid='. $this->clean($id) .'">'. $txt['modSite_edit'] .'</a>';
 
 		if ($delete == true)
-			$return .= ($edit == true ? ' | ': '') .'<a href="'. $scripturl .'?action=modsite;sa=delete;lid='. $this->clean($id) .'">'. $txt['modsite_delete'] .'</a>';
+			$return .= ($edit == true ? ' | ': '') .'<a href="'. $scripturl .'?action=modsite;sa=delete;lid='. $this->clean($id) .'">'. $txt['modSite_delete'] .'</a>';
 
 		/* Send the string */
 		return $return;

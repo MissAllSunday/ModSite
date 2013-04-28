@@ -43,7 +43,7 @@ $txt['modSite_time_year'] = 'year';
 // Admin strings
 $txt['modSite_admin_desc'] = 'Some description here';
 $txt['modSite_menu_position'] = 'Select the button position';
-$txt['modSite_menu_position_desc'] = 'la bl bla';
+$txt['modSite_menu_position_desc'] = 'bla bl bla';
 $txt['modSite_enable'] = 'Enable the mode site';
 $txt['modSite_enable_desc'] = 'bla bla bla';
 $txt['modSite_latest_limit'] = 'Latest limit';
@@ -53,3 +53,6 @@ $txt['modSite_pag_limit_desc'] = 'For pagination stuff';
 $txt['modSite_'] = '';
 $txt['modSite_'] = '';
 $txt['modSite_'] = '';
+
+// Error
+$txt['modSite_error_enable'] = 'The mod is not enable';
