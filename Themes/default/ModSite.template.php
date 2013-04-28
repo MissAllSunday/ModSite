@@ -25,7 +25,7 @@
  *
  */
 
-function template_ModSite_main()
+function template_modSite_main()
 {
 	global $txt, $context, $scripturl, $modSettings;
 
@@ -67,35 +67,109 @@ function template_ModSite_main()
 		</div>';
 }
 
-function template_ModSite_add()
+function template_modSite_add()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
-	// The main containing header.
+	/* The main div */
 	echo '
-		<form action="', $scripturl, '?action=mods;sa=add2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
-			<h3 class="catbg">
-				<span class="left"></span>
-				<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" class="icon" />
-				', $context['page_desc'] , '
-			</h3>
-			<p class="windowbg description">
-				', $context['page_desc'] , '
-			</p>
-			<div class="windowbg2">
-				<span class="topslice"><span></span></span>
-					<div class="content">';
+	<div class="floatright nopadding" ', $context['modsite']['object']->getBlockWidth() ,'>';
 
-		/* Print the form */
-		echo $context['ModSite']['Form'];
-
-	echo '<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-						<input type="submit" name="send" class="sbtn" value="Create" />
-					</div>
-				<span class="botslice"><span></span></span>
+	// Show the preview
+	if (isset($context['preview_message']))
+	echo '
+		<div class="cat_bar">
+			<h3 class="catbg">', $context['preview_title'], '</h3>
+		</div>
+		<div class="windowbg">
+		<span class="topslice"><span></span></span>
+			<div class="content">
+				', $context['preview_message'], '
 			</div>
-			<br />
+		<span class="botslice"><span></span></span>
+		</div>
+		<br />';
+
+		echo '
+		<form action="', $scripturl, '?action=modsite;sa=add2;', (!empty($context['modsite']['edit']) || isset($_REQUEST['previewEdit']) ? 'fid='.  (!empty($context['modsite']['edit']['id']) ? $context['modsite']['edit']['id'] : $_REQUEST['previewEdit']) .';edit' : ''),'" method="post" target="_self" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'title\', \'body\']);" >
+			<div class="cat_bar">
+				<h3 class="catbg">
+					',(!empty($context['modsite']['edit']) ?  $txt['faqmod_editing'] .' - '. $context['modsite']['edit']['title'] : $txt['faqmod_adding']),'
+				</h3>
+			</div>
+			<span class="clear upperframe">
+				<span></span>
+			</span>
+			<div class="roundframe rfix">
+				<div class="innerframe">
+					<dl id="post_header">';
+
+			/* Title */
+			echo '
+						<dt>
+							<span id="caption_subject">', $txt['faqmod_title_edit'] ,'</span>
+						</dt>
+						<dd>
+							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_title']) ? $context['preview_title'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['title'] : '') ,'" class="input_text" />
+						</dd>';
+
+			/* Category select field */
+			echo'
+						<dt>
+							<span id="caption_subject">', $txt['faqmod_edit_category'] ,':</span>
+						</dt>
+						<dd>';
+
+			/* Show the category select field */
+			if (!empty($context['modsite']['cats']))
+			{
+				echo '
+							<select name="category_id">';
+
+				foreach($context['modsite']['cats'] as $cats)
+					echo '
+								<option value="', $cats['id'] ,'" ', isset($context['preview_cat']) && $cats['id'] == $context['preview_cat'] ? 'selected="selected"' : (isset($context['modsite']['edit']['cat']['id']) && $cats['id'] == $context['modsite']['edit']['cat']['id'] ? 'selected="selected"' : '') ,'>', $cats['name'] ,'</option>';
+
+				echo '
+							</select>';
+			}
+
+			else
+				echo '
+							<div class="faqmod_warning">
+								',$txt['faqmod_no_cat_admin'],'
+							</div>';
+
+			echo'
+						</dd>
+					</dl>';
+
+			if ($context['show_bbc'])
+				echo '
+						<div id="bbcBox_message"></div>';
+
+			if (!empty($context['smileys']['postform']) || !empty($context['smileys']['popup']))
+				echo '
+						<div id="smileyBox_message"></div>';
+
+			echo template_control_richedit($context['post_box_name'], 'smileyBox_message', 'bbcBox_message');
+
+			echo '
+						<div id="confirm_buttons">
+							<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+							<input type="submit" name="send" class="sbtn" value="',(!empty($context['modsite']['edit']) || !empty($_REQUEST['previewEdit']) ? $txt['faqmod_edit_send'] : $txt['faqmod_create_send']),'" />
+							<input type="submit" name="preview" class="sbtn" value="', $txt['preview'], '" />
+						</div>
+					</div>
+				</div>
+				<span class="lowerframe">
+					<span></span>
+				</span><br />
 		</form>';
+
+	echo '
+	</div>
+	<div class="clear"></div>';
 }
 
 function modsite_header()
