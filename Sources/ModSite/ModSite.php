@@ -231,57 +231,15 @@ function modsite_add2($modsiteObject)
 	checkSession('post', '', true);
 
 	/* Check permissions */
-	$modsiteObject->permissions('add', true);
-
-	/* Want to see your masterpiece before others? */
-	if (isset($_REQUEST['preview']))
-	{
-		/* Set everything up to be displayed. */
-		$context['preview_subject'] = $modsiteObject->clean($_REQUEST['title']);
-		$context['preview_artist'] = $modsiteObject->clean($_REQUEST['artist']);
-		$context['preview_message'] = $modsiteObject->clean($_REQUEST['body'], true);
-
-		/* Parse out the BBC if it is enabled. */
-		$context['preview_message'] = parse_bbc($context['preview_message']);
-
-		/* We Censor for your protection... */
-		censorText($context['preview_subject']);
-		censorText($context['preview_artist']);
-		censorText($context['preview_message']);
-
-		/* Build the link tree.... */
-		$context['linktree'][] = array(
-			'url' => $scripturl . '?action=modsite;sa=add',
-			'name' => $txt['modSite_preview_add'],
-		);
-
-		/* We need make sure we have this. */
-		require_once($sourcedir . '/Subs-Editor.php');
-
-		/* Create it... */
-		$editorOptions = array(
-			'id' => 'body',
-			'value' => isset($_REQUEST['body']) ? str_replace(array('  '), array('&nbsp; '), $smcFunc['htmlspecialchars']($_REQUEST['body'])) : '',
-			'width' => '90%',
-		);
-
-		create_control_richedit($editorOptions);
-
-		/* ... and store the ID again for use in the form */
-		$context['post_box_name'] = $editorOptions['id'];
-		$context['sub_template'] = 'modSite_add';
-
-		/* Set a descriptive title. */
-		$context['page_title'] = $txt['preview'] .' - ' . $context['preview_subject'];
-	}
+	// $modsiteObject->permissions('add', true);
 
 	/* Editing */
 	elseif (isset($_REQUEST['edit']))
 	{
-		if (!isset($_GET['lid']) || empty($_GET['lid']))
+		if (!isset($_GET['did']) || empty($_GET['did']))
 			redirectexit('action=modsite');
 
-		$lid = (int) $modsiteObject->clean($_GET['lid']);
+		$lid = (int) $modsiteObject->clean($_GET['did']);
 
 		/* Make usre it does exists... */
 		$current = $modsiteObject->getBy('id', $lid, 1);
@@ -326,7 +284,7 @@ function modsite_edit($modsiteObject)
 
 	$modsiteObject->permissions('edit', true);
 
-	if (!isset($_GET['lid']) || empty($_GET['lid']))
+	if (!isset($_GET['did']) || empty($_GET['did']))
 		redirectexit('action=modsite');
 
 	else
@@ -341,7 +299,7 @@ function modsite_edit($modsiteObject)
 			$_POST['body'] = $_REQUEST['body'];
 		}
 
-		$lid = (int) $modsiteObject->clean($_GET['lid']);
+		$lid = (int) $modsiteObject->clean($_GET['did']);
 
 		$temp = $modsiteObject->getBy('id', $lid, 1);
 
@@ -377,12 +335,12 @@ function modsite_delete($modsiteObject)
 
 	$modsiteObject->permissions('delete', true);
 
-	if (!isset($_GET['lid']) || empty($_GET['lid']))
+	if (!isset($_GET['did']) || empty($_GET['did']))
 		redirectexit('action=modsite');
 
 	else
 	{
-		$lid = (int) $modsiteObject->clean($_GET['lid']);
+		$lid = (int) $modsiteObject->clean($_GET['did']);
 		$modsiteObject->delete($lid);
 		redirectexit('action=modsite;sa=success;pin=delete');
 	}
@@ -418,14 +376,14 @@ function modsite_single($modsiteObject)
 	global $context, $scripturl, $txt, $user_info;
 
 	/* Forget it... */
-	if (!isset($_GET['lid']) || empty($_GET['lid']))
+	if (!isset($_GET['did']) || empty($_GET['did']))
 		fatal_lang_error('modSite_error_no_valid_action', false);
 
 	/* Are you allowed to see this page? */
 	$modsiteObject->permissions('view', true);
 
 	/* Get a valid ID */
-	$id = $modsiteObject->clean($_GET['lid']);
+	$id = $modsiteObject->clean($_GET['did']);
 
 	if (empty($id))
 		fatal_lang_error('modSite_error_no_valid_action', false);
@@ -456,13 +414,13 @@ function modsite_artist($modsiteObject)
 	global $context, $scripturl, $txt, $user_info;
 
 	/* Forget it... */
-	if (!isset($_GET['lid']) || empty($_GET['lid']))
+	if (!isset($_GET['did']) || empty($_GET['did']))
 		fatal_lang_error('modSite_error_no_valid_action', false);
 
 	/* Are you allowed to see this page? */
 	$modsiteObject->permissions('view', true);
 
-	$lid = $modsiteObject->clean($_GET['lid']);
+	$lid = $modsiteObject->clean($_GET['did']);
 
 	$context['sub_template'] = 'modSite_artist';
 	$context['canonical_url'] = $scripturl . '?action=modsite;sa=artist;lid='. $lid;
