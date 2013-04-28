@@ -196,10 +196,10 @@ function modsite_add($modsiteObject)
 	$modsiteObject->permissions('add', true);
 
 	$context['sub_template'] = 'modSite_add';
-	$context['page_title'] = $txt['modSite_post_title'];
+	$context['page_title'] = $txt['modSite_edit_creating'];
 	$context['linktree'][] = array(
 		'url' => $scripturl. '?action=modsite;sa=add',
-		'name' => $txt['modSite_post_title'],
+		'name' => $context['page_title'],
 	);
 
 	/* Pass the object to the template */

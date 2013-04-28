@@ -29,6 +29,8 @@ $txt['modSite_edit_info'] = 'Info:';
 $txt['modSite_edit_info_sub'] = 'Short description of the mod.';
 $txt['modSite_edit_edit'] = 'Edit this mod';
 $txt['modSite_edit_add'] = 'Add this mod';
+$txt['modSite_edit_editing'] = 'Editing';
+$txt['modSite_edit_creating'] = 'Creating a new mod';
 
 // Time stuff
 $txt['modSite_time_just_now'] = 'just now.';

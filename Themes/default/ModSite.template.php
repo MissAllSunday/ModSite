@@ -73,7 +73,7 @@ function template_modSite_add()
 
 	/* The main div */
 	echo '
-	<div class="floatright nopadding" ', $context['modsite']['object']->getBlockWidth() ,'>';
+	<div class="floatright nopadding" style="width:80%">';
 
 	// Show the preview
 	if (isset($context['preview_message']))
@@ -91,10 +91,10 @@ function template_modSite_add()
 		<br />';
 
 		echo '
-		<form action="', $scripturl, '?action=modsite;sa=add2;', (!empty($context['modsite']['edit']) || isset($_REQUEST['previewEdit']) ? 'fid='.  (!empty($context['modsite']['edit']['id']) ? $context['modsite']['edit']['id'] : $_REQUEST['previewEdit']) .';edit' : ''),'" method="post" target="_self" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'title\', \'body\']);" >
+		<form action="', $scripturl, '?action=modsite;sa=add2;', (!empty($context['modsite']['edit']) || isset($_REQUEST['previewEdit']) ? 'fid='.  (!empty($context['modsite']['edit']['id']) ? $context['modsite']['edit']['id'] : $_REQUEST['previewEdit']) .';edit' : ''),'" method="post" target="_self" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'name\', \'body\']);" >
 			<div class="cat_bar">
 				<h3 class="catbg">
-					',(!empty($context['modsite']['edit']) ?  $txt['faqmod_editing'] .' - '. $context['modsite']['edit']['title'] : $txt['faqmod_adding']),'
+					',(!empty($context['modsite']['edit']) ?  $txt['modSite_edit_editing'] .' - '. $context['modsite']['edit']['name'] : $txt['modSite_edit_creating']),'
 				</h3>
 			</div>
 			<span class="clear upperframe">
@@ -104,13 +104,13 @@ function template_modSite_add()
 				<div class="innerframe">
 					<dl id="post_header">';
 
-			/* Title */
+			/* Name */
 			echo '
 						<dt>
 							<span id="caption_subject">', $txt['modSite_edit_name'] ,'</span>
 						</dt>
 						<dd>
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_title']) ? $context['preview_title'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['title'] : '') ,'" class="input_text" />
+							<input type="text" name="name" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_name']) ? $context['preview_name'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['name'] : '') ,'" class="input_text" />
 						</dd>';
 
 			/* File */
@@ -179,7 +179,7 @@ function template_modSite_add()
 			/* Category select field */
 			echo'
 						<dt>
-							<span id="caption_subject">', $txt['modSite_edit_category'] ,':</span>
+							<span id="caption_subject">', $txt['modSite_edit_category'] ,'</span>
 						</dt>
 						<dd>';
 
