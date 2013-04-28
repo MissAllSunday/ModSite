@@ -68,6 +68,19 @@ class ModSite {
 		);
 	}
 
+	public function doesExists($id)
+	{
+		global $smcFunc;
+
+		$query = $smcFunc['db_query']('', '
+			SELECT id
+			FROM {db_prefix}' . ($this->_table['modsite']['name']) . '
+			WHERE id = '. ($id) .'
+		');
+
+		return $smcFunc['db_num_rows']($query);
+	}
+
 	public function getLatest($limit = 10)
 	{
 		global $smcFunc, $scripturl, $txt;
