@@ -107,7 +107,7 @@ function template_modSite_add()
 			/* Title */
 			echo '
 						<dt>
-							<span id="caption_subject">', $txt['faqmod_title_edit'] ,'</span>
+							<span id="caption_subject">', $txt['modSite_edit_title'] ,'</span>
 						</dt>
 						<dd>
 							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="', isset($context['preview_title']) ? $context['preview_title'] : (!empty($context['modsite']['edit']) ? $context['modsite']['edit']['title'] : '') ,'" class="input_text" />
@@ -116,7 +116,7 @@ function template_modSite_add()
 			/* Category select field */
 			echo'
 						<dt>
-							<span id="caption_subject">', $txt['faqmod_edit_category'] ,':</span>
+							<span id="caption_subject">', $txt['modSite_edit_category'] ,':</span>
 						</dt>
 						<dd>';
 
@@ -137,7 +137,7 @@ function template_modSite_add()
 			else
 				echo '
 							<div class="faqmod_warning">
-								',$txt['faqmod_no_cat_admin'],'
+								', $txt['modSite_edit_category_no'] ,'
 							</div>';
 
 			echo'
@@ -157,7 +157,7 @@ function template_modSite_add()
 			echo '
 						<div id="confirm_buttons">
 							<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-							<input type="submit" name="send" class="sbtn" value="',(!empty($context['modsite']['edit']) || !empty($_REQUEST['previewEdit']) ? $txt['faqmod_edit_send'] : $txt['faqmod_create_send']),'" />
+							<input type="submit" name="send" class="sbtn" value="',(!empty($context['modsite']['edit']) || !empty($_REQUEST['previewEdit']) ? $txt['modSite_edit_edit'] : $txt['modSite_edit_add']),'" />
 							<input type="submit" name="preview" class="sbtn" value="', $txt['preview'], '" />
 						</div>
 					</div>

@@ -2,11 +2,13 @@
 
 global $txt;
 
+// Add/Edit strings
 $txt['modSite_title_main'] = 'Mod Site';
 $txt['modSite_mods'] = 'Mods';
 $txt['modSite_themes'] = 'Themes';
 $txt['modSite_edit_name'] = 'Name: ';
 $txt['modSite_edit_category'] = 'Category: ';
+$txt['modSite_edit_category_no'] = 'You need to add a category first';
 $txt['modSite_edit_title'] = 'Title: ';
 $txt['modSite_edit_file'] = 'File name:';
 $txt['modSite_edit_file_sub'] = 'The file name must correspond to an existing file in the Downloads directory.';
@@ -22,10 +24,14 @@ $txt['modSite_edit_smfd'] = 'SMF download';
 $txt['modSite_edit_smfd_sub'] = 'A link to the download at SMF';
 $txt['modSite_edit_github'] = 'Github:';
 $txt['modSite_edit_github_sub'] = 'The github name for this mod';
-$txt['modSite_edit_desc'] = 'Description:';
+$txt['modSite_edit_desc'] = 'Description: ';
 $txt['modSite_edit_desc_sub'] = 'Long description for the mod, readme, etc';
 $txt['modSite_edit_info'] = 'Info:';
 $txt['modSite_edit_info_sub'] = 'Short description of the mod.';
+$txt['modSite_edit_edit'] = 'Edit this mod';
+$txt['modSite_edit_add'] = 'Add this mod';
+
+// Time stuff
 $txt['modSite_time_just_now'] = 'just now.';
 $txt['modSite_time_second'] = 'second';
 $txt['modSite_time_ago'] = 'ago.';
@@ -35,6 +41,7 @@ $txt['modSite_time_day'] = 'day';
 $txt['modSite_time_month'] = 'month';
 $txt['modSite_time_year'] = 'year';
 
+// Admin strings
 $txt['modSite_admin_desc'] = 'Some description here';
 $txt['modSite_menu_position'] = 'Select the button position';
 $txt['modSite_menu_position_desc'] = 'la bl bla';
