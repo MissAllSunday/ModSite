@@ -236,21 +236,22 @@ function modsite_add2($modsiteObject)
 	/* Editing */
 	elseif (isset($_REQUEST['edit']))
 	{
+		/* Sorry! */
 		if (!isset($_GET['did']) || empty($_GET['did']))
 			redirectexit('action=modsite');
 
-		$lid = (int) $modsiteObject->clean($_GET['did']);
+		$did = (int) $modsiteObject->clean($_GET['did']);
 
 		/* Make usre it does exists... */
-		$current = $modsiteObject->getBy('id', $lid, 1);
+		$current = $modsiteObject->getBy('id', $did, 1);
 
 		/* Tell the user this entry doesn't exists anymore */
 		if (empty($current))
-			fatal_lang_error('modSite_no_valid_id', false);
+			fatal_lang_error('modSite_error_no_valid_id', false);
 
 		/* Let us continue... */
 		$editData = array(
-			'id' => $lid,
+			'id' => $did,
 			'artist' => $modsiteObject->clean($_REQUEST['artist']),
 			'title' => $modsiteObject->clean($_REQUEST['title']),
 			'body' => $modsiteObject->clean($_REQUEST['body'], true),
@@ -299,18 +300,18 @@ function modsite_edit($modsiteObject)
 			$_POST['body'] = $_REQUEST['body'];
 		}
 
-		$lid = (int) $modsiteObject->clean($_GET['did']);
+		$did = (int) $modsiteObject->clean($_GET['did']);
 
-		$temp = $modsiteObject->getBy('id', $lid, 1);
+		$temp = $modsiteObject->getBy('id', $did, 1);
 
 		if (empty($temp))
 			fatal_lang_error('modSite_no_valid_id', false);
 
-		$context['modSite']['edit'] = $temp[$lid];
+		$context['modSite']['edit'] = $temp[$did];
 		$context['sub_template'] = 'modSite_add';
 		$context['page_title'] = $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=edit;lid='. $lid,
+			'url' => $scripturl. '?action=modsite;sa=edit;lid='. $did,
 			'name' => $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
 		);
 
@@ -340,8 +341,8 @@ function modsite_delete($modsiteObject)
 
 	else
 	{
-		$lid = (int) $modsiteObject->clean($_GET['did']);
-		$modsiteObject->delete($lid);
+		$did = (int) $modsiteObject->clean($_GET['did']);
+		$modsiteObject->delete($did);
 		redirectexit('action=modsite;sa=success;pin=delete');
 	}
 }
@@ -420,18 +421,18 @@ function modsite_artist($modsiteObject)
 	/* Are you allowed to see this page? */
 	$modsiteObject->permissions('view', true);
 
-	$lid = $modsiteObject->clean($_GET['did']);
+	$did = $modsiteObject->clean($_GET['did']);
 
 	$context['sub_template'] = 'modSite_artist';
-	$context['canonical_url'] = $scripturl . '?action=modsite;sa=artist;lid='. $lid;
-	$context['page_title'] = $txt['modSite_artist_title'] . $lid;
+	$context['canonical_url'] = $scripturl . '?action=modsite;sa=artist;lid='. $did;
+	$context['page_title'] = $txt['modSite_artist_title'] . $did;
 	$context['linktree'][] = array(
-		'url' => $scripturl. '?action=modsite;sa=artist;lid='. $lid,
+		'url' => $scripturl. '?action=modsite;sa=artist;lid='. $did,
 		'name' => $context['page_title'],
 	);
 
 	/* Get the latest modsite from DB */
-	$context['modSite']['artist'] = $modsiteObject->getBy('artist', $lid , false);
+	$context['modSite']['artist'] = $modsiteObject->getBy('artist', $did , false);
 
 	/* Pass the object to the template */
 	$context['modSite']['object'] = $modsiteObject;
@@ -459,16 +460,16 @@ function modsite_list($modsiteObject)
 	/* Show a list of modsite starting with X letter */
 	elseif (isset($_GET['lidletter']))
 	{
-		$lidletter = $modsiteObject->clean($_GET['lidletter']);
+		$didletter = $modsiteObject->clean($_GET['lidletter']);
 
 		/* Replace the linktree and title with something more specific */
-		$context['page_title'] = $txt['modSite_list_title_by_letter'] . $lidletter;
+		$context['page_title'] = $txt['modSite_list_title_by_letter'] . $didletter;
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=list;lidletter='. $lidletter,
-			'name' => $txt['modSite_list_title_by_letter'] . $lidletter,
+			'url' => $scripturl. '?action=modsite;sa=list;lidletter='. $didletter,
+			'name' => $txt['modSite_list_title_by_letter'] . $didletter,
 		);
 
-		$context['modSite']['list'] = $modsiteObject->getBy('title', $lidletter .'%');
+		$context['modSite']['list'] = $modsiteObject->getBy('title', $didletter .'%');
 
 		if (empty($context['modSite']['list']))
 			fatal_lang_error('modSite_no_modsite_with_letter', false);
@@ -500,16 +501,16 @@ function modsite_manage($modsiteObject)
 	/* Show a list of modsite starting with X letter */
 	elseif (isset($_GET['lidletter']))
 	{
-		$lidletter = $modsiteObject->clean($_GET['lidletter']);
+		$didletter = $modsiteObject->clean($_GET['lidletter']);
 
 		/* Replace the linktree and title with something more specific */
-		$context['page_title'] = $txt['modSite_list_title_by_letter'] . $lidletter;
+		$context['page_title'] = $txt['modSite_list_title_by_letter'] . $didletter;
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=list;lidletter='. $lidletter,
-			'name' => $txt['modSite_list_title_by_letter'] . $lidletter,
+			'url' => $scripturl. '?action=modsite;sa=list;lidletter='. $didletter,
+			'name' => $txt['modSite_list_title_by_letter'] . $didletter,
 		);
 
-		$context['modSite']['list'] = $modsiteObject->getBy('title', $lidletter .'%');
+		$context['modSite']['list'] = $modsiteObject->getBy('title', $didletter .'%');
 
 		if (empty($context['modSite']['list']))
 			fatal_lang_error('modSite_no_modsite_with_letter', false);

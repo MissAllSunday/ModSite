@@ -160,46 +160,45 @@ class ModSite {
 		return $return;
 	}
 
-	public function getBy($column, $value, $limit = false)
+	public function getBy($page = '', $table, $column, $value, $limit = false, $like = false, $sort = 'title ASC')
 	{
 		global $smcFunc, $scripturl, $txt;
 
-		if (empty($column) || !in_array($column, $this->_table['columns']) || empty($value))
+		if (!empty($like) && $like == true)
+			$likeString = !empty($like) && $like == true ? 'LIKE' : '=';
+
+		/* We actually need some stuff to work on... */
+		if (empty($table) || empty($column) || !in_array($column, $this->_table[$table]['columns']) || empty($value))
 			return false;
 
 		$return = array();
 
-		$result = $smcFunc['db_query']('', '
-			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
-			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
-				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.cat_id = s.id_category)
-				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
-			WHERE '. $column .' '. (is_int($value) ? '= {int:value} ' : 'LIKE {string:value} ') .'
+		$result = $smcFunc['db_query']('', '' . ($this->queryConstruct) . '
+			WHERE '. $column .' '. (is_numeric($value) ? '= {int:value} ' : $likeString .' {string:value} ') .'
 			ORDER BY {raw:sort}
 			'. (!empty($limit) ? '
 			LIMIT {int:limit}' : '') .'',
 			array(
-				'sort' => 'title ASC',
+				'sort' => $sort,
 				'value' => $value,
 				'column' => $column,
-				'limit' => !empty($limit) ? (int) $limit : 0,
+				'limit' => !empty($limit) ? $limit : 0,
 			)
 		);
 
 		while ($row = $smcFunc['db_fetch_assoc']($result))
 			$return[$row['id']] = array(
 				'id' => $row['id'],
-				'artist' => $row['artist'],
 				'title' => $row['title'],
-				'keywords' => $row['keywords'],
-				'body' => parse_bbc($row['body']),
-				'user' => array(
-					'id' => $row['id_user'],
-					'username' => $row['member_name'],
-					'name' => isset($row['real_name']) ? $row['real_name'] : '',
-					'href' => $scripturl . '?action=profile;u=' . $row['id_user'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
+				'link' => '<a href="'. $scripturl .'?action='. faq::$name .';sa=single;fid='. $this->clean($row['id']) .'">'. $row['title'] .'</a>',
+				'body' => !empty($page) && $page == 'manage' ? $row['body'] : parse_bbc($row['body']),
+
+				'cat' => array(
+					'id' => $row['category_id'],
+					'name' => $row['category_name'],
+					'link' => '<a href="'. $scripturl .'?action='. faq::$name .';sa=categories;fid='. $this->clean($row['category_id']) .'">'. $row['category_name'] .'</a>'
 				),
+				'log' => ($row['log']),
 			);
 
 		$smcFunc['db_free_result']($result);

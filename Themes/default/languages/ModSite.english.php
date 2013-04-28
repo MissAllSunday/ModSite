@@ -58,3 +58,4 @@ $txt['modSite_'] = '';
 
 // Error
 $txt['modSite_error_enable'] = 'The mod is not enable';
+$txt['modSite_error_no_valid_id'] = 'No valid action';
