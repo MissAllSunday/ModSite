@@ -41,7 +41,7 @@ class ModSite {
 		$smcFunc['db_insert']('',
 			'{db_prefix}modsite',
 			array(
-				'id' => 'int', 'name' => 'string-255', 'github' => 'string-255', 'id_user' => 'int', 'id_topic' => 'int', 'downloads' => 'int', 'desc' => 'string-65534', 'body' => 'string-65534', 'file' => 'string-65534'
+				'id' => 'int', 'id_category' => 'int', 'id_user' => 'int', 'downloads' => 'int', 'name' => 'string-255', 'file' => 'string-65534', 'demo' => 'string-255', 'version' => 'string-255', 'id_topic' => 'int', 'smf_version' => 'string-255', 'smf_download' => 'string-255', 'github' => 'string-255', 'description' => 'string-65534', 'time' => 'int',
 			),
 			$data,
 			array('id')

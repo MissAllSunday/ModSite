@@ -64,9 +64,8 @@
 				),
 				array(
 					'name' => 'id_topic',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
+					'type' => 'int',
+					'size' => 10,
 				),
 				array(
 					'name' => 'smf_version',
