@@ -242,8 +242,8 @@ function modsite_add2($modsiteObject)
 
 		$did = (int) $modsiteObject->clean($_GET['did']);
 
-		/* Make usre it does exists... */
-		$current = $modsiteObject->getBy('id', $did, 1);
+		/* Make sure it does exists... */
+		$current = $modsiteObject->doesExists($did);
 
 		/* Tell the user this entry doesn't exists anymore */
 		if (empty($current))
@@ -252,9 +252,16 @@ function modsite_add2($modsiteObject)
 		/* Let us continue... */
 		$editData = array(
 			'id' => $did,
-			'artist' => $modsiteObject->clean($_REQUEST['artist']),
-			'title' => $modsiteObject->clean($_REQUEST['title']),
-			'body' => $modsiteObject->clean($_REQUEST['body'], true),
+			'id_category' => $modsiteObject->clean($_REQUEST['id_category']),
+			'name' => $modsiteObject->clean($_REQUEST['name']),
+			'file' => $modsiteObject->clean($_REQUEST['file']),
+			'demo' => $modsiteObject->clean($_REQUEST['demo']),
+			'version' => $modsiteObject->clean($_REQUEST['version']),
+			'id_topic' => $modsiteObject->clean($_REQUEST['id_topic']),
+			'smf_version' => $modsiteObject->clean($_REQUEST['smf_version']),
+			'smf_download' => $modsiteObject->clean($_REQUEST['smf_download']),
+			'github' => $modsiteObject->clean($_REQUEST['github']),
+			'description', => $modsiteObject->clean($_REQUEST['description']),
 		);
 
 		/* Finally, store the data and tell the user */

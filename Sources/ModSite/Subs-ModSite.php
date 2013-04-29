@@ -207,9 +207,9 @@ class ModSite {
 				'body' => !empty($page) && $page == 'manage' ? $row['body'] : parse_bbc($row['body']),
 
 				'cat' => array(
-					'id' => $row['category_id'],
+					'id' => $row['id_category'],
 					'name' => $row['category_name'],
-					'link' => '<a href="'. $scripturl .'?action='. faq::$name .';sa=categories;fid='. $this->clean($row['category_id']) .'">'. $row['category_name'] .'</a>'
+					'link' => '<a href="'. $scripturl .'?action='. faq::$name .';sa=categories;fid='. $this->clean($row['id_category']) .'">'. $row['category_name'] .'</a>'
 				),
 				'log' => ($row['log']),
 			);

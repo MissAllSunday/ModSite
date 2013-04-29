@@ -172,7 +172,7 @@ function template_modSite_add()
 			if (!empty($context['modSite']['cats']))
 			{
 				echo '
-							<select name="category_id">';
+							<select name="id_category">';
 
 				foreach($context['modSite']['cats'] as $cats)
 					echo '
