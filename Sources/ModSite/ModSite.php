@@ -250,7 +250,7 @@ function modsite_add2($modsiteObject)
 			fatal_lang_error('modSite_error_no_valid_id', false);
 
 		/* Let us continue... */
-		$editData = array(
+		$data = array(
 			'id' => $did,
 			'id_category' => $modsiteObject->clean($_REQUEST['id_category']),
 			'name' => $modsiteObject->clean($_REQUEST['name']),
@@ -265,7 +265,7 @@ function modsite_add2($modsiteObject)
 		);
 
 		/* Finally, store the data and tell the user */
-		$modsiteObject->edit($editData);
+		$modsiteObject->edit($data);
 		redirectexit('action=modsite;sa=success;pin=edit');
 	}
 
@@ -273,11 +273,10 @@ function modsite_add2($modsiteObject)
 	else
 	{
 		/* Create the data */
-		$data = array(
-			'user' => $user_info['id'],
-			'artist' => $modsiteObject->clean($_REQUEST['artist']),
-			'title' => $modsiteObject->clean($_REQUEST['title']),
-			'body' => $modsiteObject->clean($_REQUEST['body'], true),
+		$data += array(
+			'id_user' => $user_info['id'],
+			'downloads' => 0,
+			'time' => time(),
 		);
 
 		$modsiteObject->add($data);
