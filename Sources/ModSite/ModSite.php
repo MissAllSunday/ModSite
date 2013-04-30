@@ -189,10 +189,6 @@ function modsite_main($modsiteObject)
 	$context['sub_template'] = 'modSite_main';
 	$context['canonical_url'] = $scripturl . '?action=modsite';
 	$context['page_title'] = $txt['modSite_title_main'];
-	$context['linktree'][] = array(
-		'url' => $scripturl. '?action=modsite',
-		'name' => $context['page_title'],
-	);
 
 	/* Pass the object to the template */
 	$context['modSite']['object'] = $modsiteObject;
