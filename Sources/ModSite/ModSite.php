@@ -237,10 +237,10 @@ function modsite_add2($modsiteObject)
 	elseif (isset($_REQUEST['edit']))
 	{
 		/* Sorry! */
-		if (!isset($_GET['did']) || empty($_GET['did']))
+		if (!isset($_GET['mid']) || empty($_GET['mid']))
 			redirectexit('action=modsite');
 
-		$did = (int) $modsiteObject->clean($_GET['did']);
+		$did = (int) $modsiteObject->clean($_GET['mid']);
 
 		/* Make sure it does exists... */
 		$current = $modsiteObject->doesExists($did);
@@ -291,7 +291,7 @@ function modsite_edit($modsiteObject)
 
 	$modsiteObject->permissions('edit', true);
 
-	if (!isset($_GET['did']) || empty($_GET['did']))
+	if (!isset($_GET['mid']) || empty($_GET['mid']))
 		redirectexit('action=modsite');
 
 	else
@@ -306,7 +306,7 @@ function modsite_edit($modsiteObject)
 			$_POST['body'] = $_REQUEST['body'];
 		}
 
-		$did = (int) $modsiteObject->clean($_GET['did']);
+		$did = (int) $modsiteObject->clean($_GET['mid']);
 
 		$temp = $modsiteObject->getBy('id', $did, 1);
 
@@ -342,12 +342,12 @@ function modsite_delete($modsiteObject)
 
 	$modsiteObject->permissions('delete', true);
 
-	if (!isset($_GET['did']) || empty($_GET['did']))
+	if (!isset($_GET['mid']) || empty($_GET['mid']))
 		redirectexit('action=modsite');
 
 	else
 	{
-		$did = (int) $modsiteObject->clean($_GET['did']);
+		$did = (int) $modsiteObject->clean($_GET['mid']);
 		$modsiteObject->delete($did);
 		redirectexit('action=modsite;sa=success;pin=delete');
 	}
@@ -383,14 +383,14 @@ function modsite_single($modsiteObject)
 	global $context, $scripturl, $txt, $user_info;
 
 	/* Forget it... */
-	if (!isset($_GET['did']) || empty($_GET['did']))
+	if (!isset($_GET['mid']) || empty($_GET['mid']))
 		fatal_lang_error('modSite_error_no_valid_action', false);
 
 	/* Are you allowed to see this page? */
 	$modsiteObject->permissions('view', true);
 
 	/* Get a valid ID */
-	$id = $modsiteObject->clean($_GET['did']);
+	$id = $modsiteObject->clean($_GET['mid']);
 
 	if (empty($id))
 		fatal_lang_error('modSite_error_no_valid_action', false);
@@ -421,13 +421,13 @@ function modsite_artist($modsiteObject)
 	global $context, $scripturl, $txt, $user_info;
 
 	/* Forget it... */
-	if (!isset($_GET['did']) || empty($_GET['did']))
+	if (!isset($_GET['mid']) || empty($_GET['mid']))
 		fatal_lang_error('modSite_error_no_valid_action', false);
 
 	/* Are you allowed to see this page? */
 	$modsiteObject->permissions('view', true);
 
-	$did = $modsiteObject->clean($_GET['did']);
+	$did = $modsiteObject->clean($_GET['mid']);
 
 	$context['sub_template'] = 'modSite_artist';
 	$context['canonical_url'] = $scripturl . '?action=modsite;sa=artist;lid='. $did;
