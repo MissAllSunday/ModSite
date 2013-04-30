@@ -231,15 +231,18 @@ function modsite_add2($modsiteObject)
 	checkSession('post', '', true);
 
 	/* Check permissions */
-	// $modsiteObject->permissions('add', true);
+	$modsiteObject->permissions('add', true);
 
-	/* Editing */
-	elseif (isset($_REQUEST['edit']))
+	/* Long, long check */
+	if (empty($_REQUEST['id_category'] || empty($_REQUEST['name'] || empty($_REQUEST['file'] || empty($_REQUEST['demo'] || empty($_REQUEST['version'] || empty($_REQUEST['id_topic'] || empty($_REQUEST['smf_version'] || empty($_REQUEST['smf_download'] || empty($_REQUEST['github'] || empty($_REQUEST['description'] || ))
+		redirectexit('action=modsite'); // Gotta send the user back to the form but I'm lazy...
+
+	/* If editing, we need the ID */
+	if (isset($_REQUEST['edit']) && !isset($_GET['mid']) || empty($_GET['mid']))
+		redirectexit('action=modsite');
+
+	else
 	{
-		/* Sorry! */
-		if (!isset($_GET['mid']) || empty($_GET['mid']))
-			redirectexit('action=modsite');
-
 		$mid = (int) $modsiteObject->clean($_GET['mid']);
 
 		/* Make sure it does exists... */
@@ -248,40 +251,31 @@ function modsite_add2($modsiteObject)
 		/* Tell the user this entry doesn't exists anymore */
 		if (empty($current))
 			fatal_lang_error('modSite_error_no_valid_id', false);
-
-		/* Let us continue... */
-		$data = array(
-			'id' => $mid,
-			'id_category' => $modsiteObject->clean($_REQUEST['id_category']),
-			'name' => $modsiteObject->clean($_REQUEST['name']),
-			'file' => $modsiteObject->clean($_REQUEST['file']),
-			'demo' => $modsiteObject->clean($_REQUEST['demo']),
-			'version' => $modsiteObject->clean($_REQUEST['version']),
-			'id_topic' => $modsiteObject->clean($_REQUEST['id_topic']),
-			'smf_version' => $modsiteObject->clean($_REQUEST['smf_version']),
-			'smf_download' => $modsiteObject->clean($_REQUEST['smf_download']),
-			'github' => $modsiteObject->clean($_REQUEST['github']),
-			'description', => $modsiteObject->clean($_REQUEST['description']),
-		);
-
-		/* Finally, store the data and tell the user */
-		$modsiteObject->edit($data);
-		redirectexit('action=modsite;sa=success;pin=edit');
 	}
 
-	/* Lastly, Adding */
-	else
-	{
-		/* Create the data */
-		$data += array(
-			'id_user' => $user_info['id'],
-			'downloads' => 0,
-			'time' => time(),
-		);
+	/* Let us continue... */
+	$data = array(
+		'id' => $mid,
+		'id_category' => $modsiteObject->clean($_REQUEST['id_category']),
+		'name' => $modsiteObject->clean($_REQUEST['name']),
+		'file' => $modsiteObject->clean($_REQUEST['file']),
+		'demo' => $modsiteObject->clean($_REQUEST['demo']),
+		'version' => $modsiteObject->clean($_REQUEST['version']),
+		'id_topic' => $modsiteObject->clean($_REQUEST['id_topic']),
+		'smf_version' => $modsiteObject->clean($_REQUEST['smf_version']),
+		'smf_download' => $modsiteObject->clean($_REQUEST['smf_download']),
+		'github' => $modsiteObject->clean($_REQUEST['github']),
+		'description', => $modsiteObject->clean($_REQUEST['description']),
+		'id_user' => $user_info['id'],
+		'downloads' => 0,
+		'time' => time(),
+	);
 
-		$modsiteObject->add($data);
-		redirectexit('action=modsite;sa=success;pin=add');
-	}
+	/* Finally, store the data and tell the user */
+	$method = isset($_REQUEST['edit']) ? 'edit' : 'add';
+
+	$modsiteObject->$method($data);
+	redirectexit('action=modsite;sa=success;pin='. $method);
 
 }
 
