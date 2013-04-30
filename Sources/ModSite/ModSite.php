@@ -105,26 +105,34 @@ function modify_modsite_post_settings(&$return_config = false)
 
 function modsite_permissions(&$permissionGroups, &$permissionList)
 {
-	$permissionGroups['membergroup']['simple'] = array('modsiteMod_per_simple');
-	$permissionGroups['membergroup']['classic'] = array('modsiteMod_per_classic');
+	$permissionGroups['membergroup']['simple'] = array('modsite_per_simple');
+	$permissionGroups['membergroup']['classic'] = array('modsite_per_classic');
 
-	$permissionList['membergroup']['modsiteMod_viewmodsite'] = array(
+	$permissionList['membergroup']['modsite_view'] = array(
 		false,
-		'modsiteMod_per_classic',
-		'modsiteMod_per_simple');
+		'modsite_per_classic',
+		'modsite_per_simple');
 
-	$permissionList['membergroup']['modsiteMod_deletemodsite'] = array(
+	$permissionList['membergroup']['modsite_delete'] = array(
 		false,
-		'modsiteMod_per_classic',
-		'modsiteMod_per_simple');
-	$permissionList['membergroup']['modsiteMod_addmodsite'] = array(
+		'modsite_per_classic',
+		'modsite_per_simple');
+	$permissionList['membergroup']['modsite_deleteOwn'] = array(
 		false,
-		'modsiteMod_per_classic',
-		'modsiteMod_per_simple');
-	$permissionList['membergroup']['modsiteMod_editmodsite'] = array(
+		'modsite_per_classic',
+		'modsite_per_simple');
+	$permissionList['membergroup']['modsite_add'] = array(
 		false,
-		'modsiteMod_per_classic',
-		'modsiteMod_per_simple');
+		'modsite_per_classic',
+		'modsite_per_simple');
+	$permissionList['membergroup']['modsite_edit'] = array(
+		false,
+		'modsite_per_classic',
+		'modsite_per_simple');
+	$permissionList['membergroup']['modsite_editOwn'] = array(
+		false,
+		'modsite_per_classic',
+		'modsite_per_simple');
 }
 
 function modsite_dispatch()
@@ -234,7 +242,7 @@ function modsite_add2($modsiteObject)
 	$modsiteObject->permissions('add', true);
 
 	/* Long, long check */
-	if (empty($_REQUEST['id_category'] || empty($_REQUEST['name'] || empty($_REQUEST['file'] || empty($_REQUEST['demo'] || empty($_REQUEST['version'] || empty($_REQUEST['id_topic'] || empty($_REQUEST['smf_version'] || empty($_REQUEST['smf_download'] || empty($_REQUEST['github'] || empty($_REQUEST['description'] || ))
+	if (empty($_REQUEST['id_category']) || empty($_REQUEST['name']) || empty($_REQUEST['file']) || empty($_REQUEST['demo']) || empty($_REQUEST['version']) || empty($_REQUEST['id_topic']) || empty($_REQUEST['smf_version']) || empty($_REQUEST['smf_download']) || empty($_REQUEST['github']) || empty($_REQUEST['description']))
 		redirectexit('action=modsite'); // Gotta send the user back to the form but I'm lazy...
 
 	/* If editing, we need the ID */
@@ -265,7 +273,7 @@ function modsite_add2($modsiteObject)
 		'smf_version' => $modsiteObject->clean($_REQUEST['smf_version']),
 		'smf_download' => $modsiteObject->clean($_REQUEST['smf_download']),
 		'github' => $modsiteObject->clean($_REQUEST['github']),
-		'description', => $modsiteObject->clean($_REQUEST['description']),
+		'description' => $modsiteObject->clean($_REQUEST['description']),
 		'id_user' => $user_info['id'],
 		'downloads' => 0,
 		'time' => time(),
@@ -276,7 +284,6 @@ function modsite_add2($modsiteObject)
 
 	$modsiteObject->$method($data);
 	redirectexit('action=modsite;sa=success;pin='. $method);
-
 }
 
 function modsite_edit($modsiteObject)

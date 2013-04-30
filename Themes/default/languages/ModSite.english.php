@@ -1,6 +1,6 @@
 <?php
 
-global $txt;
+global $txt, $scripturl;
 
 // Add/Edit strings
 $txt['modSite_title_main'] = 'Mod Site';
@@ -59,3 +59,17 @@ $txt['modSite_'] = '';
 // Error
 $txt['modSite_error_enable'] = 'The mod is not enable';
 $txt['modSite_error_no_valid_id'] = 'No valid action';
+
+// Permissions strings
+$txt['permissiongroup_simple_modsite_per_simple'] = 'Mod site permissions';
+$txt['permissiongroup_modsite_per_classic'] = 'Mod site permissions';
+$txt['permissionname_modsite_search'] = 'Search the Mod site';
+$txt['permissionname_modsite_editOwn'] = 'Edit own mods';
+$txt['permissionname_modsite_edit'] = 'Edit any mod';
+$txt['permissionname_modsite_view'] = 'View mods';
+$txt['permissionname_modsite_add'] = 'Add mods';
+$txt['permissionname_modsite_delete'] = 'Delete any mods';
+$txt['permissionname_modsite_deleteOwn'] = 'Delete own mods';
+
+// Who's online strings
+$txt['whoall_modsite'] = 'Viewing the <a href="'. $scripturl. '?action=faq">Mod site</a>.';
