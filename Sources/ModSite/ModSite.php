@@ -152,6 +152,7 @@ function modsite_dispatch()
 			'single',
 			'success',
 			'manage',
+			'manageCat',
 		);
 
 		if (empty($modsiteObject))
@@ -222,7 +223,7 @@ function modsite_add($modsiteObject)
 
 	/* Create it... */
 	$editorOptions = array(
-		'id' => 'body',
+		'id' => 'description',
 		'value' => '',
 		'width' => '90%',
 	);

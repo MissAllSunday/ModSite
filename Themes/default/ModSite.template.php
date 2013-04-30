@@ -76,7 +76,7 @@ function template_modSite_add()
 	<div class="floatright nopadding" style="width:80%">';
 
 		echo '
-		<form action="', $scripturl, '?action=modsite;sa=add2;', (!empty($context['modSite']['edit']) ? 'fid='.  $context['modSite']['edit']['id'] .';edit' : ''),'" method="post" target="_self" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'name\', \'body\']);" >
+		<form action="', $scripturl, '?action=modsite;sa=add2;', (!empty($context['modSite']['edit']) ? 'fid='.  $context['modSite']['edit']['id'] .';edit' : ''),'" method="post" target="_self" id="postmodify" class="flow_hidden" onsubmit="submitonce(this);smc_saveEntities(\'postmodify\', [\'name\', \'description\']);" >
 			<div class="cat_bar">
 				<h3 class="catbg">
 					',(!empty($context['modSite']['edit']) ?  $txt['modSite_edit_editing'] .' - '. $context['modSite']['edit']['name'] : $txt['modSite_edit_creating']),'
