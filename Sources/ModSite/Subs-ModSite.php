@@ -373,24 +373,6 @@ class ModSite {
 		return $return;
 	}
 
-	/* A function to cut-off a string */
-	protected function truncateString($string, $limit, $break = ' ', $pad = '...')
-	{
-		if(empty($limit))
-			$limit = 30;
-
-		 /* return with no change if string is shorter than $limit */
-		if(strlen($string) <= $limit)
-			return $string;
-
-		/* is $break present between $limit and the end of the string? */
-		if(false !== ($breakpoint = strpos($string, $break, $limit)))
-			if($breakpoint < strlen($string) - 1)
-				$string = substr($string, 0, $breakpoint) . $pad;
-
-		return $string;
-	}
-
 	public function status()
 	{
 		$v = json_decode($this->fetch_web_data('https://status.github.com/api/status.json'));
