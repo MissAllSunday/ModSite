@@ -345,14 +345,56 @@ function modsite_delete($modsiteObject)
 
 	$modsiteObject->permissions('delete', true);
 
-	if (!isset($_GET['mid']) || empty($_GET['mid']))
-		redirectexit('action=modsite');
+	/* Gotta have an ID to work with */
+	if (!isset($_GET['mid']) || empty($_GET['mid']) || !isset($_GET['table']))
+		redirectexit('action=faq');
 
 	else
 	{
 		$mid = (int) $modsiteObject->clean($_GET['mid']);
-		$modsiteObject->delete($mid);
-		redirectexit('action=modsite;sa=success;pin=delete');
+		$table = $modsiteObject->clean($_GET['table']);
+		$modsiteObject->delete($mid, $table);
+		redirectexit('action=modsite;sa=success;pin=deleteCat');
+	}
+}
+
+function modsite_addCat($modsiteObject)
+{
+	global $context;
+	
+	/* Set all the usual stuff */
+	$context['faq']['cat']['edit'] = $context['faq']['cats'][$mid];
+	$context['sub_template'] = 'faq_addCat';
+	$context['page_title'] = $txt['faqmod_editing_cat'] .' - '. $context['faq']['cats'][$mid]['name'];
+	$context['linktree'][] = array(
+		'url' => $scripturl. '?action=modsite;sa=edit;fid='. $mid,
+		'name' => $context['page_title'],
+	);
+}
+
+function modsite_editCat($modsiteObject)
+{
+	global $context, $txt;
+
+	$modsiteObject->permissions('edit', true);
+
+	/* Gotta have something to work with */
+	if (!isset($_POST['title']) || empty($_POST['title']))
+		redirectexit('action=faq');
+
+	else
+	{
+		$title = $modsiteObject->clean($_POST['title']);
+		$id = $modsiteObject->clean($_POST['catID']);
+
+		$editData = array(
+			'id' => $id,
+			'category_name' => $title,
+		);
+
+		/* Finally, store the data and tell the user */
+		$modsiteObject->editCat($editData);
+		redirectexit('action=modsite;sa=success;pin=editCat');
 	}
 }
 
