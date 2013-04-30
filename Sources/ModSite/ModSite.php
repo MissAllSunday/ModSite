@@ -137,7 +137,7 @@ function modsite_permissions(&$permissionGroups, &$permissionList)
 
 function modsite_dispatch()
 {
-	global $txt, $sourcedir, $modSettings, $context;
+	global $txt, $sourcedir, $modSettings, $context, $scripturl;
 	static $modsiteObject;
 
 		/* Safety first, hardcode the actions */
@@ -163,6 +163,11 @@ function modsite_dispatch()
 		/* Load both language and template files */
 		loadLanguage('modsite');
 		loadtemplate('modsite', 'admin');
+
+		$context['linktree'][] = array(
+			'url' => $scripturl. '?action=modsite',
+			'name' => $txt['modSite_title_main'],
+		);
 
 		/* It is faster to use $var() than use call_user_func_array */
 		if (isset($_GET['sa']))
