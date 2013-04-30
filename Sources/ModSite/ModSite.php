@@ -318,7 +318,7 @@ function modsite_edit($modsiteObject)
 		$context['sub_template'] = 'modSite_add';
 		$context['page_title'] = $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=edit;lid='. $mid,
+			'url' => $scripturl. '?action=modsite;sa=edit;mid='. $mid,
 			'name' => $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
 		);
 
@@ -406,7 +406,7 @@ function modsite_single($modsiteObject)
 
 	/* Set all we need */
 	$context['sub_template'] = 'modSite_single';
-	$context['canonical_url'] = $scripturl . '?action=modsite;sa=single;lid=' . $id;
+	$context['canonical_url'] = $scripturl . '?action=modsite;sa=single;mid=' . $id;
 	$context['page_title'] = $context['modSite']['single']['title'] .' - '. $context['modSite']['single']['artist'];
 	$context['linktree'][] = array(
 		'url' => $context['canonical_url'],
@@ -431,10 +431,10 @@ function modsite_artist($modsiteObject)
 	$mid = $modsiteObject->clean($_GET['mid']);
 
 	$context['sub_template'] = 'modSite_artist';
-	$context['canonical_url'] = $scripturl . '?action=modsite;sa=artist;lid='. $mid;
+	$context['canonical_url'] = $scripturl . '?action=modsite;sa=artist;mid='. $mid;
 	$context['page_title'] = $txt['modSite_artist_title'] . $mid;
 	$context['linktree'][] = array(
-		'url' => $scripturl. '?action=modsite;sa=artist;lid='. $mid,
+		'url' => $scripturl. '?action=modsite;sa=artist;mid='. $mid,
 		'name' => $context['page_title'],
 	);
 

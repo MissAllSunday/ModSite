@@ -333,12 +333,11 @@ class ModSite {
 
 		/* colect the permissions */
 		foreach ($type as $t)
-				$allowed[] = (allowedTo('modsiteMod_'. $t .'modsite') == true ? 1 : 0);
-
+				$allowed[] = (allowedTo('modsite_'. $t) == true ? 1 : 0);
 
 		/* You need at least 1 permission to be true */
 		if ($fatal_error == true && !in_array(1, $allowed))
-			isAllowedTo('modsiteMod_'. $t .'modsite');
+			isAllowedTo('modsite_'. $t);
 
 		elseif ($fatal_error == false && !in_array(1, $allowed))
 			return false;
@@ -360,15 +359,15 @@ class ModSite {
 			return $return;
 
 		/* Set the pertinent permissions */
-		$edit = $this->permissions('edit');
-		$delete = $this->permissions('delete');
+		$edit = $this->permissions(array('edit', 'editOwn'));
+		$delete = $this->permissions(array('delete', 'deleteOwn'));
 
 		/* Let's check if you have what it takes... */
 		if ($edit == true)
-			$return .= '<a href="'. $scripturl .'?action=modsite;sa=edit;lid='. $this->clean($id) .'">'. $txt['modSite_edit'] .'</a>';
+			$return .= '<a href="'. $scripturl .'?action=modsite;sa=edit;mid='. $this->clean($id) .'">'. $txt['modSite_edit'] .'</a>';
 
 		if ($delete == true)
-			$return .= ($edit == true ? ' | ': '') .'<a href="'. $scripturl .'?action=modsite;sa=delete;lid='. $this->clean($id) .'">'. $txt['modSite_delete'] .'</a>';
+			$return .= ($edit == true ? ' | ': '') .'<a href="'. $scripturl .'?action=modsite;sa=delete;mid='. $this->clean($id) .'">'. $txt['modSite_delete'] .'</a>';
 
 		/* Send the string */
 		return $return;
