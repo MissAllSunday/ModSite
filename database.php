@@ -39,7 +39,7 @@
 			'parameters' => array(),
 		);
 		$tables[] = array (
-			'table_name' => 'mod_cat',
+			'table_name' => 'id',
 			'columns' => array(
 				array(
 					'name' => 'id_cat',
@@ -48,7 +48,7 @@
 					'auto' => true,
 				),
 				array(
-					'name' => 'name_cat',
+					'name' => 'name',
 					'type' => 'varchar',
 					'size' => 255,
 					'default' => '',
@@ -58,7 +58,7 @@
 				array(
 					'type' => 'primary',
 					'columns' => array(
-						'id_cat'
+						'id'
 					),
 				),
 			),

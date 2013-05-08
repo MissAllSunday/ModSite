@@ -11,18 +11,12 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 
-class ModSite {
-
+class ModSite
+{
 	protected $_table = array(
-		'modsite' => array(
-			'name' => 'mod_site',
-			'columns' => array('id', 'id_category', 'id_user', 'downloads', 'name', 'file', 'demo', 'version', 'id_topic', 'smf_version', 'smf_download', 'github', 'description', 'time'),
-		),
-		'cats' => array(
-			'name' => 'mod_categories',
-			'columns' => array('cat_id', 'cat_name',),
-		),
-	);
+		'name' => 'mod_site',
+		'columns' => array('id', 'name'),
+		);
 
 	public static $name = 'modsite';
 
@@ -36,18 +30,16 @@ class ModSite {
 			return false;
 
 		/* Clear the cache */
-		$this->cleanCache(array('latest', 'all'));
+		$this->cleanCache();
 
 		$smcFunc['db_insert']('',
-			'{db_prefix}modsite',
-			array(
-				'id' => 'int', 'id_category' => 'int', 'id_user' => 'int', 'downloads' => 'int', 'name' => 'string-255', 'file' => 'string-65534', 'demo' => 'string-255', 'version' => 'string-255', 'id_topic' => 'int', 'smf_version' => 'string-255', 'smf_download' => 'string-255', 'github' => 'string-255', 'description' => 'string-65534', 'time' => 'int',
-			),
+			'{db_prefix}'. $this->_table['name'],
+			array('id' => 'int', 'name' => 'string-255'),
 			$data,
 			array('id')
 		);
 
-		return $id = $smcFunc['db_insert_id']('{db_prefix}modsite', 'id');
+		return $id = $smcFunc['db_insert_id']('{db_prefix}'. $this->_table['name'], 'id');
 	}
 
 	public function edit($data)
@@ -58,11 +50,11 @@ class ModSite {
 			return false;
 
 		/* Clear the cache */
-		$this->cleanCache(array('latest', 'all'));
+		$this->cleanCache();
 
 		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}' . ($this->_table['table']) . '
-			SET name = {string:name}, github = {string:github}, id_user = {int:user}, id_topic = {int:topic}, downloads = {int:downloads}, desc = {string:desc}, body = {string:body}, file = {string:file}
+			UPDATE {db_prefix}' . ($this->_table['name']) . '
+			SET name = {string:name}
 			WHERE id = {int:id}',
 			$data
 		);
@@ -74,7 +66,7 @@ class ModSite {
 
 		$query = $smcFunc['db_query']('', '
 			SELECT id
-			FROM {db_prefix}' . ($this->_table['modsite']['name']) . '
+			FROM {db_prefix}' . ($this->_table['name']) . '
 			WHERE id = '. ($id) .'
 		');
 
@@ -89,10 +81,8 @@ class ModSite {
 		if (($return = cache_get_data(modsite::$name .'_latest', 120)) == null)
 		{
 			$result = $smcFunc['db_query']('', '
-				SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
-				FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
-					LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.cat_id = s.id_category)
-					LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
+				SELECT id, name
+				FROM {db_prefix}' . ($this->_table['name']) . '
 				ORDER BY {raw:sort}
 				LIMIT {int:limit}',
 				array(
@@ -105,24 +95,6 @@ class ModSite {
 				$return[$row['id']] = array(
 					'id' => $row['id'],
 					'name' => $row['name'],
-					'github' => $row['github'],
-					'topic' => $row['id_topic'],
-					'downloads' => $row['downloads'],
-					'desc' => $row['desc'],
-					'file' => !empty($row['file']) ? json_decode($row['file'], true) : array(),
-					'body' => parse_bbc($row['body']),
-					'cat' => array(
-						'id' => $row['id_cat'],
-						'name' => $row['cat_name'],
-						'link' => '<a href="' . $scripturl . '?action=modsite;sa=cat;mid=' . $row['id_cat'] . '">' . $row['cat_name'] . '</a>',
-					),
-					'user' => array(
-						'id' => $row['id_user'],
-						'username' => $row['member_name'],
-						'name' => isset($row['real_name']) ? $row['real_name'] : '',
-						'href' => $scripturl . '?action=profile;u=' . $row['id_user'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
-					),
 				);
 
 			$smcFunc['db_free_result']($result);
@@ -139,11 +111,9 @@ class ModSite {
 		global $smcFunc, $scripturl, $txt;
 
 		$result = $smcFunc['db_query']('', '
-			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
-			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
-				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.cat_id = s.id_category)
-				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
-			WHERE id = ({int:id})
+			SELECT id, name
+			FROM {db_prefix}' . ($this->_table['name']) . '
+			ORDER BY {raw:sort}
 			LIMIT {int:limit}',
 			array(
 				'id' => (int) $id,
@@ -152,146 +122,27 @@ class ModSite {
 		);
 
 		while ($row = $smcFunc['db_fetch_assoc']($result))
-			$return = array(
+			$return[$row['id']] = array(
 				'id' => $row['id'],
-				'artist' => $row['artist'],
-				'title' => $row['title'],
-				'keywords' => $row['keywords'],
-				'body' => parse_bbc($row['body']),
-				'user' => array(
-					'id' => $row['id_user'],
-					'username' => $row['member_name'],
-					'name' => isset($row['real_name']) ? $row['real_name'] : '',
-					'href' => $scripturl . '?action=profile;u=' . $row['id_user'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
-				),
+				'name' => $row['name'],
 			);
 
 		$smcFunc['db_free_result']($result);
 
 		/* Done? */
 		return $return;
-	}
-
-	public function getBy($page = '', $table, $column, $value, $limit = false, $like = false, $sort = 'title ASC')
-	{
-		global $smcFunc, $scripturl, $txt;
-
-		if (!empty($like) && $like == true)
-			$likeString = !empty($like) && $like == true ? 'LIKE' : '=';
-
-		/* We actually need some stuff to work on... */
-		if (empty($table) || empty($column) || !in_array($column, $this->_table[$table]['columns']) || empty($value))
-			return false;
-
-		$return = array();
-
-		$result = $smcFunc['db_query']('', '' . ($this->queryConstruct) . '
-			WHERE '. $column .' '. (is_numeric($value) ? '= {int:value} ' : $likeString .' {string:value} ') .'
-			ORDER BY {raw:sort}
-			'. (!empty($limit) ? '
-			LIMIT {int:limit}' : '') .'',
-			array(
-				'sort' => $sort,
-				'value' => $value,
-				'column' => $column,
-				'limit' => !empty($limit) ? $limit : 0,
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($result))
-			$return[$row['id']] = array(
-				'id' => $row['id'],
-				'title' => $row['title'],
-				'link' => '<a href="'. $scripturl .'?action='. faq::$name .';sa=single;fid='. $this->clean($row['id']) .'">'. $row['title'] .'</a>',
-				'body' => !empty($page) && $page == 'manage' ? $row['body'] : parse_bbc($row['body']),
-
-				'cat' => array(
-					'id' => $row['id_category'],
-					'name' => $row['category_name'],
-					'link' => '<a href="'. $scripturl .'?action='. faq::$name .';sa=categories;fid='. $this->clean($row['id_category']) .'">'. $row['category_name'] .'</a>'
-				),
-				'log' => ($row['log']),
-			);
-
-		$smcFunc['db_free_result']($result);
-
-		/* Done? */
-		return !empty($return) ? $return : false;
-	}
-
-	public function getAll($page = 'list')
-	{
-		global $smcFunc, $scripturl, $txt, $modSettings, $context;
-
-		$total = $this->getCount();
-		$maxIndex = !empty($modSettings['modSite_pag_limit']) ? $modSettings['modSite_pag_limit'] : 20;
-
-		/* Safety first! */
-		$sortArray = array('title', 'artist', 'latest');
-
-		$result = $smcFunc['db_query']('', '
-			SELECT '. (implode(', s.', $this->_table['modsite']['columns'])) .', '. (implode(', c.', $this->_table['cats']['columns'])) .', m.member_name, m.real_name
-			FROM {db_prefix}' . ($this->_table['modsite']['name']) . ' AS s
-				LEFT JOIN {db_prefix}' . ($this->_table['cats']['name']) . ' AS c ON (c.cat_id = s.id_category)
-				LEFT JOIN {db_prefix}members AS m ON (m.id_member = s.id_user)
-			ORDER BY {raw:sort} ASC
-			LIMIT {int:start}, {int:maxindex}',
-			array(
-				'start' => $_REQUEST['start'],
-				'maxindex' => $maxIndex,
-				'sort' => isset($_REQUEST['lSort']) && in_array(trim(htmlspecialchars($_REQUEST['lSort'])), $sortArray) ? $_REQUEST['lSort'] : 'title'
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($result))
-			$return[$row['id']] = array(
-				'id' => $row['id'],
-				'artist' => $row['artist'],
-				'title' => $row['title'],
-				'keywords' => $row['keywords'],
-				'body' => parse_bbc($row['body']),
-				'user' => array(
-					'id' => $row['id_user'],
-					'username' => $row['member_name'],
-					'name' => isset($row['real_name']) ? $row['real_name'] : '',
-					'href' => $scripturl . '?action=profile;u=' . $row['id_user'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_user'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '">' . $row['real_name'] . '</a>',
-				),
-			);
-
-		$smcFunc['db_free_result']($result);
-
-		/* Build the pagination */
-		$context['page_index'] = constructPageIndex($scripturl . '?action=modsite;sa='. $page .'', $_REQUEST['start'], $total, $maxIndex, false);
-
-		/* Done? */
-		return $return;
-	}
-
-	protected function getCount()
-	{
-		global $smcFunc;
-
-		$result = $smcFunc['db_query']('', '
-			SELECT id
-			FROM {db_prefix}' . ($this->_table['table']),
-			array()
-		);
-
-		return $smcFunc['db_num_rows']($result);
 	}
 
 	public function delete($id)
 	{
 		global $smcFunc;
 
-		/* Clear the cache */
-		cache_put_data(modsite::$name .'_latest', '', 120);
-
 		/* Do not waste my time... */
 		if (empty($id))
 			return false;
+
+		/* Clear the cache */
+		$this->cleanCache();
 
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}' . ($this->_table['table']) .'
@@ -307,12 +158,6 @@ class ModSite {
 		global $smcFunc, $sourcedir;
 
 		$string = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($string, ENT_QUOTES, ENT_QUOTES));
-
-		if ($body)
-		{
-			require_once($sourcedir.'/Subs-Post.php');
-			preparsecode($string);
-		}
 
 		return $string;
 	}
@@ -344,33 +189,6 @@ class ModSite {
 
 		elseif ($fatal_error == false && in_array(1, $allowed))
 			return true;
-	}
-
-	/* Creates simple links to edit/delete based on the users permissions */
-	public function crud($id)
-	{
-		global $scripturl, $txt;
-
-		/* By default lets send nothing! */
-		$return = '';
-
-		/* We need an ID... */
-		if (empty($id))
-			return $return;
-
-		/* Set the pertinent permissions */
-		$edit = $this->permissions(array('edit', 'editOwn'));
-		$delete = $this->permissions(array('delete', 'deleteOwn'));
-
-		/* Let's check if you have what it takes... */
-		if ($edit == true)
-			$return .= '<a href="'. $scripturl .'?action=modsite;sa=edit;mid='. $this->clean($id) .'">'. $txt['modSite_edit'] .'</a>';
-
-		if ($delete == true)
-			$return .= ($edit == true ? ' | ': '') .'<a href="'. $scripturl .'?action=modsite;sa=delete;mid='. $this->clean($id) .'">'. $txt['modSite_delete'] .'</a>';
-
-		/* Send the string */
-		return $return;
 	}
 
 	public function status()
