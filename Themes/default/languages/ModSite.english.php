@@ -5,38 +5,10 @@ global $txt, $scripturl;
 // Add/Edit strings
 $txt['modSite_title_main'] = 'Mod Site';
 $txt['modSite_mods'] = 'Mods';
-$txt['modSite_themes'] = 'Themes';
 $txt['modSite_edit_name'] = 'Name: ';
-$txt['modSite_edit_category'] = 'Category: ';
-$txt['modSite_edit_category_no'] = 'You need to add a category first';
-$txt['modSite_edit_file'] = 'File name:';
-$txt['modSite_edit_file_sub'] = 'The file name must correspond to an existing file in the Downloads directory.';
-$txt['modSite_edit_demo'] = 'Demo: ';
-$txt['modSite_edit_demo_sub'] = 'A link to a page where a demo can be found';
-$txt['modSite_edit_id'] = 'ID';
-$txt['modSite_edit_version'] = 'Version:';
-$txt['modSite_edit_version_sub'] = 'The mod\'s current stable version';
-$txt['modSite_edit_topic'] = 'Topic ID ';
-$txt['modSite_edit_topic_sub'] = 'A number that corresponds to the topic for this mod.';
-$txt['modSite_edit_smf'] = 'SMF version';
-$txt['modSite_edit_smf_sub'] = 'The SMF version this mod is compatible with';
-$txt['modSite_edit_smfd'] = 'SMF download';
-$txt['modSite_edit_smfd_sub'] = 'A link to the download at SMF';
-$txt['modSite_edit_github'] = 'Github repo name:';
-$txt['modSite_edit_github_sub'] = 'The github name for this mod';
-$txt['modSite_edit_desc'] = 'Description: ';
-$txt['modSite_edit_desc_sub'] = 'Long description for the mod, readme, etc';
-$txt['modSite_edit_info'] = 'Info:';
-$txt['modSite_edit_info_sub'] = 'Short description of the mod.';
-$txt['modSite_edit_edit'] = 'Edit this mod';
 $txt['modSite_edit_add'] = 'Add this mod';
 $txt['modSite_edit_editing'] = 'Editing';
 $txt['modSite_edit_creating'] = 'Creating a new mod';
-$txt['modSite_edit_cat_title'] = 'Manage Categories';
-$txt['modSite_edit_cat_desc'] = 'From here bla bla bla';
-$txt['modSite_edit_cat_name'] = 'Cat name';
-$txt['modSite_edit_edit_delete'] = 'Edit/Delete';
-$txt['modSite_edit_create_cat'] = 'Create cat';
 
 // Time stuff
 $txt['modSite_time_just_now'] = 'just now.';
