@@ -144,11 +144,12 @@ function modsite_dispatch()
 		$subActions = array(
 			'add',
 			'add2',
+			'addCat',
 			'delete',
 			'edit',
+			'editCat',
 			'list',
 			'search',
-			'artist',
 			'single',
 			'success',
 			'manage',
