@@ -217,8 +217,6 @@ function modsite_add($mainObj)
 
 function modsite_add2($mainObj)
 {
-	global $context, $scripturl, $user_info, $sourcedir, $txt, $smcFunc;
-
 	checkSession('post', '', true);
 
 	/* Check permissions */
@@ -255,6 +253,8 @@ function modsite_add2($mainObj)
 	$method = isset($_REQUEST['edit']) ? 'edit' : 'add';
 
 	$mainObj->$method($data);
+
+	/* All done, show a nice page */
 	redirectexit('action=modsite;sa=success;pin='. $method);
 }
 
@@ -267,46 +267,24 @@ function modsite_edit($mainObj)
 	if (!isset($_GET['mid']) || empty($_GET['mid']))
 		redirectexit('action=modsite');
 
-	else
-	{
-		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+	/* Pass the object to the template */
+	$context['modSite']['object'] = $mainObj;
 
-		if (isset($_REQUEST['body']) && !empty($_REQUEST['body_mode']))
-		{
-			$_REQUEST['body'] = html_to_bbc($_REQUEST['body']);
-			$_REQUEST['body'] = un_htmlspecialchars($_REQUEST['body']);
-			$_POST['body'] = $_REQUEST['body'];
-		}
+	$mid = (int) $mainObj->clean($_GET['mid']);
 
-		$mid = (int) $mainObj->clean($_GET['mid']);
+	/* Get the mod */
+	$temp = $mainObj->getSingle($mid);
 
-		$temp = $mainObj->getBy('id', $mid, 1);
+	if (empty($temp))
+		fatal_lang_error('modSite_no_valid_id', false);
 
-		if (empty($temp))
-			fatal_lang_error('modSite_no_valid_id', false);
-
-		$context['modSite']['edit'] = $temp[$mid];
-		$context['sub_template'] = 'modSite_add';
-		$context['page_title'] = $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
-		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=edit;mid='. $mid,
-			'name' => $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
-		);
-
-		require_once($sourcedir .'/Subs-Editor.php');
-		/* Needed for the WYSIWYG editor, we all love the WYSIWYG editor... */
-		$modSettings['disable_wysiwyg'] = !empty($modSettings['disable_wysiwyg']) || empty($modSettings['enableBBC']);
-
-		$editorOptions = array(
-			'id' => 'body',
-			'value' => html_to_bbc(un_htmlspecialchars($context['modSite']['edit']['body'])),
-			'width' => '90%',
-		);
-
-		create_control_richedit($editorOptions);
-		$context['post_box_name'] = $editorOptions['id'];
-	}
+	$context['modSite']['edit'] = $temp[$mid];
+	$context['sub_template'] = 'modSite_add';
+	$context['page_title'] = $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
+	$context['linktree'][] = array(
+		'url' => $scripturl. '?action=modsite;sa=edit;mid='. $mid,
+		'name' => $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
+	);
 }
 
 function modsite_delete($mainObj)
@@ -316,55 +294,14 @@ function modsite_delete($mainObj)
 	$mainObj->permissions('delete', true);
 
 	/* Gotta have an ID to work with */
-	if (!isset($_GET['mid']) || empty($_GET['mid']) || !isset($_GET['table']))
-		redirectexit('action=faq');
+	if (!isset($_GET['mid']) || empty($_GET['mid']))
+		redirectexit('action=modsite');
 
 	else
 	{
 		$mid = (int) $mainObj->clean($_GET['mid']);
-		$table = $mainObj->clean($_GET['table']);
-		$mainObj->delete($mid, $table);
-		redirectexit('action=modsite;sa=success;pin=deleteCat');
-	}
-}
-
-function modsite_addCat($mainObj)
-{
-	global $context;
-
-	/* Set all the usual stuff */
-	$context['faq']['cat']['edit'] = $context['faq']['cats'][$mid];
-	$context['sub_template'] = 'faq_addCat';
-	$context['page_title'] = $txt['faqmod_editing_cat'] .' - '. $context['faq']['cats'][$mid]['name'];
-	$context['linktree'][] = array(
-		'url' => $scripturl. '?action=modsite;sa=edit;fid='. $mid,
-		'name' => $context['page_title'],
-	);
-}
-
-function modsite_editCat($mainObj)
-{
-	global $context, $txt;
-
-	$mainObj->permissions('edit', true);
-
-	/* Gotta have something to work with */
-	if (!isset($_POST['title']) || empty($_POST['title']))
-		redirectexit('action=faq');
-
-	else
-	{
-		$title = $mainObj->clean($_POST['title']);
-		$id = $mainObj->clean($_POST['catID']);
-
-		$editData = array(
-			'id' => $id,
-			'category_name' => $title,
-		);
-
-		/* Finally, store the data and tell the user */
-		$mainObj->editCat($editData);
-		redirectexit('action=modsite;sa=success;pin=editCat');
+		$mainObj->delete($mid);
+		redirectexit('action=modsite;sa=success;pin=delete');
 	}
 }
 
@@ -431,34 +368,6 @@ function modsite_single($mainObj)
 	$context['modSite']['object'] = $mainObj;
 }
 
-function modsite_artist($mainObj)
-{
-	global $context, $scripturl, $txt, $user_info;
-
-	/* Forget it... */
-	if (!isset($_GET['mid']) || empty($_GET['mid']))
-		fatal_lang_error('modSite_error_no_valid_action', false);
-
-	/* Are you allowed to see this page? */
-	$mainObj->permissions('view', true);
-
-	$mid = $mainObj->clean($_GET['mid']);
-
-	$context['sub_template'] = 'modSite_artist';
-	$context['canonical_url'] = $scripturl . '?action=modsite;sa=artist;mid='. $mid;
-	$context['page_title'] = $txt['modSite_artist_title'] . $mid;
-	$context['linktree'][] = array(
-		'url' => $scripturl. '?action=modsite;sa=artist;mid='. $mid,
-		'name' => $context['page_title'],
-	);
-
-	/* Get the latest modsite from DB */
-	$context['modSite']['artist'] = $mainObj->getBy('artist', $mid , false);
-
-	/* Pass the object to the template */
-	$context['modSite']['object'] = $mainObj;
-}
-
 function modsite_list($mainObj)
 {
 	global $context, $txt, $scripturl;
@@ -477,47 +386,6 @@ function modsite_list($mainObj)
 	/* No letter? then show the main page */
 	if (!isset($_GET['lidletter']) || empty($_GET['lidletter']))
 		$context['modSite']['list'] = $mainObj->getAll();
-
-	/* Show a list of modsite starting with X letter */
-	elseif (isset($_GET['lidletter']))
-	{
-		$midletter = $mainObj->clean($_GET['lidletter']);
-
-		/* Replace the linktree and title with something more specific */
-		$context['page_title'] = $txt['modSite_list_title_by_letter'] . $midletter;
-		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=list;lidletter='. $midletter,
-			'name' => $txt['modSite_list_title_by_letter'] . $midletter,
-		);
-
-		$context['modSite']['list'] = $mainObj->getBy('title', $midletter .'%');
-
-		if (empty($context['modSite']['list']))
-			fatal_lang_error('modSite_no_modsite_with_letter', false);
-	}
-
-	/* Pass the object to the template */
-	$context['modSite']['object'] = $mainObj;
-}
-
-function modsite_manage($mainObj)
-{
-	global $context, $txt, $scripturl;
-
-	/* Are you allowed to see this page? */
-	$mainObj->permissions(array('edit', 'delete'), true);
-
-	/* Page stuff */
-	$context['sub_template'] = 'modSite_manage';
-	$context['page_title'] = $txt['modSite_manage_title'];
-	$context['linktree'][] = array(
-		'url' => $scripturl. '?action=modsite;sa=manage',
-		'name' => $context['page_title'],
-	);
-
-	/* No letter? then show the main page */
-	if (!isset($_GET['lidletter']) || empty($_GET['lidletter']))
-		$context['modSite']['list'] = $mainObj->getAll('manage');
 
 	/* Show a list of modsite starting with X letter */
 	elseif (isset($_GET['lidletter']))
