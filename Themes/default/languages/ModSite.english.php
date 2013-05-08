@@ -35,6 +35,8 @@ $txt['modSite_'] = '';
 $txt['modSite_'] = '';
 
 // Error
+$txt['modSite_error_message'] = 'There was an error:';
+$txt['modSite_error_empty_field'] = ' field was left empty';
 $txt['modSite_error_enable'] = 'The mod is not enable';
 $txt['modSite_error_no_valid_id'] = 'No valid action';
 

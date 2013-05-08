@@ -80,6 +80,16 @@ function template_modSite_add()
 	echo '
 	<div class="floatright nopadding" style="width:80%;">';
 
+	/* You didn't fill the field... */
+	if (isset($_GET['missing']))
+		echo '
+	<div class="errorbox">
+<p class="alert">
+	<h3>', $txt['modSite_error_message'] ,'</h3>
+	<p>
+		', $_GET['missing'] . $txt['modSite_error_empty_field'] ,'
+	</p>
+</div>';
 	/* A nice form for adding a new cat */
 	// if ($context['faq']['object']->permissions('add') == true)Q
 		echo '
