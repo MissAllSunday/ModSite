@@ -88,7 +88,7 @@ function template_modSite_add()
 		</span>
 		<div class="roundframe rfix">
 			<div class="innerframe">
-				<form action="', $scripturl, '?action='. modsite::$name .';sa=add;step=2" method="post" target="_self">
+				<form action="', $scripturl, '?action='. modsite::$name .';sa=add2" method="post" target="_self">
 					<dl id="post_header">
 						<dt>
 							<span id="caption_subject">', $txt['modSite_edit_name'] ,'</span>

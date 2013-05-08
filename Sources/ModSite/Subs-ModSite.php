@@ -153,13 +153,11 @@ class ModSite
 		);
 	}
 
-	public function clean($string, $body = false)
+	public function clean($string)
 	{
 		global $smcFunc, $sourcedir;
 
-		$string = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($string, ENT_QUOTES, ENT_QUOTES));
-
-		return $string;
+		return $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($string, ENT_QUOTES, ENT_QUOTES));
 	}
 
 	public function permissions($type, $fatal_error = false)

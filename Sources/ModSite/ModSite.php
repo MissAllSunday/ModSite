@@ -143,6 +143,7 @@ function modsite_dispatch()
 		/* Safety first, hardcode the actions */
 		$subActions = array(
 			'add',
+			'add2',
 			'delete',
 			'edit',
 			'list',
@@ -212,21 +213,6 @@ function modsite_add($mainObj)
 
 	/* Tell the template we are adding, not editing */
 	$context['modSite']['edit'] = false;
-
-	/* We need make sure we have this. */
-	require_once($sourcedir . '/Subs-Editor.php');
-
-	/* Create it... */
-	$editorOptions = array(
-		'id' => 'description',
-		'value' => '',
-		'width' => '90%',
-	);
-
-	create_control_richedit($editorOptions);
-
-	/* ... and store the ID again for use in the form */
-	$context['post_box_name'] = $editorOptions['id'];
 }
 
 function modsite_add2($mainObj)
@@ -236,16 +222,17 @@ function modsite_add2($mainObj)
 	checkSession('post', '', true);
 
 	/* Check permissions */
-	$mainObj->permissions('add', true);
+	$mainObj->permissions(isset($_REQUEST['edit']) ? 'edit' : 'add', true);
 
-	/* Long, long check */
-	if (empty($_REQUEST['id_category']) || empty($_REQUEST['name']) || empty($_REQUEST['file']) || empty($_REQUEST['demo']) || empty($_REQUEST['version']) || empty($_REQUEST['id_topic']) || empty($_REQUEST['smf_version']) || empty($_REQUEST['smf_download']) || empty($_REQUEST['github']) || empty($_REQUEST['description']))
-		redirectexit('action=modsite'); // Gotta send the user back to the form but I'm lazy...
+	/* Gotta send the user back to the form and tell them theres a missing field */
+	if (empty($_REQUEST['name']))
+		redirectexit('action=modsite;sa=add;missing=name');
 
 	/* If editing, we need the ID */
 	if (isset($_REQUEST['edit']) && !isset($_GET['mid']) || empty($_GET['mid']))
 		redirectexit('action=modsite');
 
+	/* Make some checks if we are editing */
 	else
 	{
 		$mid = (int) $mainObj->clean($_GET['mid']);
@@ -261,19 +248,7 @@ function modsite_add2($mainObj)
 	/* Let us continue... */
 	$data = array(
 		'id' => $mid,
-		'id_category' => $mainObj->clean($_REQUEST['id_category']),
 		'name' => $mainObj->clean($_REQUEST['name']),
-		'file' => $mainObj->clean($_REQUEST['file']),
-		'demo' => $mainObj->clean($_REQUEST['demo']),
-		'version' => $mainObj->clean($_REQUEST['version']),
-		'id_topic' => $mainObj->clean($_REQUEST['id_topic']),
-		'smf_version' => $mainObj->clean($_REQUEST['smf_version']),
-		'smf_download' => $mainObj->clean($_REQUEST['smf_download']),
-		'github' => $mainObj->clean($_REQUEST['github']),
-		'description' => $mainObj->clean($_REQUEST['description']),
-		'id_user' => $user_info['id'],
-		'downloads' => 0,
-		'time' => time(),
 	);
 
 	/* Finally, store the data and tell the user */
