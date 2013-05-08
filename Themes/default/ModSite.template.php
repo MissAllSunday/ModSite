@@ -81,7 +81,7 @@ function template_modSite_add()
 	<div class="floatright nopadding" style="width:80%;">';
 
 	/* A nice form for adding a new cat */
-	if ($context['faq']['object']->permissions('add') == true)
+	// if ($context['faq']['object']->permissions('add') == true)Q
 		echo '
 		<span class="clear upperframe">
 			<span></span>
@@ -94,6 +94,7 @@ function template_modSite_add()
 							<span id="caption_subject">', $txt['modSite_edit_name'] ,'</span>
 						</dt>
 						<dd>
+							<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="" class="input_text" /> <input type="submit" name="send" class="sbtn" value="', $txt['modSite_edit_add'] ,'" />
 						</dd>
 					</dl>
