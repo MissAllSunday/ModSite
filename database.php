@@ -28,6 +28,7 @@
 					'size' => 255,
 					'default' => '',
 				),
+			),
 			'indexes' => array(
 				array(
 					'type' => 'primary',
@@ -37,7 +38,6 @@
 			'if_exists' => 'ignore',
 			'error' => 'fatal',
 			'parameters' => array(),
-			),
 		);
 
 		// Loop through each defined table and do whats needed, update existing or add as new

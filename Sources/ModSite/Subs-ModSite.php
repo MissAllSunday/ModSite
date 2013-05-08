@@ -34,7 +34,7 @@ class ModSite
 
 		$smcFunc['db_insert']('',
 			'{db_prefix}'. $this->_table['name'],
-			array('id' => 'int', 'name' => 'string-255'),
+			array('name' => 'string-255'),
 			$data,
 			array('id')
 		);
@@ -200,15 +200,7 @@ class ModSite
 			return false;
 	}
 
-	protected function cleanCache($type)
+	protected function cleanCache()
 	{
-		if (empty($type))
-			return;
-
-		if (!is_array($type))
-			$type = array($type);
-
-		foreach ($type as $t)
-			cache_put_data(modsite::$name .'_'. $type, '', 120);
 	}
 }

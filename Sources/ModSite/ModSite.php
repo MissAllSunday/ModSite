@@ -220,38 +220,50 @@ function modsite_add2($mainObj)
 	checkSession('post', '', true);
 
 	/* Check permissions */
-	$mainObj->permissions(isset($_REQUEST['edit']) ? 'edit' : 'add', true);
+	// $mainObj->permissions(isset($_REQUEST['edit']) ? 'edit' : 'add', true);
 
 	/* Gotta send the user back to the form and tell them theres a missing field */
 	if (empty($_REQUEST['name']))
 		redirectexit('action=modsite;sa=add;missing=name');
 
-	/* If editing, we need the ID */
-	if (isset($_REQUEST['edit']) && !isset($_GET['mid']) || empty($_GET['mid']))
-		redirectexit('action=modsite');
-
-	/* Make some checks if we are editing */
-	else
-	{
-		$mid = (int) $mainObj->clean($_GET['mid']);
-
-		/* Make sure it does exists... */
-		$current = $mainObj->doesExists($mid);
-
-		/* Tell the user this entry doesn't exists anymore */
-		if (empty($current))
-			fatal_lang_error('modSite_error_no_valid_id', false);
-	}
+	/* Set the method name */
+	$method = 'add';
 
 	/* Let us continue... */
 	$data = array(
-		'id' => $mid,
-		'name' => $mainObj->clean($_REQUEST['name']),
+		$mainObj->clean($_REQUEST['name']),
 	);
 
-	/* Finally, store the data and tell the user */
-	$method = isset($_REQUEST['edit']) ? 'edit' : 'add';
+	/* Are we editing */
+	if($_REQUEST['edit'])
+	{
+		/* If editing, we need the ID */
+		if (!isset($_GET['mid']) || empty($_GET['mid']))
+			redirectexit('action=modsite;sa=add;missing=ID');
 
+		/* Make some checks if we are editing */
+		else
+		{
+			$mid = (int) $mainObj->clean($_GET['mid']);
+
+			/* Make sure it does exists... */
+			$current = $mainObj->doesExists($mid);
+
+			/* Tell the user this entry doesn't exists anymore */
+			if (empty($current))
+				fatal_lang_error('modSite_error_no_valid_id', false);
+		}
+
+		/* All good, append the ID */
+		$data += array(
+			!empty($mid) ? $mid : 0,
+		);
+
+		/* And finally, change the method */
+		$method = 'edit';
+	}
+
+	/* Call the DB */
 	$mainObj->$method($data);
 
 	/* All done, show a nice page */
