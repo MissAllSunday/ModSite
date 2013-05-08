@@ -23,81 +23,11 @@
 					'auto' => true
 				),
 				array(
-					'name' => 'id_category',
-					'type' => 'int',
-					'size' => 5,
-					'null' => false
-				),
-				array(
-					'name' => 'id_user',
-					'type' => 'int',
-					'size' => 10,
-				),
-				array(
-					'name' => 'downloads',
-					'type' => 'int',
-					'size' => 10,
-				),
-				array(
 					'name' => 'name',
 					'type' => 'varchar',
 					'size' => 255,
 					'default' => '',
 				),
-				array(
-					'name' => 'file',
-					'type' => 'text',
-					'size' => '',
-					'default' => '',
-				),
-				array(
-					'name' => 'demo',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'version',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'id_topic',
-					'type' => 'int',
-					'size' => 10,
-				),
-				array(
-					'name' => 'smf_version',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'smf_download',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'github',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'description',
-					'type' => 'text',
-					'size' => '',
-					'default' => '',
-				),
-				array(
-					'name' => 'time',
-					'type' => 'int',
-					'size' => 10,
-					'default' => null,
-				),
-			),
 			'indexes' => array(
 				array(
 					'type' => 'primary',
@@ -109,16 +39,16 @@
 			'parameters' => array(),
 		);
 		$tables[] = array (
-			'table_name' => 'mod_categories',
+			'table_name' => 'mod_cat',
 			'columns' => array(
 				array(
-					'name' => 'cat_id',
+					'name' => 'id_cat',
 					'type' => 'int',
 					'size' => 10,
 					'auto' => true,
 				),
 				array(
-					'name' => 'cat_name',
+					'name' => 'name_cat',
 					'type' => 'varchar',
 					'size' => 255,
 					'default' => '',
@@ -128,7 +58,7 @@
 				array(
 					'type' => 'primary',
 					'columns' => array(
-						'cat_id'
+						'id_cat'
 					),
 				),
 			),
