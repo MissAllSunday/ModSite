@@ -117,19 +117,11 @@ function modsite_permissions(&$permissionGroups, &$permissionList)
 		false,
 		'modsite_per_classic',
 		'modsite_per_simple');
-	$permissionList['membergroup']['modsite_deleteOwn'] = array(
-		false,
-		'modsite_per_classic',
-		'modsite_per_simple');
 	$permissionList['membergroup']['modsite_add'] = array(
 		false,
 		'modsite_per_classic',
 		'modsite_per_simple');
 	$permissionList['membergroup']['modsite_edit'] = array(
-		false,
-		'modsite_per_classic',
-		'modsite_per_simple');
-	$permissionList['membergroup']['modsite_editOwn'] = array(
 		false,
 		'modsite_per_classic',
 		'modsite_per_simple');
@@ -149,6 +141,7 @@ function modsite_dispatch()
 			'list',
 			'search',
 			'single',
+			'success',
 		);
 
 		if (empty($mainObj))
@@ -319,24 +312,23 @@ function modsite_delete($mainObj)
 
 function modsite_success($mainObj)
 {
-	global $context, $scripturl, $smcFunc, $txt;
+	global $context, $scripturl, $txt;
 
+	/* No direct access */
 	if (!isset($_GET['pin']) || empty($_GET['pin']))
 		redirectexit('action=modsite');
 
-	$context['modSite']['pin'] = trim($smcFunc['htmlspecialchars']($_GET['pin']));
+	$context['modSite']['pin'] = $mainObj->clean($_GET['pin']));
 
-		/* Build the link tree.... */
-		$context['linktree'][] = array(
-			'url' => $scripturl . '?action=modsite;sa=success',
-			'name' => $txt['modSite_success_message_title'],
-		);
+	/* Build the link tree.... */
+	$context['page_title'] = $txt['modSite_success_message_title'];
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=modsite;sa=success',
+		'name' => $context['page_title'],
+	);
 
-		$context['sub_template'] = 'modSite_success';
-		$context['modSite']['message'] = $txt['modSite_success_message_'. $context['modSite']['pin']];
-
-		/* Set a descriptive title. */
-		$context['page_title'] = $txt['modSite_success_title'];
+	$context['sub_template'] = 'modSite_success';
+	$context['modSite']['message'] = $txt['modSite_success_message_'. $context['modSite']['pin']];
 
 	/* Pass the object to the template */
 	$context['modSite']['object'] = $mainObj;
