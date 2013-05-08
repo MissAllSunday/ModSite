@@ -318,7 +318,7 @@ function modsite_success($mainObj)
 	if (!isset($_GET['pin']) || empty($_GET['pin']))
 		redirectexit('action=modsite');
 
-	$context['modSite']['pin'] = $mainObj->clean($_GET['pin']));
+	$context['modSite']['pin'] = $mainObj->clean($_GET['pin']);
 
 	/* Build the link tree.... */
 	$context['page_title'] = $txt['modSite_success_message_title'];

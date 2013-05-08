@@ -30,7 +30,7 @@ $txt['modSite_latest_limit'] = 'Latest limit';
 $txt['modSite_latest_limit_desc'] = 'This used to be a description until it took an arrow to its knee';
 $txt['modSite_pag_limit'] = 'Page limit';
 $txt['modSite_pag_limit_desc'] = 'For pagination stuff';
-$txt['modSite_success_message_title'] ? 'You have successfully completed this action';
+$txt['modSite_success_message_title'] = 'You have successfully completed this action';
 $txt['modSite_success_message_add'] = 'You have successfully added this mod';
 $txt['modSite_success_message_edit'] = 'You have successfully edited this mod';
 $txt['modSite_success_message_delete'] = 'You have successfully deleted this mod';
