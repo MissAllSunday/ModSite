@@ -91,7 +91,7 @@ function template_modSite_add()
 	</p>
 </div>';
 	/* A nice form for adding a new cat */
-	// if ($context['faq']['object']->permissions('add') == true)Q
+	// if ($context['modsite']['object']->permissions('add') == true)
 		echo '
 		<span class="clear upperframe">
 			<span></span>
@@ -105,7 +105,7 @@ function template_modSite_add()
 						</dt>
 						<dd>
 							<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-							<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="" class="input_text" /> <input type="submit" name="send" class="sbtn" value="', $txt['modSite_edit_add'] ,'" />
+							<input type="text" name="name" size="55" tabindex="1" maxlength="255" value="" class="input_text" /> <input type="submit" name="send" class="sbtn" value="', $txt['modSite_edit_add'] ,'" />
 						</dd>
 					</dl>
 				</form>

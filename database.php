@@ -10,8 +10,8 @@
 
 	db_extend('packages');
 
-	if (empty($context['uninstalling'])){
-
+	if (empty($context['uninstalling']))
+	{
 		$tables[] = array(
 			'table_name' => 'mod_site',
 			'columns' => array(
@@ -37,34 +37,7 @@
 			'if_exists' => 'ignore',
 			'error' => 'fatal',
 			'parameters' => array(),
-		);
-		$tables[] = array (
-			'table_name' => 'id',
-			'columns' => array(
-				array(
-					'name' => 'id_cat',
-					'type' => 'int',
-					'size' => 10,
-					'auto' => true,
-				),
-				array(
-					'name' => 'name',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
 			),
-			'indexes' => array(
-				array(
-					'type' => 'primary',
-					'columns' => array(
-						'id'
-					),
-				),
-			),
-			'if_exists' => 'ignore',
-			'error' => 'fatal',
-			'parameters' => array(),
 		);
 
 		// Loop through each defined table and do whats needed, update existing or add as new
