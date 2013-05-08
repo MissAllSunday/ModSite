@@ -120,6 +120,41 @@ function template_modSite_add()
 	<div class="clear"></div>';
 }
 
+function template_modSite_success()
+{
+	global $txt, $context, $scripturl, $modSettings;
+
+	modsite_header();
+
+	/* Sidebar */
+	modsite_sideBar();
+
+	/* The main div */
+	echo '
+	<div class="floatright" style="width:80%;">';
+
+	/* No direct access */
+	if (!empty($context['modSite']['pin']))
+		echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft">', $context['modSite']['message'] ,'</span>
+			</h3>
+		</div>
+
+		<div class="windowbg nopadding">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				', $context['modSite']['message'] ,'<p />
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>';
+
+	echo '
+	</div>
+	<div class="clear"></div>';
+}
+
 function modsite_header()
 {
 
