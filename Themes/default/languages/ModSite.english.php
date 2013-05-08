@@ -13,6 +13,7 @@ $txt['modSite_edit_file'] = 'File name:';
 $txt['modSite_edit_file_sub'] = 'The file name must correspond to an existing file in the Downloads directory.';
 $txt['modSite_edit_demo'] = 'Demo: ';
 $txt['modSite_edit_demo_sub'] = 'A link to a page where a demo can be found';
+$txt['modSite_edit_id'] = 'ID';
 $txt['modSite_edit_version'] = 'Version:';
 $txt['modSite_edit_version_sub'] = 'The mod\'s current stable version';
 $txt['modSite_edit_topic'] = 'Topic ID ';
@@ -31,6 +32,11 @@ $txt['modSite_edit_edit'] = 'Edit this mod';
 $txt['modSite_edit_add'] = 'Add this mod';
 $txt['modSite_edit_editing'] = 'Editing';
 $txt['modSite_edit_creating'] = 'Creating a new mod';
+$txt['modSite_edit_cat_title'] = 'Manage Categories';
+$txt['modSite_edit_cat_desc'] = 'From here bla bla bla';
+$txt['modSite_edit_cat_name'] = 'Cat name';
+$txt['modSite_edit_edit_delete'] = 'Edit/Delete';
+$txt['modSite_edit_create_cat'] = 'Create cat';
 
 // Time stuff
 $txt['modSite_time_just_now'] = 'just now.';

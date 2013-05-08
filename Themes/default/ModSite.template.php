@@ -220,6 +220,82 @@ function template_modSite_add()
 	<div class="clear"></div>';
 }
 
+function template_modSite_manageCat()
+{
+	global $context, $txt, $scripturl;
+
+	/* The main div */
+	echo '
+	<div class="floatright nopadding" style="width:80%">';
+
+	echo '
+		<div class="cat_bar">
+			<h3 class="catbg">', $txt['modSite_edit_cat_title'] ,'</h3>
+		</div>
+		<div class="windowbg description">
+			', $txt['modSite_edit_cat_desc'] ,'
+		</div>';
+
+		echo '
+			<table class="table_grid" cellspacing="0" width="100%">
+				<thead>
+					<tr class="catbg">
+						<th scope="col" class="first_th">', $txt['modSite_edit_id']  ,'</th>
+						<th scope="col">', $txt['modSite_edit_cat_name']  ,'</th>
+						<th scope="col" class="last_th">', $txt['modSite_edit_edit_delete'] ,'</th>
+					</tr>
+				</thead>
+			<tbody>';
+
+		foreach($context['modsite']['cats']['all'] as $all)
+		{
+			echo '
+				<tr class="windowbg" style="text-align: center">
+					<td>
+						', $all['id'] ,'
+					</td>
+					<td>
+						',$all['name'],'
+					</td>
+					<td>
+						', $context['modsite']['object']->crud($all['id'], 'cat') ,'
+					</td>
+				</tr>';
+		}
+
+		echo '
+			</tbody>
+		</table><br />';
+
+	/* A nice form for adding a new cat */
+	if ($context['modsite']['object']->permissions('add') == true)
+		echo '
+			<span class="clear upperframe">
+				<span></span>
+			</span>
+			<div class="roundframe rfix">
+				<div class="innerframe">
+					<form action="', $scripturl, '?action=modsite;sa=addCat" method="post" target="_self">
+						<dl id="post_header">
+							<dt>
+								<span id="caption_subject">', $txt['modSite_edit_create_cat']  ,'</span>
+							</dt>
+							<dd>
+								<input type="text" name="title" size="55" tabindex="1" maxlength="255" value="" class="input_text" /> <input type="submit" name="send" class="sbtn" value="', $txt['modSite_edit_create_cat']  ,'" />
+							</dd>
+						</dl>
+					</form>
+				</div>
+			</div>
+			<span class="clear lowerframe">
+				<span></span>
+			</span><br />';
+
+	echo '
+	</div>
+	<div class="clear"></div>';
+}
+
 function modsite_header()
 {
 

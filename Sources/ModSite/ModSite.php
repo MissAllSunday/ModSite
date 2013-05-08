@@ -361,7 +361,7 @@ function modsite_delete($modsiteObject)
 function modsite_addCat($modsiteObject)
 {
 	global $context;
-	
+
 	/* Set all the usual stuff */
 	$context['faq']['cat']['edit'] = $context['faq']['cats'][$mid];
 	$context['sub_template'] = 'faq_addCat';
