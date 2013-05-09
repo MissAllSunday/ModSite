@@ -21,6 +21,7 @@ class ModSiteParser
 		global $boarddir, $boardurl, $modSettings;
 
 		$this->_jsonDir = !empty($modSettings['modsite_json_dir']) ? '/'. $modSettings['modsite_json_dir'] .'/%s.json' : '%s';
+		$this->githubUser = $modSettings['modsite_github_username'];
 		$this->_boarddir = $boarddir;
 		$this->_boardurl = $boardurl;
 	}
@@ -47,6 +48,9 @@ class ModSiteParser
 
 		/* Create the mod array */
 		$this->modArray = json_decode($this->jsonFile, true);
+
+		/* Append github repo info */
+		$this->modArray['repo'] = getRepoInfo();
 	}
 
 	public function getSingle($property)
@@ -65,6 +69,15 @@ class ModSiteParser
 		return false;
 	}
 
+	protected function getRepoInfo()
+	{
+		/* Init github API */
+		$this->github($this->githubUser );
+
+		/* Get the repo info */
+		return $this->client->api('repo')->show($this->githubUser , $this->modArray['githubName'])
+	}
+
 	public function github($username)
 	{
 		require_once ($this->_boarddir .'/vendor/autoload.php');
@@ -72,7 +85,6 @@ class ModSiteParser
 		$this->client = new Github\Client(
 			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $this->_boarddir .'/cache/github-api-cache'))
 		);
-		$this->githubUsername = $username;
 
 		return $this->client;
 	}
