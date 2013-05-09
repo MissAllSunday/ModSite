@@ -14,6 +14,7 @@ if (!defined('SMF'))
 class ModSiteParser
 {
 	protected $_jsonDir = '';
+	public $modObject;
 
 	public function __construct()
 	{
@@ -24,12 +25,28 @@ class ModSiteParser
 		$this->_boardurl = $boardurl;
 	}
 
-	protected function getFile($file)
+	protected function getFile()
+	{
+		/* There is no raw file to work with */
+		if (empty($this->rawFile ))
+			return false;
+
+		$this->jsonFile = file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $this->rawFile ));
+	}
+
+	public function parse($file)
 	{
 		if (empty($file))
 			return false;
 
-		file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $file));
+		/* Set the raw file */
+		$this->rawFile = $file
+
+		/* Get the file */
+		$this->getFile();
+
+		/* Create the object */
+		$this->modObject = json_decode($this->jsonFile);
 	}
 
 	public function github($username)
