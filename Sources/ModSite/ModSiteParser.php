@@ -75,7 +75,10 @@ class ModSiteParser
 		$this->github($this->githubUser );
 
 		/* Get the repo info */
-		return $this->client->api('repo')->show($this->githubUser , $this->modArray['githubName'])
+		$return['info'] =  $this->client->api('repo')->show($this->githubUser, $this->modArray['githubName']);
+
+		/* Get the collaborators for a repository if any */
+		$return['collaborators'] = $this->client->api('repo')->collaborators()->all($this->githubUser, $this->modArray['githubName']);
 	}
 
 	public function github($username)
