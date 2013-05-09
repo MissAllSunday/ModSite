@@ -13,12 +13,15 @@ if (!defined('SMF'))
 
 class ModSiteParser
 {
+	protected $_jsonDir = '';
+
 	public function __construct()
 	{
-		global $boarddir;
+		global $boarddir, $boardurl;
 
+		$this->_jsonDir = !empty($modSettings['modsite_json_dir']) ? '/'. $modSettings['modsite_json_dir'] .'/%s.json' : '%s';
 		$this->_boarddir = $boarddir;
-
+		$this->_boardurl = $boardurl;
 	}
 
 	protected function getFile($file)
@@ -26,7 +29,7 @@ class ModSiteParser
 		if (empty($file))
 			return false;
 
-			file_get_contents($this->_boarddir);
+			file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $file));
 	}
 
 
