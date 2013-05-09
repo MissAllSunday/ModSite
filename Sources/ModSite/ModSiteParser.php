@@ -41,7 +41,7 @@ class ModSiteParser
 			return false;
 
 		/* Set the raw file */
-		$this->fileName = $file
+		$this->fileName = $file;
 
 		/* Get the file */
 		$this->getFile();
@@ -50,12 +50,12 @@ class ModSiteParser
 		$this->modArray = json_decode($this->jsonFile, true);
 
 		/* Append github repo info */
-		$this->modArray['repo'] = getRepoInfo();
+		$this->modArray['repo'] = $this->getRepoInfo();
 	}
 
 	public function getSingle($property)
 	{
-		if (!empty($this->modArray)) && !empty($this->modArray[$property])
+		if (!empty($this->modArray) && !empty($this->modArray[$property]))
 			return $this->modArray[$property];
 
 		return false;
@@ -63,7 +63,7 @@ class ModSiteParser
 
 	public function getAll()
 	{
-		if (!empty($this->modArray)))
+		if (!empty($this->modArray))
 			return $this->modArray;
 
 		return false;
