@@ -49,6 +49,14 @@ class ModSiteParser
 		$this->modObject = json_decode($this->jsonFile);
 	}
 
+	public function get($property)
+	{
+		if (!empty($this->modObject)) && !empty($this->modObject->$property)
+			return $this->modObject->$property;
+
+		return false;
+	}
+
 	public function github($username)
 	{
 		require_once ($this->_boarddir .'/vendor/autoload.php');
