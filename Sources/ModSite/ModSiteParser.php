@@ -17,7 +17,7 @@ class ModSiteParser
 
 	public function __construct()
 	{
-		global $boarddir, $boardurl;
+		global $boarddir, $boardurl, $modSettings;
 
 		$this->_jsonDir = !empty($modSettings['modsite_json_dir']) ? '/'. $modSettings['modsite_json_dir'] .'/%s.json' : '%s';
 		$this->_boarddir = $boarddir;
@@ -40,7 +40,7 @@ class ModSiteParser
 		$this->client = new Github\Client(
 			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $this->_boarddir .'/cache/github-api-cache'))
 		);
-		$this->username = $username;
+		$this->githubUsername = $username;
 
 		return $this->client;
 	}

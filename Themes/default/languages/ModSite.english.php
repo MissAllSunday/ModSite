@@ -34,8 +34,8 @@ $txt['modSite_success_message_title'] = 'You have successfully completed this ac
 $txt['modSite_success_message_add'] = 'You have successfully added this mod';
 $txt['modSite_success_message_edit'] = 'You have successfully edited this mod';
 $txt['modSite_success_message_delete'] = 'You have successfully deleted this mod';
-$txt['modSite_'] = '';
-$txt['modSite_'] = '';
+$txt['modsite_json_dir'] = 'json dir path';
+$txt['modsite_json_dir_desc'] = 'Relative path where all the json files are stored';
 $txt['modSite_'] = '';
 
 // Error
