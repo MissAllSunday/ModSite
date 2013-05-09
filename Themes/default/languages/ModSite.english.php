@@ -36,6 +36,8 @@ $txt['modSite_success_message_edit'] = 'You have successfully edited this mod';
 $txt['modSite_success_message_delete'] = 'You have successfully deleted this mod';
 $txt['modsite_json_dir'] = 'json dir path';
 $txt['modsite_json_dir_desc'] = 'Relative path where all the json files are stored';
+$txt['modsite_github_username'] = 'github username';
+$txt['modsite_github_username_desc'] = 'The name of the main repo where the mods are stored';
 $txt['modSite_'] = '';
 
 // Error

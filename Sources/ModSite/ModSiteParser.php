@@ -29,9 +29,8 @@ class ModSiteParser
 		if (empty($file))
 			return false;
 
-			file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $file));
+		file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $file));
 	}
-
 
 	public function github($username)
 	{
