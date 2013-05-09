@@ -13,14 +13,29 @@ if (!defined('SMF'))
 
 class ModSiteParser
 {
-	public function github($username)
+	public function __construct()
 	{
 		global $boarddir;
 
-		require_once ($boarddir .'/vendor/autoload.php');
+		$this->_boarddir = $boarddir;
+
+	}
+
+	protected function getFile($file)
+	{
+		if (empty($file))
+			return false;
+
+			file_get_contents($this->_boarddir);
+	}
+
+
+	public function github($username)
+	{
+		require_once ($this->_boarddir .'/vendor/autoload.php');
 
 		$this->client = new Github\Client(
-			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $boarddir .'/cache/github-api-cache'))
+			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $this->_boarddir .'/cache/github-api-cache'))
 		);
 		$this->username = $username;
 
