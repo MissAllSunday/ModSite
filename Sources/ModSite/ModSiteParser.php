@@ -14,7 +14,7 @@ if (!defined('SMF'))
 class ModSiteParser
 {
 	protected $_jsonDir = '';
-	public $modObject;
+	public $modArray = array();
 
 	public function __construct()
 	{
@@ -28,10 +28,10 @@ class ModSiteParser
 	protected function getFile()
 	{
 		/* There is no raw file to work with */
-		if (empty($this->rawFile ))
+		if (empty($this->fileName))
 			return false;
 
-		$this->jsonFile = file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $this->rawFile ));
+		$this->jsonFile = file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $this->fileName));
 	}
 
 	public function parse($file)
@@ -40,19 +40,27 @@ class ModSiteParser
 			return false;
 
 		/* Set the raw file */
-		$this->rawFile = $file
+		$this->fileName = $file
 
 		/* Get the file */
 		$this->getFile();
 
-		/* Create the object */
-		$this->modObject = json_decode($this->jsonFile);
+		/* Create the mod array */
+		$this->modArray = json_decode($this->jsonFile, true);
 	}
 
-	public function get($property)
+	public function getSingle($property)
 	{
-		if (!empty($this->modObject)) && !empty($this->modObject->$property)
-			return $this->modObject->$property;
+		if (!empty($this->modArray)) && !empty($this->modArray[$property])
+			return $this->modArray[$property];
+
+		return false;
+	}
+
+	public function getAll()
+	{
+		if (!empty($this->modArray)))
+			return $this->modArray;
 
 		return false;
 	}
