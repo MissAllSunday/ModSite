@@ -167,8 +167,12 @@ function modsite_dispatch()
 
 		$call = 'modSite_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
 
-		// Call the appropiate method
-		$call($mainObj);
+		// Call the appropiate method if the mod is enable
+		if (!empty($modSettings['modSite_enable']))
+			$call($mainObj);
+
+		else
+		fatal_lang_error('modSite_error_enable', false);
 }
 
 function modsite_main($mainObj)
