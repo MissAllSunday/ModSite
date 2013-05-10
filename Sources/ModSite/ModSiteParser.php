@@ -45,45 +45,39 @@ class ModSiteParser
 			return false;
 
 		/* Create the mod array */
-		$modArray = json_decode($this->getFile($file), true);
+		$mod = json_decode($this->getFile($file), true);
 
 		/* Append github repo info */
-		$modArray['repo'] = $this->getRepoInfo();
+		$mod['repo'] = $this->getRepoInfo($mod['githubName']);
 
 		/* Replace the ugly number with a nice readable word */
-		if (!empty($modArray['cat']) && in_array($modArray['cat'], array_keys($this->cats)))
-			$modArray['cat'] = $this->cats[$modArray['cat']];
+		if (!empty($mod['cat']) && in_array($mod['cat'], array_keys($this->cats)))
+			$mod['cat'] = $this->cats[$mod['cat']];
 
 		else
-			$modArray['cat'] = $this->cats[1];
+			$mod['cat'] = $this->cats[1];
+
+		return $mod;
 	}
 
-	public function getSingle($property)
-	{
-		if (!empty($modArray) && !empty($modArray[$property]))
-			return $modArray[$property];
-
-		return false;
-	}
-
-	public function getAll()
-	{
-		if (!empty($modArray))
-			return $modArray;
-
-		return false;
-	}
-
-	protected function getRepoInfo()
+	protected function getRepoInfo($repoName)
 	{
 		/* Init github API */
-		$this->github($this->githubUser );
+		if (!isset($this->client))
+			$this->github($this->githubUser);
 
 		/* Get the repo info */
-		$return['info'] =  $this->client->api('repo')->show($this->githubUser, $modArray['githubName']);
+		return  $this->client->api('repo')->show($this->githubUser, $repoName);
+	}
+
+	protected function getRepoCollaborators($repoName)
+	{
+		/* Init github API */
+		if (!isset($this->client))
+			$this->github($this->githubUser);
 
 		/* Get the collaborators for a repository if any */
-		$return['collaborators'] = $this->client->api('repo')->collaborators()->all($this->githubUser, $modArray['githubName']);
+		return = $this->client->api('repo')->collaborators()->all($this->githubUser, $repoName);
 	}
 
 	public function github($username)
