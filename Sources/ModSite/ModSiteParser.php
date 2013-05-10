@@ -14,7 +14,6 @@ if (!defined('SMF'))
 class ModSiteParser
 {
 	protected $_jsonDir = '';
-	public $modArray = array();
 
 	public function __construct()
 	{
@@ -24,15 +23,20 @@ class ModSiteParser
 		$this->githubUser = $modSettings['modsite_github_username'];
 		$this->_boarddir = $boarddir;
 		$this->_boardurl = $boardurl;
+
+		/* Get the cats! */
+		$this->cats = $this->getCats();
 	}
 
-	protected function getFile()
+	protected function getFile($file)
 	{
 		/* There is no raw file to work with */
-		if (empty($this->fileName))
+		if (empty($file))
 			return false;
 
-		$this->jsonFile = file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $this->fileName));
+		/* Check using scan() to be sure we got something */
+
+		return file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $file));
 	}
 
 	public function parse($file)
@@ -40,41 +44,32 @@ class ModSiteParser
 		if (empty($file))
 			return false;
 
-		/* Set the raw file */
-		$this->fileName = $file;
-
-		/* Get the file */
-		$this->getFile();
-
 		/* Create the mod array */
-		$this->modArray = json_decode($this->jsonFile, true);
+		$modArray = json_decode($this->getFile($file), true);
 
 		/* Append github repo info */
-		$this->modArray['repo'] = $this->getRepoInfo();
-
-		/* Get the cats! */
-		$this->cats = $this->getCats();
+		$modArray['repo'] = $this->getRepoInfo();
 
 		/* Replace the ugly number with a nice readable word */
-		if (!empty($this->modArray['cat']) && in_array($this->modArray['cat'], array_keys($this->cats)))
-			$this->modArray['cat'] = $this->cats[$this->modArray['cat']];
+		if (!empty($modArray['cat']) && in_array($modArray['cat'], array_keys($this->cats)))
+			$modArray['cat'] = $this->cats[$modArray['cat']];
 
 		else
-			$this->modArray['cat'] = $this->cats[1];
+			$modArray['cat'] = $this->cats[1];
 	}
 
 	public function getSingle($property)
 	{
-		if (!empty($this->modArray) && !empty($this->modArray[$property]))
-			return $this->modArray[$property];
+		if (!empty($modArray) && !empty($modArray[$property]))
+			return $modArray[$property];
 
 		return false;
 	}
 
 	public function getAll()
 	{
-		if (!empty($this->modArray))
-			return $this->modArray;
+		if (!empty($modArray))
+			return $modArray;
 
 		return false;
 	}
@@ -85,10 +80,10 @@ class ModSiteParser
 		$this->github($this->githubUser );
 
 		/* Get the repo info */
-		$return['info'] =  $this->client->api('repo')->show($this->githubUser, $this->modArray['githubName']);
+		$return['info'] =  $this->client->api('repo')->show($this->githubUser, $modArray['githubName']);
 
 		/* Get the collaborators for a repository if any */
-		$return['collaborators'] = $this->client->api('repo')->collaborators()->all($this->githubUser, $this->modArray['githubName']);
+		$return['collaborators'] = $this->client->api('repo')->collaborators()->all($this->githubUser, $modArray['githubName']);
 	}
 
 	public function github($username)

@@ -11,7 +11,7 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 
-class ModSite
+class ModSite extends ModSiteParser
 {
 	protected $_table = array(
 		'name' => 'mod_site',
