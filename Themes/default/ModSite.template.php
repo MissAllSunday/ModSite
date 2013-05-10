@@ -34,9 +34,13 @@ function template_modSite_main()
 	/* Sidebar */
 	modsite_sideBar();
 
-	/* Show a nice message if no mods are avaliable */
+	/* The main div */
 	echo '
-	<div class="floatright nopadding" style="width:80%;">
+	<div class="floatright nopadding" style="width:80%;">';
+
+	/* There is no mods or this thing is disable :( */
+	if (empty($context['modSite']['latest']) || empty($modSettings['modSite_enable']))
+		echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
 				<span class="ie6_header floatleft">Some title here</span>
@@ -48,8 +52,14 @@ function template_modSite_main()
 			some text here
 			</div>
 			<span class="botslice"><span></span></span>
-		</div>
-	</div>';
+		</div>';
+
+	/* Show the goodies	 */
+	else
+
+	/* End of main div */
+	echo
+	'</div>';
 
 	echo '
 		<div class="clear">';
