@@ -77,7 +77,7 @@ class ModSiteParser
 			$this->github($this->githubUser);
 
 		/* Get the collaborators for a repository if any */
-		return = $this->client->api('repo')->collaborators()->all($this->githubUser, $repoName);
+		return $this->client->api('repo')->collaborators()->all($this->githubUser, $repoName);
 	}
 
 	public function github($username)

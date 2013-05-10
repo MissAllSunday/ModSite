@@ -28,6 +28,12 @@
 					'size' => 255,
 					'default' => '',
 				),
+				array(
+					'name' => 'downloads',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+				),
 			),
 			'indexes' => array(
 				array(
