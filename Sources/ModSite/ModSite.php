@@ -219,7 +219,7 @@ function modsite_add2($mainObj)
 	checkSession('post', '', true);
 
 	/* Check permissions */
-	$mainObj->permissions(isset($_REQUEST['edit']) ? 'edit' : 'add', true)
+	$mainObj->permissions(isset($_REQUEST['edit']) ? 'edit' : 'add', true);
 
 	/* Gotta send the user back to the form and tell them theres a missing field */
 	if (empty($_REQUEST['name']))

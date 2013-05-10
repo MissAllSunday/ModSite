@@ -56,11 +56,11 @@ class ModSiteParser
 		$this->cats = $this->getCats();
 
 		/* Replace the ugly number with a nice readable word */
-		if (!empty($this->modArray['cat']) && in_array($this->modArray['cat'], $this->cats))
+		if (!empty($this->modArray['cat']) && in_array($this->modArray['cat'], array_keys($this->cats)))
 			$this->modArray['cat'] = $this->cats[$this->modArray['cat']];
 
 		else
-			$this->modArray['cat'] = $this->cats[0];
+			$this->modArray['cat'] = $this->cats[1];
 	}
 
 	public function getSingle($property)
