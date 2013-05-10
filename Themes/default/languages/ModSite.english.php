@@ -7,6 +7,7 @@ $txt['modSite_title_main'] = 'Mod Site';
 $txt['modSite_mods'] = 'Mods';
 $txt['modSite_edit_name'] = 'Name: ';
 $txt['modSite_edit_add'] = 'Add this mod';
+$txt['modSite_edit_edit'] = 'Edit this mod';
 $txt['modSite_edit_editing'] = 'Editing';
 $txt['modSite_edit_creating'] = 'Creating a new mod';
 

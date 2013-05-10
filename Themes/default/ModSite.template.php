@@ -55,7 +55,7 @@ function template_modSite_main()
 		<div class="clear">';
 
 	/* Button for adding a new entry */
-	// if ($context['Modsite']['object']->permissions('add') == true)
+	if ($context['Modsite']['object']->permissions('add') == true)
 		echo '
 			<div id="confirm_buttons">
 				<form action="', $scripturl, '?action=modsite;sa=add" method="post" target="_self">
@@ -98,14 +98,14 @@ function template_modSite_add()
 		</span>
 		<div class="roundframe rfix">
 			<div class="innerframe">
-				<form action="', $scripturl, '?action='. modsite::$name .';sa=add2" method="post" target="_self">
+				<form action="', $scripturl, '?action='. modsite::$name .';sa=add2', !empty($context['modSite']['edit']) ? ';edit;mid='. $context['modSite']['id'] : '' ,'" method="post" target="_self">
 					<dl id="post_header">
 						<dt>
 							<span id="caption_subject">', $txt['modSite_edit_name'] ,'</span>
 						</dt>
 						<dd>
 							<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-							<input type="text" name="name" size="55" tabindex="1" maxlength="255" value="" class="input_text" /> <input type="submit" name="send" class="sbtn" value="', $txt['modSite_edit_add'] ,'" />
+							<input type="text" name="name" size="55" tabindex="1" maxlength="255" value="', !empty($context['modSite']['edit']) ? $context['modSite']['edit']['name'] : '' ,'" class="input_text" /> <input type="submit" name="send" class="sbtn" value="', !empty($context['modSite']['edit']) ? $txt['modSite_edit_edit'] : $txt['modSite_edit_add'] ,'" />
 						</dd>
 					</dl>
 				</form>
