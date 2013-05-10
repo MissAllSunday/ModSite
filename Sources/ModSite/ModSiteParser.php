@@ -92,6 +92,11 @@ class ModSiteParser
 		return $this->client;
 	}
 
+	protected function getCats()
+	{
+		return json_decode(file_get_contents($this->_boarddir . sprintf($this->_jsonDir, 'categories')), true);
+	}
+
 	/**
 	 * Tries to fetch the content of a given url
 	 *
