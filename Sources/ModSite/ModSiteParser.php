@@ -51,6 +51,16 @@ class ModSiteParser
 
 		/* Append github repo info */
 		$this->modArray['repo'] = $this->getRepoInfo();
+
+		/* Get the cats! */
+		$this->cats = $this->getCats();
+
+		/* Replace the ugly number with a nice readable word */
+		if (!empty($this->modArray['cat']) && in_array($this->modArray['cat'], $this->cats))
+			$this->modArray['cat'] = $this->cats[$this->modArray['cat']];
+
+		else
+			$this->modArray['cat'] = $this->cats[0];
 	}
 
 	public function getSingle($property)
