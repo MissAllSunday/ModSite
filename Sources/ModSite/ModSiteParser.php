@@ -137,6 +137,19 @@ class ModSiteParser
 		}
 	}
 
+	protected function getAPIStatus()
+	{
+		$apiUrl = 'https://status.github.com/api/status.json';
+
+		$check = json_decode($this->fetch_web_data($apiUrl));
+
+		if (empty($check))
+			return false;
+
+		if (!empty($check) && is_object($check) &&)
+			return $check->status == 'good' ? true : false;
+	}
+
 	protected function cleanCache($type)
 	{
 		if (empty($type))
