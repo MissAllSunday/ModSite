@@ -62,6 +62,10 @@ class ModSiteParser
 
 	protected function getRepoInfo($repoName)
 	{
+		/* Don't even think about it... */
+		if (!$this->getAPIStatus())
+			return false;
+
 		/* Init github API */
 		if (!isset($this->client))
 			$this->github($this->githubUser);
@@ -72,6 +76,10 @@ class ModSiteParser
 
 	protected function getRepoCollaborators($repoName)
 	{
+		/* Don't even think about it... */
+		if (!$this->getAPIStatus())
+			return false;
+
 		/* Init github API */
 		if (!isset($this->client))
 			$this->github($this->githubUser);
@@ -82,6 +90,10 @@ class ModSiteParser
 
 	public function github($username)
 	{
+		/* Don't even think about it... */
+		if (!$this->getAPIStatus())
+			return false;
+
 		require_once ($this->_boarddir .'/vendor/autoload.php');
 
 		$this->client = new Github\Client(
@@ -137,17 +149,20 @@ class ModSiteParser
 		}
 	}
 
-	protected function getAPIStatus()
+	public function getAPIStatus()
 	{
 		$apiUrl = 'https://status.github.com/api/status.json';
 
-		$check = json_decode($this->fetch_web_data($apiUrl));
+		$check = $this->fetch_web_data($apiUrl);
 
 		if (empty($check))
-			return false;
+			return 'false';
 
-		if (!empty($check) && is_object($check) &&)
+		if (!empty($check))
+		{
+			$check = json_decode($check);
 			return $check->status == 'good' ? true : false;
+		}
 	}
 
 	protected function cleanCache($type)
