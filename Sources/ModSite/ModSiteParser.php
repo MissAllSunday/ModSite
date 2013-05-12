@@ -64,7 +64,7 @@ class ModSiteParser
 	protected function getRepoInfo($repoName)
 	{
 		/* Don't even think about it... */
-		if (!$this->getAPIStatus())
+		if (!in_array($this->getAPIStatus(), $_apiAcceptableStatus)
 			return false;
 
 		/* Init github API */
@@ -78,7 +78,7 @@ class ModSiteParser
 	protected function getRepoCollaborators($repoName)
 	{
 		/* Don't even think about it... */
-		if (!$this->getAPIStatus())
+		if (!in_array($this->getAPIStatus(), $_apiAcceptableStatus)
 			return false;
 
 		/* Init github API */
@@ -92,7 +92,7 @@ class ModSiteParser
 	public function github($username)
 	{
 		/* Don't even think about it... */
-		if (!$this->getAPIStatus())
+		if (!in_array($this->getAPIStatus(), $_apiAcceptableStatus)
 			return false;
 
 		require_once ($this->_boarddir .'/vendor/autoload.php');
