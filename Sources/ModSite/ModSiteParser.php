@@ -110,9 +110,13 @@ class ModSiteParser
 		return $this->client;
 	}
 
-	protected function getCats()
+	public function getCats()
 	{
-		return json_decode(file_get_contents($this->_boarddir . sprintf($this->_jsonDir, 'categories')), true);
+		if (file_exists($this->_boarddir . sprintf($this->_jsonDir, 'categories')))
+			return json_decode(file_get_contents($this->_boarddir . sprintf($this->_jsonDir, 'categories')), true);
+
+		else
+			return false;
 	}
 
 	/**

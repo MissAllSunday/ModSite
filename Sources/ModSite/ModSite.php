@@ -190,7 +190,7 @@ function modsite_main($mainObj)
 	$context['modSite']['object'] = $mainObj;
 
 	/* Get the latest modsite from DB */
-	$context['modSite']['latest'] = $mainObj->getLatest(empty($modSettings['modSite_latest_limit']) ? 10 : $modSettings['modSite_latest_limit']);
+	$context['modSite']['all'] = $mainObj->getAll();
 }
 
 function modsite_add($mainObj)
