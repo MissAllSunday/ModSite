@@ -20,7 +20,10 @@ class ModSite extends ModSiteParser
 
 	public static $name = 'modsite';
 
-	public function __construct(){}
+	public function __construct()
+	{
+		parent::__construct();
+	}
 
 	public function add($data)
 	{
@@ -86,7 +89,6 @@ class ModSite extends ModSiteParser
 				ORDER BY {raw:sort}',
 				array(
 					'sort' => 'name DESC',
-					'limit' => $limit
 				)
 			);
 
@@ -94,7 +96,7 @@ class ModSite extends ModSiteParser
 				$return[$row['id']] = array(
 					'id' => $row['id'],
 					'name' => $row['name'],
-					'info' => $this->parser($row['name']),
+					'info' => $this->parse($row['name']),
 				);
 
 			$smcFunc['db_free_result']($result);
@@ -125,7 +127,7 @@ class ModSite extends ModSiteParser
 			$return[$row['id']] = array(
 				'id' => $row['id'],
 				'name' => $row['name'],
-				'info' => $this->parser($row['name']),
+				'info' => $this->parse($row['name']),
 			);
 
 		$smcFunc['db_free_result']($result);
