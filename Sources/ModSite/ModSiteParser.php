@@ -153,15 +153,22 @@ class ModSiteParser
 	{
 		$apiUrl = 'https://status.github.com/api/status.json';
 
-		$check = $this->fetch_web_data($apiUrl);
-
-		if (empty($check))
-			return 'false';
-
-		if (!empty($check))
+		if ($return = cache_get_data('modsite_status', 120) == null)
 		{
-			$check = json_decode($check);
-			return $check->status == 'good' ? true : false;
+			$check = $this->fetch_web_data($apiUrl);
+
+			if (empty($check))
+			{
+				cache_put_data('modsite_status', 'major', 120);
+				return 'major';
+			}
+
+			if (!empty($check))
+			{
+				$check = json_decode($check);
+				cache_put_data('modsite_status', $check->status, 120);
+				return $check->status;
+			}
 		}
 	}
 

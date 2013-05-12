@@ -73,20 +73,19 @@ class ModSite extends ModSiteParser
 		return $smcFunc['db_num_rows']($query);
 	}
 
-	public function getLatest($limit = 10)
+	public function getAll()
 	{
 		global $smcFunc, $scripturl, $txt;
 
 		 /* Use the cache when possible */
-		if (($return = cache_get_data(modsite::$name .'_latest', 120)) == null)
+		if (($return = cache_get_data(modsite::$name .'_all', 120)) == null)
 		{
 			$result = $smcFunc['db_query']('', '
 				SELECT id, name
 				FROM {db_prefix}' . ($this->_table['name']) . '
-				ORDER BY {raw:sort}
-				LIMIT {int:limit}',
+				ORDER BY {raw:sort}',
 				array(
-					'sort' => 'id DESC',
+					'sort' => 'name DESC',
 					'limit' => $limit
 				)
 			);
