@@ -151,25 +151,30 @@ class ModSiteParser
 
 	public function getAPIStatus()
 	{
-		$apiUrl = 'https://status.github.com/api/status.json';
-
 		if ($return = cache_get_data('modsite_status', 120) == null)
 		{
+			/* Github API url check */
+			$apiUrl = 'https://status.github.com/api/status.json';
+
+			/* Get the data */
 			$check = $this->fetch_web_data($apiUrl);
 
+			/* Site is down :(  */
 			if (empty($check))
 			{
 				cache_put_data('modsite_status', 'major', 120);
-				return 'major';
+				$return = 'major';
 			}
 
-			if (!empty($check))
+			elseif(!empty($check))
 			{
 				$check = json_decode($check);
 				cache_put_data('modsite_status', $check->status, 120);
-				return $check->status;
+				$return = $check->status;
 			}
 		}
+
+		return $return;
 	}
 
 	protected function cleanCache($type)
