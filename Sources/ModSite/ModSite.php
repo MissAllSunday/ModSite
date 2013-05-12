@@ -148,7 +148,9 @@ function modsite_dispatch()
 
 		if (empty($mainObj))
 		{
-			require_once($sourcedir .'/ModSite/Subs-Modsite.php');
+			require_once($sourcedir .'/ModSite/ModSiteParser.php');
+			require_once($sourcedir .'/ModSite/Subs-ModSite.php');
+
 			$mainObj = new modsite();
 		}
 

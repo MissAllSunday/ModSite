@@ -39,23 +39,39 @@ function template_modSite_main()
 	<div class="floatright nopadding" style="width:80%;">';
 
 	/* There is no mods or this thing is disable :( */
-	if (empty($context['modSite']['latest']) || empty($modSettings['modSite_enable']))
+	if (empty($context['modSite']['all']) || empty($modSettings['modSite_enable']))
 		echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<span class="ie6_header floatleft">Some title here</span>
+				<span class="ie6_header floatleft">', $txt['modSite_error_message'] ,'</span>
 			</h3>
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-			some text here
+			', $txt['modSite_error_enable'] ,'
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
 
-	/* Show the goodies	 */
+	/* Show the goodies */
 	else
+		foreach ($context['modSite']['all'] as $mod)
+		{var_dump($mod);
+			echo '
+			<div class="cat_bar">
+				<h3 class="catbg">
+					<span class="ie6_header floatleft"></span>
+				</h3>
+			</div>
+			<div class="windowbg">
+				<span class="topslice"><span></span></span>
+				<div class="content">
+				', $txt['modSite_error_enable'] ,'
+				</div>
+				<span class="botslice"><span></span></span>
+			</div>';
+		}
 
 	/* End of main div */
 	echo
@@ -65,16 +81,17 @@ function template_modSite_main()
 		<div class="clear">';
 
 	/* Button for adding a new entry */
-	if ($context['Modsite']['object']->permissions('add') == true)
+	if ($context['modSite']['object']->permissions('add') == true)
 		echo '
 			<div id="confirm_buttons">
 				<form action="', $scripturl, '?action=modsite;sa=add" method="post" target="_self">
-					<input type="submit" name="send" class="input_text" value="', $txt['send'] ,'" />
+					<input type="submit" name="send" class="input_text" value="Create a new entry" />
 				</form>
 			</div>';
 
 	echo '
-		</div>';
+		</div>
+		<br />';
 }
 
 function template_modSite_add()
@@ -172,5 +189,39 @@ function modsite_header()
 
 function modsite_sideBar()
 {
+	global $context, $scripturl, $txt, $modSettings;
 
+	echo '
+	<div class="floatleft nopadding" style="width:19%;">';
+	/* Show a nice category list */
+	if (!empty($context['modSite']['object']->cats))
+	{
+		echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft">', $txt['modsite_sidebar_cats_title'] ,'</span>
+			</h3>
+		</div>
+
+		<div class="windowbg nopadding">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<ul class="reset">';
+
+		foreach($context['modSite']['object']->cats as $id => $name)
+			echo '
+					<li>
+						<a href="'. $scripturl .'?action=modsite;sa=categories;fid='. $id .'">'. $name .'</a>
+					</li>';
+
+		echo '
+				</ul>
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+		<br />';
+	}
+
+	echo '
+	</div>';
 }
