@@ -125,6 +125,7 @@ class ModSite extends ModSiteParser
 			$return[$row['id']] = array(
 				'id' => $row['id'],
 				'name' => $row['name'],
+				'info' => $this->parser($row['name']),
 			);
 
 		$smcFunc['db_free_result']($result);
