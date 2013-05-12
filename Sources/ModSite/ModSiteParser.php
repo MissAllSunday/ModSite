@@ -50,10 +50,6 @@ class ModSiteParser
 		/* Create the mod array */
 		$mod = json_decode($this->getFile($file), true);
 
-		/* There is no file, quietly withdraw... */
-		if (!$mod)
-			return false;
-
 		/* Append github repo info */
 		$mod['repo'] = $this->getRepoInfo($mod['githubName']);
 
@@ -67,10 +63,10 @@ class ModSiteParser
 		return $mod;
 	}
 
-	protected function getRepoInfo($repoName)
+	public function getRepoInfo($repoName)
 	{
 		/* Don't even think about it... */
-		if (!in_array($this->getAPIStatus(), $this->_apiAcceptableStatus))
+		if ($this->getAPIStatus() == 'major')
 			return false;
 
 		/* Init github API */
@@ -84,7 +80,7 @@ class ModSiteParser
 	protected function getRepoCollaborators($repoName)
 	{
 		/* Don't even think about it... */
-		if (!in_array($this->getAPIStatus(), $this->_apiAcceptableStatus))
+		if ($this->getAPIStatus() == 'major')
 			return false;
 
 		/* Init github API */
@@ -97,10 +93,6 @@ class ModSiteParser
 
 	public function github($username)
 	{
-		/* Don't even think about it... */
-		if (!in_array($this->getAPIStatus(), $this->_apiAcceptableStatus))
-			return false;
-
 		require_once ($this->_boarddir .'/vendor/autoload.php');
 
 		$this->client = new Github\Client(

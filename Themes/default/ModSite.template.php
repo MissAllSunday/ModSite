@@ -57,7 +57,7 @@ function template_modSite_main()
 	/* Show the goodies */
 	else
 		foreach ($context['modSite']['all'] as $mod)
-		{var_dump($mod);
+		{
 			echo '
 			<div class="cat_bar">
 				<h3 class="catbg">

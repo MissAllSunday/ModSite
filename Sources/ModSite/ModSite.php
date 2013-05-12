@@ -155,8 +155,8 @@ function modsite_dispatch()
 		}
 
 		/* Load both language and template files */
-		loadLanguage('modsite');
-		loadtemplate('modsite', 'admin');
+		loadLanguage('ModSite');
+		loadtemplate('ModSite', 'admin');
 
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite',
