@@ -51,7 +51,13 @@ class ModSiteParser
 		$mod = json_decode($this->getFile($file), true);
 
 		/* Append github repo info */
-		$mod['repo'] = $this->getRepoInfo($mod['githubName']);
+		try{
+			$mod['repo'] = $this->getRepoInfo('ShareThis');
+		}
+		catch (RuntimeException $e)
+		{
+			log_error('issues with github API');
+		}
 
 		/* Replace the ugly number with a nice readable word */
 		if (!empty($mod['cat']) && in_array($mod['cat'], array_keys($this->cats)))
@@ -71,7 +77,7 @@ class ModSiteParser
 
 		/* Init github API */
 		if (!isset($this->client))
-			$this->github($this->githubUser);
+			$this->github();
 
 		/* Get the repo info */
 		return  $this->client->api('repo')->show($this->githubUser, $repoName);
@@ -91,13 +97,18 @@ class ModSiteParser
 		return $this->client->api('repo')->collaborators()->all($this->githubUser, $repoName);
 	}
 
-	public function github($username)
+	public function github()
 	{
+		global $githubClient, $githubPass;
+
 		require_once ($this->_boarddir .'/vendor/autoload.php');
 
 		$this->client = new Github\Client(
 			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $this->_boarddir .'/cache/github-api-cache'))
 		);
+
+		/* Make this an authenticate call */
+		$this->client->authenticate($githubClient, $githubPass, Github\Client::AUTH_URL_CLIENT_ID);
 
 		return $this->client;
 	}
