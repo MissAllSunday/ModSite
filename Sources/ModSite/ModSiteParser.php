@@ -35,9 +35,11 @@ class ModSiteParser
 		if (empty($file))
 			return false;
 
-		/* Check using scan() to be sure we got something */
+		if (file_exists($this->_boarddir . sprintf($this->_jsonDir, $file)))
+			return file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $file));
 
-		return file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $file));
+		else
+			return false;
 	}
 
 	public function parse($file)
@@ -47,6 +49,10 @@ class ModSiteParser
 
 		/* Create the mod array */
 		$mod = json_decode($this->getFile($file), true);
+
+		/* There is no file, quietly withdraw... */
+		if (!$mod)
+			return false;
 
 		/* Append github repo info */
 		$mod['repo'] = $this->getRepoInfo($mod['githubName']);
