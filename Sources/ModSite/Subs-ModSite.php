@@ -99,7 +99,7 @@ class ModSite extends ModSiteParser
 
 			$smcFunc['db_free_result']($result);
 
-			cache_put_data(modsite::$name .'_latest', $return, 120);
+			cache_put_data(modsite::$name .'_all', $return, 120);
 		}
 
 		/* Done? */
