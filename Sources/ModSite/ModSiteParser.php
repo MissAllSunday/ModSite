@@ -14,6 +14,7 @@ if (!defined('SMF'))
 class ModSiteParser
 {
 	protected $_jsonDir = '';
+	protected $_apiAcceptableStatus = array('good', 'minor');
 
 	public function __construct()
 	{
