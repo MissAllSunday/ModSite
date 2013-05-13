@@ -61,15 +61,26 @@ function template_modSite_main()
 			echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<span class="ie6_header floatleft"></span>
+					<span class="ie6_header floatleft">', $mod['publicName'] ,'</span>
 				</h3>
 			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
-				<div class="content">
-				<div class="nopadding floatright" style="width:77%;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur varius, felis sit amet volutpat eleifend, elit libero condimentum magna, at tincidunt sapien diam id arcu. Fusce quis ante neque, eget suscipit metus. Ut ullamcorper enim sed ipsum pellentesque suscipit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed id nulla a felis aliquam porttitor at non lectus. Aliquam lorem est, mattis sed iaculis sed, accumsan non metus. Nulla risus libero, condimentum a eleifend et, rhoncus eu felis. Ut bibendum tortor vel nisl convallis tincidunt. Donec mollis diam ut ipsum pulvinar vel pulvinar felis blandit. Nam posuere accumsan dolor et vestibulum. Nulla facilisi. Nullam tincidunt, ipsum nec sodales faucibus, metus velit cursus ipsum, eu congue magna purus at ante. Suspendisse orci mi, elementum ac sodales ut, ultricies vel lorem. Duis vulputate orci et est condimentum pellentesque. Sed in enim sed nunc interdum varius quis sit amet nisl. Fusce sed turpis ut purus bibendum eleifend.</div>
-				<div class="floatleft nopadding description" style="width:18%;"> right side, inner sidebar</div>
-				<div class="clear"></div>
+				<div class="content">';
+
+			/* Description */
+			if (!empty($mod['info']['desc']))
+				echo '
+					<div class="nopadding floatright" style="width:77%;">', $mod['info']['desc'] ,'</div>';
+
+			/* The inner sidebar for each mod */
+			if (!empty($mod['info']['repo']))
+				echo '
+					<div class="floatleft nopadding description" style="width:18%;"> right side, inner sidebar</div>
+
+				/* End of inner sidebar */
+			echo
+				'	<div class="clear"></div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';

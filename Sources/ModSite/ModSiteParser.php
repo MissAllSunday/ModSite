@@ -63,6 +63,10 @@ class ModSiteParser
 			log_error('issues with github API');
 		}
 
+		/* Parse the desc */
+		if (!empty($mod['desc']))
+			$mod['desc'] = parse_bbc($mod['desc']);
+
 		/* Replace the ugly number with a nice readable word */
 		if (!empty($mod['cat']) && in_array($mod['cat'], array_keys($this->cats)))
 			$mod['cat'] = $this->cats[$mod['cat']];
