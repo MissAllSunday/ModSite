@@ -46,6 +46,11 @@ $txt['modSite_error_message'] = 'There was an error:';
 $txt['modSite_error_empty_field'] = ' field was left empty';
 $txt['modSite_error_enable'] = 'The mod is not enable';
 $txt['modSite_error_no_valid_id'] = 'No valid action';
+$txt['cannot_modsite_view'] = 'I\'m sorry you cannot view the modsite';
+$txt['cannot_modsite_search'] = 'I\'m sorry you cannot search the modsite';
+$txt['cannot_modsite_edit'] = 'I\'m sorry you cannot edit the modsite';
+$txt['cannot_modsite_add'] = 'I\'m sorry you cannot add new items to the modsite';
+$txt['cannot_modsite_delete'] = 'I\'m sorry you cannot delete items from the modsite';
 
 /* UI */
 $txt['modSite_ui_github'] = 'Github repo';
