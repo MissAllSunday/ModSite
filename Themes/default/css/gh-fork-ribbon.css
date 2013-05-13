@@ -134,11 +134,15 @@
 
 /* Local css, show  a nice image for each list item */
 .li_github {
-   background:url('../images/github.png') 0% 50% no-repeat no-repeat;
+   background:url('../images/modsite/github.png') 0% 50% no-repeat no-repeat;
    padding-left: 20px !important;
 }
 .li_cat {
-   background:url('../images/cat.png') 0% 50% no-repeat no-repeat;
+   background:url('../images/modsite/cat.png') 0% 50% no-repeat no-repeat;
    padding-left: 20px !important;
 }
 
+.li_support {
+   background:url('../images/modsite/support.png') 0% 50% no-repeat no-repeat;
+   padding-left: 20px !important;
+}

@@ -15,7 +15,7 @@ class ModSite extends ModSiteParser
 {
 	protected $_table = array(
 		'name' => 'mod_site',
-		'columns' => array('id', 'name'),
+		'columns' => array('id', 'name', 'cat', 'downloads'),
 		);
 
 	public static $name = 'modsite';
@@ -84,7 +84,7 @@ class ModSite extends ModSiteParser
 		if (($return = cache_get_data(modsite::$name .'_all', 120)) == null)
 		{
 			$result = $smcFunc['db_query']('', '
-				SELECT id, name
+				SELECT '. (implode(', ', $this->_table['columns'])) .'
 				FROM {db_prefix}' . ($this->_table['name']) . '
 				ORDER BY {raw:sort}',
 				array(

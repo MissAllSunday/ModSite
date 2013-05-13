@@ -34,6 +34,12 @@
 					'size' => 5,
 					'null' => false,
 				),
+				array(
+					'name' => 'cat',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+				),
 			),
 			'indexes' => array(
 				array(
