@@ -27,7 +27,7 @@
 
 function template_modSite_main()
 {
-	global $txt, $context, $scripturl, $modSettings;
+	global $txt, $context, $scripturl, $modSettings, $settings;
 
 	modsite_header();
 
@@ -61,7 +61,8 @@ function template_modSite_main()
 			echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<span class="ie6_header floatleft">', $mod['publicName'] ,'</span>
+					<span class="ie6_header floatleft">', $mod['info']['publicName'] ,'</span>
+					<span class="floatright"><img src="', $settings['images_url'] ,'/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</span>
 				</h3>
 			</div>
 			<div class="windowbg">
@@ -78,7 +79,8 @@ function template_modSite_main()
 				echo '
 					<div class="floatleft nopadding description" style="width:18%;"> 
 						<ul class="reset">
-							<li><a href="'. $scripturl .'?action=modsite;sa=categories;cat=', urlencode($mod['info']['cat']) ,'"', $mod['info']['cat'] ,'</a></li>
+							<li><a href="'. $scripturl .'?action=modsite;sa=categories;cat=', $mod['info']['repo']['html_url'] ,'">', $mod['info']['cat'] ,'</a></li>
+							<li><a href="'. $scripturl .'?action=modsite;sa=categories;cat=', urlencode($mod['info']['cat']) ,'">', $txt['modSite_ui_github'] ,'</a></li>
 						</ul>
 					</div>';
 
@@ -95,7 +97,7 @@ function template_modSite_main()
 	'</div>';
 
 	echo '
-		<div class="clear">';
+	<div class="clear">';
 
 	/* Button for adding a new entry */
 	if ($context['modSite']['object']->permissions('add') == true)

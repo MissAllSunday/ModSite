@@ -50,6 +50,13 @@ $txt['modSite_error_no_valid_id'] = 'No valid action';
 /* UI */
 $txt['modSite_ui_github'] = 'Github repo';
 $txt['modSite_ui_cat'] = 'Category';
+$txt['modSite_ui_download'] = 'Download';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
 
 // Permissions strings
 $txt['permissiongroup_simple_modsite_per_simple'] = 'Mod site permissions';
