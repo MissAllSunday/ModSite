@@ -56,12 +56,16 @@ class ModSiteParser
 
 		/* Append github repo info */
 		try{
-			$mod['repo'] = $this->getRepoInfo('ShareThis');
+			$repoInfo = $this->getRepoInfo('ShareThis');
 		}
 		catch (RuntimeException $e)
 		{
 			log_error('issues with github API');
 		}
+
+		/* Merge the info */
+		if (is_array($repoInfo))
+			$mod = array_merge($mod, $this->getRepoInfo('ShareThis'));
 
 		/* Parse the desc */
 		if (!empty($mod['desc']))
