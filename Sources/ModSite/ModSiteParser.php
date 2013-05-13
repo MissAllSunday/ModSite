@@ -138,11 +138,11 @@ class ModSiteParser
 
 		/* Does the category exists? */
 		if (in_array($id, array_keys($this->cats)))
-			return $this->cats[$id];
+			return array($id => $this->cats[$id]);
 
 		/* No? the send the default */
 		else
-			return $this->cats[1];
+			return array(1 => $this->cats[1]);
 	}
 
 	/**
