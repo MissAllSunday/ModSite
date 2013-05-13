@@ -76,7 +76,11 @@ function template_modSite_main()
 			/* The inner sidebar for each mod */
 			if (!empty($mod['info']['repo']))
 				echo '
-					<div class="floatleft nopadding description" style="width:18%;"> right side, inner sidebar</div>
+					<div class="floatleft nopadding description" style="width:18%;"> 
+						<ul class="reset">
+							<li><a href="'. $scripturl .'?action=modsite;sa=categories;cat=', urlencode($mod['info']['cat']) ,'"', $mod['info']['cat'] ,'</a></li>
+						</ul>
+					</div>';
 
 				/* End of inner sidebar */
 			echo
