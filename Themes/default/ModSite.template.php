@@ -72,14 +72,24 @@ function template_modSite_main()
 					<div class="nopadding floatright" style="width:77%;">', $mod['info']['desc'] ,'</div>';
 
 			/* The inner sidebar for each mod */
-			if (!empty($mod['info']['repo']))
+			if (!empty($mod['info']))
+			{
 				echo '
-					<div class="floatleft nopadding description" style="width:18%;"> 
+					<div class="floatleft nopadding description" style="width:18%;">
 						<ul class="reset">
-							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;cat=', urlencode($mod['info']['cat']) ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['info']['cat'] ,'</a></li>
-							<li class="li_github"><a href="', $mod['info']['repo']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>
+							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;mid=', $mod['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>';
+
+
+			/* These values depend on github so lets check em first */
+				if (!empty($mod['info']['html_url']))
+					echo '
+							<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>';
+
+			/* End the list */
+				echo '
 						</ul>
 					</div>';
+			}
 
 				/* End of inner sidebar */
 			echo
@@ -116,12 +126,9 @@ function template_modSite_add()
 
 	modsite_header();
 
-	/* Sidebar */
-	modsite_sideBar();
-
 	/* The main div */
 	echo '
-	<div class="floatright nopadding" style="width:80%;">';
+	<div class="floatright nopadding" style="width:99%;">';
 
 	/* You didn't fill the field... */
 	if (isset($_GET['missing']))
@@ -169,12 +176,9 @@ function template_modSite_success()
 
 	modsite_header();
 
-	/* Sidebar */
-	modsite_sideBar();
-
 	/* The main div */
 	echo '
-	<div class="floatright" style="width:80%;">';
+	<div class="floatright" style="width:99%;">';
 
 	/* No direct access */
 	if (!empty($context['modSite']['pin']))
