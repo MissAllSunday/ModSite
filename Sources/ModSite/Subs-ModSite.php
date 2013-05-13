@@ -97,6 +97,7 @@ class ModSite extends ModSiteParser
 					'id' => $row['id'],
 					'name' => $row['name'],
 					'info' => $this->parse($row['name']),
+					'category' => $this->getSingleCat($row['cat']),
 				);
 
 			$smcFunc['db_free_result']($result);

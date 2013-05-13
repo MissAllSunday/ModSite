@@ -130,6 +130,19 @@ class ModSiteParser
 			return false;
 	}
 
+	public function getSingleCat($id)
+	{
+		/* Get all the cats */
+		$cats = $this->getCats();
+
+
+		if (in_array($id, $cats)
+			return $cats[$id];
+
+		else
+			return false;
+	}
+
 	/**
 	 * Tries to fetch the content of a given url
 	 *
