@@ -156,7 +156,7 @@ function modsite_dispatch()
 
 		/* Load both language and template files */
 		loadLanguage('ModSite');
-		loadtemplate('ModSite', 'admin');
+		loadtemplate('ModSite', 'gh-fork-ribbon');
 
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite',
