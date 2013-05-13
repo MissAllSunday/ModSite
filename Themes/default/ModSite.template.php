@@ -66,18 +66,14 @@ function template_modSite_main()
 				<span class="topslice"><span></span></span>
 				<div class="content">';
 
-			/* Description */
-			if (!empty($mod['info']['desc']))
-				echo '
-					<div class="nopadding floatright" style="width:77%;">', $mod['info']['desc'] ,'</div>';
-
 			/* The inner sidebar for each mod */
 			if (!empty($mod['info']))
 			{
 				echo '
-					<div class="floatleft nopadding description" style="width:18%;">
+					<div class="description" style="20%; float:left; margin:0 1em 1em 0; display: block;">
 						<ul class="reset">
-							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;mid=', $mod['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>';
+							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;mid=', $mod['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>
+							<li class="li_support"><a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>';
 
 
 			/* These values depend on github so lets check em first */
@@ -91,9 +87,14 @@ function template_modSite_main()
 					</div>';
 			}
 
-				/* End of inner sidebar */
+			/* Description */
+			if (!empty($mod['info']['desc']))
+				echo '
+					<div style="padding:10px;">', $mod['info']['desc'] ,'</div>';
+
+				/* End block */
 			echo
-				'	<div class="clear"></div>
+				'<div class="clear"></div>
 				</div>
 				<span class="botslice"><span></span></span>
 			</div>';
