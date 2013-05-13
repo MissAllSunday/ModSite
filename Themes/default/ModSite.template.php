@@ -31,12 +31,9 @@ function template_modSite_main()
 
 	modsite_header();
 
-	/* Sidebar */
-	modsite_sideBar();
-
 	/* The main div */
 	echo '
-	<div class="floatright nopadding" style="width:80%;">';
+	<div class="floatright nopadding" style="width:99%;">';
 
 	/* There is no mods or this thing is disable :( */
 	if (empty($context['modSite']['all']) || empty($modSettings['modSite_enable']))
@@ -204,43 +201,4 @@ function template_modSite_success()
 function modsite_header()
 {
 
-}
-
-function modsite_sideBar()
-{
-	global $context, $scripturl, $txt, $modSettings;
-
-	echo '
-	<div class="floatleft nopadding" style="width:19%;">';
-	/* Show a nice category list */
-	if (!empty($context['modSite']['object']->cats))
-	{
-		echo '
-		<div class="cat_bar">
-			<h3 class="catbg">
-				<span class="ie6_header floatleft">', $txt['modsite_sidebar_cats_title'] ,'</span>
-			</h3>
-		</div>
-
-		<div class="windowbg nopadding">
-			<span class="topslice"><span></span></span>
-			<div class="content">
-				<ul class="reset">';
-
-		foreach($context['modSite']['object']->cats as $id => $name)
-			echo '
-					<li>
-						<a href="'. $scripturl .'?action=modsite;sa=categories;fid='. $id .'">'. $name .'</a>
-					</li>';
-
-		echo '
-				</ul>
-			</div>
-			<span class="botslice"><span></span></span>
-		</div>
-		<br />';
-	}
-
-	echo '
-	</div>';
 }
