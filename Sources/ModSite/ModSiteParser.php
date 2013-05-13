@@ -50,6 +50,10 @@ class ModSiteParser
 		/* Create the mod array */
 		$mod = json_decode($this->getFile($file), true);
 
+		/* Bad file? some kind of error? */
+		if (!$mod)
+			return false;
+
 		/* Append github repo info */
 		try{
 			$mod['repo'] = $this->getRepoInfo('ShareThis');
