@@ -67,13 +67,6 @@ class ModSiteParser
 		if (!empty($mod['desc']))
 			$mod['desc'] = parse_bbc($mod['desc']);
 
-		/* Replace the ugly number with a nice readable word */
-		if (!empty($mod['cat']) && in_array($mod['cat'], array_keys($this->cats)))
-			$mod['cat'] = $this->cats[$mod['cat']];
-
-		else
-			$mod['cat'] = $this->cats[1];
-
 		return $mod;
 	}
 
@@ -132,15 +125,20 @@ class ModSiteParser
 
 	public function getSingleCat($id)
 	{
+		/* Do not waste my time */
+		if (empty($id))
+			return 'Default';
+
 		/* Get all the cats */
-		$cats = $this->getCats();
+		$this->getCats();
 
+		/* Does the category exists? */
+		if (in_array($id, array_keys($this->cats)))
+			return $this->cats[$id];
 
-		if (in_array($id, $cats)
-			return $cats[$id];
-
+		/* No? the send the default */
 		else
-			return false;
+			return $this->cats[1];
 	}
 
 	/**
