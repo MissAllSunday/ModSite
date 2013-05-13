@@ -29,7 +29,7 @@ class ModSiteParser
 		$this->cats = $this->getCats();
 	}
 
-	protected function getFile($file)
+	public function getFile($file)
 	{
 		/* There is no raw file to work with */
 		if (empty($file))

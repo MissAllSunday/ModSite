@@ -62,7 +62,7 @@ function template_modSite_main()
 			<div class="cat_bar">
 				<h3 class="catbg">
 					<span class="ie6_header floatleft">', $mod['info']['publicName'] ,'</span>
-					<span class="floatright"><img src="', $settings['images_url'] ,'/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</span>
+					<span class="floatright"><img src="', $settings['default_theme_url'] ,'/images/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</span>
 				</h3>
 			</div>
 			<div class="windowbg">
@@ -79,8 +79,8 @@ function template_modSite_main()
 				echo '
 					<div class="floatleft nopadding description" style="width:18%;"> 
 						<ul class="reset">
-							<li><a href="'. $scripturl .'?action=modsite;sa=categories;cat=', $mod['info']['repo']['html_url'] ,'">', $mod['info']['cat'] ,'</a></li>
-							<li><a href="'. $scripturl .'?action=modsite;sa=categories;cat=', urlencode($mod['info']['cat']) ,'">', $txt['modSite_ui_github'] ,'</a></li>
+							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;cat=', urlencode($mod['info']['cat']) ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['info']['cat'] ,'</a></li>
+							<li class="li_github"><a href="', $mod['info']['repo']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>
 						</ul>
 					</div>';
 
