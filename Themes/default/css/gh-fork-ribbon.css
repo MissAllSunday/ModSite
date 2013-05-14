@@ -133,16 +133,23 @@
 }
 
 /* Local css, show  a nice image for each list item */
+.modsite_info li{
+   padding-left: 25px !important;
+   margin:3px !important;
+}
 .li_github {
    background:url('../images/modsite/github.png') 0% 50% no-repeat no-repeat;
-   padding-left: 20px !important;
 }
 .li_cat {
    background:url('../images/modsite/cat.png') 0% 50% no-repeat no-repeat;
-   padding-left: 20px !important;
 }
 
 .li_support {
    background:url('../images/modsite/support.png') 0% 50% no-repeat no-repeat;
-   padding-left: 20px !important;
+}
+.li_supported_versions{
+	background:url('../images/modsite/supported-versions.png') 0% 50% no-repeat no-repeat;
+}
+.li_license{
+	background:url('../images/modsite/license.png') 0% 50% no-repeat no-repeat;
 }

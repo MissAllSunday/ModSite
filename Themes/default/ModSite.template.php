@@ -70,10 +70,12 @@ function template_modSite_main()
 			if (!empty($mod['info']))
 			{
 				echo '
-					<div class="description" style="20%; float:left; margin:0 1em 1em 0; display: block;">
-						<ul class="reset">
+					<div class="description" style="width:25%; float:left; margin:0 1em 1em 0; display: block;">
+						<ul class="reset modsite_info">
 							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;mid=', $mod['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>
-							<li class="li_support"><a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>';
+							<li class="li_support"><a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>
+							<li class="li_supported_versions">', $txt['modSite_ui_smf_versions'] . $mod['info']['versionSMF'] ,'</li>
+							<li class="li_license">', $txt['modSite_ui_license'] ,'<a href="', $mod['info']['license']['link'] ,'">', $mod['info']['license']['name'] ,'</a></li>';
 
 
 			/* These values depend on github so lets check em first */
