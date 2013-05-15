@@ -40,6 +40,7 @@ $txt['modsite_json_dir_desc'] = 'Relative path where all the json files are stor
 $txt['modsite_github_username'] = 'github username';
 $txt['modsite_github_username_desc'] = 'The name of the main repo where the mods are stored';
 $txt['modsite_sidebar_cats_title'] = 'Category list';
+$txt['modSite_download_path'] = 'Path to the downloads dir';
 
 // Error
 $txt['modSite_error_message'] = 'There was an error:';

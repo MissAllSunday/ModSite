@@ -79,6 +79,7 @@ function modify_modsite_post_settings(&$return_config = false)
 			),
 			'subtext' => $txt['modSite_menu_position_desc']
 		),
+		array('text', 'modSite_download_path'),
 	);
 
 	if ($return_config)
