@@ -59,7 +59,7 @@ function template_modSite_main()
 			<div class="cat_bar">
 				<h3 class="catbg">
 					<span class="ie6_header floatleft">', $mod['info']['publicName'] ,'</span>
-					<span class="floatright"><img src="', $settings['default_theme_url'] ,'/images/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</span>
+					<span class="floatright"><a href="', $scripturl ,'?action=modsite;sa=download;mid=', $mod['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
 				</h3>
 			</div>
 			<div class="windowbg">

@@ -349,7 +349,7 @@ function modsite_single($mainObj)
 
 	/* Forget it... */
 	if (!isset($_GET['mid']) || empty($_GET['mid']))
-		fatal_lang_error('modSite_error_no_valid_action', false);
+		fatal_lang_error('modSite_error_no_valid_id', false);
 
 	/* Are you allowed to see this page? */
 	$mainObj->permissions('view', true);
@@ -358,7 +358,7 @@ function modsite_single($mainObj)
 	$id = $mainObj->clean($_GET['mid']);
 
 	if (empty($id))
-		fatal_lang_error('modSite_error_no_valid_action', false);
+		fatal_lang_error('modSite_error_no_valid_id', false);
 
 	/* Does the data has been already loaded? */
 	if (!empty($context['modSite_all'][$id]))
@@ -431,7 +431,7 @@ function modsite_search($mainObj)
 
 	/* We need a valur to serch and a column */
 	if (!isset($_REQUEST['l_search_value']) || empty($_REQUEST['l_search_value']) || !isset($_REQUEST['l_column']) || empty($_REQUEST['l_column']))
-		fatal_lang_error('modSite_error_no_valid_action', false);
+		fatal_lang_error('modSite_error_no_valid_id', false);
 
 	$value = urlencode($mainObj->clean($_REQUEST['l_search_value']));
 	$column = $mainObj->clean($_REQUEST['l_column']);
@@ -460,7 +460,7 @@ function modsite_download($mainObj)
 
 	/* We need a valid ID and a valid downloads dir */
 	if (isset($_GET['mid']) || empty($modSettings['modSite_download_path']))
-		fatal_lang_error('modSite_error_no_valid_action', false);
+		fatal_lang_error('modSite_error_no_valid_id', false);
 
 	/* You're not welcome here Mr bot... */
 	if (true == $user_info['possibly_robot'])
