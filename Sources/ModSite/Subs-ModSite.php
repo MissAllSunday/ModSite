@@ -221,17 +221,6 @@ class ModSite extends ModSiteParser
 			return true;
 	}
 
-	public function status()
-	{
-		$v = json_decode($this->fetch_web_data('https://status.github.com/api/status.json'));
-
-		if (!empty($v) && trim($v->status) == 'good')
-			return true;
-
-		else
-			return false;
-	}
-
 	protected function cleanCache()
 	{
 		cache_put_data(modsite::$name .'_all', null, 120);
