@@ -65,7 +65,7 @@ class ModSiteParser
 
 		/* Merge the info */
 		if (is_array($repoInfo))
-			$mod = array_merge($mod, $this->getRepoInfo('ShareThis'));
+			$mod = array_merge($mod, $this->getRepoInfo($mod['githubName']));
 
 		/* Parse the desc */
 		if (!empty($mod['desc']))

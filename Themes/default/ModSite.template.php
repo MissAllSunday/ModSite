@@ -71,7 +71,7 @@ function template_modSite_main()
 			{
 				echo '
 					<div class="description" style="width:25%; float:left; margin:0 1em 1em 0; display: block;">
-						<ul class="reset modsite_info">
+						<ul class="modsite_info">
 							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;mid=', $mod['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>
 							<li class="li_support"><a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>
 							<li class="li_supported_versions">', $txt['modSite_ui_smf_versions'] . $mod['info']['versionSMF'] ,'</li>
@@ -81,11 +81,32 @@ function template_modSite_main()
 			/* These values depend on github so lets check em first */
 				if (!empty($mod['info']['html_url']))
 					echo '
-							<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>';
+							<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>
+							<li>
+							<span class="github-btn" id="github-btn">
+								<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/stargazers" target="_blank">
+									<span class="gh-ico"></span>
+									<span class="gh-text" id="gh-text">Star</span>
+								</a>
+								<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['watchers_count'] ,'</a>
+							</span>
+						</li>
+						<li>
+							<span class="github-btn" id="github-btn">
+								<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/fork" target="_blank">
+									<span class="gh-ico"></span>
+									<span class="gh-text" id="gh-text">Fork it!</span>
+								</a>
+								<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['forks'] ,'</a>
+							</span>
+						</li>';
 
 			/* End the list */
 				echo '
-						</ul>
+						</ul>';
+
+				/* End of inner sidebar */
+				echo'
 					</div>';
 			}
 
