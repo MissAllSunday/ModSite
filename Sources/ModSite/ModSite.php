@@ -144,6 +144,7 @@ function modsite_dispatch()
 			'search',
 			'single',
 			'success',
+			'download',
 		);
 
 		if (empty($mainObj))
@@ -451,4 +452,63 @@ function modsite_search($mainObj)
 
 	/* Pass the object to the template */
 	$context['modSite']['object'] = $mainObj;
+}
+
+function modsite_download()
+{
+	global $context;
+
+	/* We need a vlid ID */
+	if (isset($_GET['mid']))
+		fatal_lang_error('modSite_error_no_valid_action', false);
+
+	$file_path = $GetModsEdit[$_GET['mid']]['file_path'];
+
+	if(!file_exists($file_path)) {
+		global $txt, $context;
+
+		loadLanguage('Errors');
+
+		header('HTTP/1.0 404 ' . $txt['attachment_not_found']);
+		header('Content-Type: text/plain; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
+
+		// Nothing more to say really
+		die('404 - ' . $txt['attachment_not_found']);
+	}
+	else {
+
+		// Update the database
+		DownMod($_GET['mid']);
+
+		// Get the file's extension
+		$ext = substr($file_path, strrpos($file_path, '.') + 1);	
+
+		// Turn off gzip for IE browsers
+		if(ini_get('zlib.output_compression'))
+			ini_set('zlib.output_compression', 'Off');
+
+		// clear anything that is in the buffers
+		while (@ob_get_level() > 0)
+			@ob_end_clean();
+
+		// Set headers to force file download
+		header('Pragma: ');
+		if (!$context['browser']['is_gecko'])
+			header('Content-Transfer-Encoding: binary');
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($file_path)) . ' GMT');
+		header('Accept-Ranges: bytes');
+		header('Content-Length: ' . filesize($file_path));
+		header('Content-Encoding: none');
+		header('Connection: close');
+		header('ETag: ' . md5_file($file_path));
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="' . basename($file_path) .'"');
+
+		// Read the file and write it to the output buffer
+		readfile($file_path);
+
+		// done so we need to end
+		exit;
+	}
+
 }
