@@ -455,15 +455,16 @@ function modsite_search($mainObj)
 	$context['modSite']['object'] = $mainObj;
 }
 
-function modsite_download()
+function modsite_download($mainObj)
 {
-	global $context;
+	global $context, $boarddir, $modSettings;
 
-	/* We need a vlid ID */
-	if (isset($_GET['mid']))
+	/* We need a valid ID and a valid downloads dir.. */
+	if (isset($_GET['mid']) || empty($modSettings['modSite_download_path']))
 		fatal_lang_error('modSite_error_no_valid_action', false);
 
-	$file_path = $GetModsEdit[$_GET['mid']]['file_path'];
+	/* Build a corect path, the downloads dir ideally should be outside the web-accessible dir */
+	$file_path = $boardir .'/'. $modSettings['modSite_download_path'] .'/';
 
 	if(!file_exists($file_path)) {
 		global $txt, $context;
