@@ -80,7 +80,7 @@ class ModSite extends ModSiteParser
 	{
 		global $smcFunc, $scripturl, $txt;
 
-		 /* Use the cache when possible */
+		/* Use the cache when possible */
 		if (($return = cache_get_data(modsite::$name .'_all', 120)) == null)
 		{
 			$result = $smcFunc['db_query']('', '
@@ -123,7 +123,6 @@ class ModSite extends ModSiteParser
 		$result = $smcFunc['db_query']('', '
 			SELECT '. (implode(', ', $this->_table['columns'])) .'
 			FROM {db_prefix}' . ($this->_table['name']) . '
-			ORDER BY {raw:sort}
 			LIMIT {int:limit}',
 			array(
 				'id' => (int) $id,
@@ -136,12 +135,34 @@ class ModSite extends ModSiteParser
 				'id' => $row['id'],
 				'name' => $row['name'],
 				'info' => $this->parse($row['name']),
+				'category' => $this->getSingleCat($row['cat']),
+				'downloads' => $row['downloads'],
 			);
 
 		$smcFunc['db_free_result']($result);
 
 		/* Done? */
 		return $return;
+	}
+
+	public function updateCount($id)
+	{
+		global $smcFunc;
+
+		if (empty($id))
+			return false;
+
+		/* Clear the cache */
+		$this->cleanCache();
+
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}' . ($this->_table['name']) . '
+			SET downloads = downloads + 1
+			WHERE id = {int:id}',
+			array(
+				'id' => $id,
+			)
+		);
 	}
 
 	public function delete($id)

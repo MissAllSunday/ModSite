@@ -488,7 +488,7 @@ function modsite_download($mainObj)
 	else
 	{
 		/* Update the downloads stat */
-		$mainObj->updateDB('downloads');
+		$mainObj->updateCount($mod['id']);
 
 		// Get the file's extension
 		$ext = substr($file_path, strrpos($file_path, '.') + 1);
