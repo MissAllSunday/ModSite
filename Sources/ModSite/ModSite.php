@@ -181,11 +181,10 @@ function modsite_dispatch()
 
 function modsite_main($mainObj)
 {
-	global $context, $scripturl, $txt, $user_info, $modSettings;
+	global $context, $scripturl, $txt, $modSettings;
 
 	/* Are you allowed to see this page? */
 	$mainObj->permissions('view', true);
-
 	$context['sub_template'] = 'modSite_main';
 	$context['canonical_url'] = $scripturl . '?action=modsite';
 	$context['page_title'] = $txt['modSite_title_main'];
@@ -457,33 +456,42 @@ function modsite_search($mainObj)
 
 function modsite_download($mainObj)
 {
-	global $context, $boarddir, $modSettings;
+	global $context, $boarddir, $modSettings, $user_info;
 
-	/* We need a valid ID and a valid downloads dir.. */
+	/* We need a valid ID and a valid downloads dir */
 	if (isset($_GET['mid']) || empty($modSettings['modSite_download_path']))
 		fatal_lang_error('modSite_error_no_valid_action', false);
 
-	/* Build a corect path, the downloads dir ideally should be outside the web-accessible dir */
-	$file_path = $boardir .'/'. $modSettings['modSite_download_path'] .'/';
+	/* You're not welcome here Mr bot... */
+	if (true == $user_info['possibly_robot'])
+		redirectexit();
 
-	if(!file_exists($file_path)) {
-		global $txt, $context;
+	/* All good, get the file info */
+	$mod = $mainObj->getSingle((int) $mainObj->clean($_GET['mid']));
+
+	/* Build a correct path, the downloads dir ideally should be outside the web-accessible dir */
+	$file_path = $boardir .'/'. $modSettings['modSite_download_path'] .'/'. $mod['name'] .'.zip';
+
+	/* Oops! */
+	if(!file_exists($file_path))
+	{
+		global $txt;
 
 		loadLanguage('Errors');
-
 		header('HTTP/1.0 404 ' . $txt['attachment_not_found']);
 		header('Content-Type: text/plain; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
 
-		// Nothing more to say really
+		/* Nothing more to say really */
 		die('404 - ' . $txt['attachment_not_found']);
 	}
-	else {
 
-		// Update the database
-		DownMod($_GET['mid']);
+	else
+	{
+		/* Update the downloads stat */
+		$mainObj->updateDB('downloads');
 
 		// Get the file's extension
-		$ext = substr($file_path, strrpos($file_path, '.') + 1);	
+		$ext = substr($file_path, strrpos($file_path, '.') + 1);
 
 		// Turn off gzip for IE browsers
 		if(ini_get('zlib.output_compression'))
