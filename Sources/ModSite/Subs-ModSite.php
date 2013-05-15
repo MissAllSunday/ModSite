@@ -234,5 +234,6 @@ class ModSite extends ModSiteParser
 
 	protected function cleanCache()
 	{
+		cache_put_data(modsite::$name .'_all', null, 120);
 	}
 }
