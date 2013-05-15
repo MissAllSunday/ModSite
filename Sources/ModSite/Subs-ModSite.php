@@ -114,8 +114,14 @@ class ModSite extends ModSiteParser
 	{
 		global $smcFunc, $scripturl, $txt;
 
+		/* Can we avoid another query? */
+		if (($return = cache_get_data(modsite::$name .'_all', 120)) != null)
+			if (in_array($id, array_keys($return)))
+				return $return[$id];
+
+		/* No? :( */
 		$result = $smcFunc['db_query']('', '
-			SELECT id, name
+			SELECT '. (implode(', ', $this->_table['columns'])) .'
 			FROM {db_prefix}' . ($this->_table['name']) . '
 			ORDER BY {raw:sort}
 			LIMIT {int:limit}',
