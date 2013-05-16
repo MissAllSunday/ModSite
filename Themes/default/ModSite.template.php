@@ -78,70 +78,69 @@ function template_modSite_main()
 							<li class="li_supported_versions">', $txt['modSite_ui_smf_versions'] . $mod['info']['versionSMF'] ,'</li>
 							<li class="li_license">', $txt['modSite_ui_license'] ,'<a href="', $mod['info']['license']['link'] ,'">', $mod['info']['license']['name'] ,'</a></li>';
 
+				/* These values depend on github so lets check em first */
+				if (!empty($mod['info']['html_url']))
+				{
+					echo '
+								<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>';
 
-			/* These values depend on github so lets check em first */
-			if (!empty($mod['info']['html_url']))
-			{
-				echo '
-							<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>';
+					/* Last 5 commits */
+					echo '
+								<li class="li_commits">
+									', $txt['modSite_ui_last_commits'] ,'
+									<ul class="reset">';
 
-				/* Last 5 commits */
-				echo '
-							<li class="li_commits">
-								', $txt['modSite_ui_last_commits'] ,'
-								<ul class="reset">';
+					/* Iterate the array */
+					foreach ($mod['info']['commits'] as $commit)
+						echo '<li><a href="', $commit['html_url'] ,'">', $context['modSite']['object']->truncateString($commit['commit']['message'], 25, $break = ' ', $pad = '...') ,'</a></li>';
 
-				/* Iterate the array */
-				foreach ($mod['info']['commits'] as $commit)
-					echo '<li><a href="', $commit['html_url'] ,'">', $context['modSite']['object']->truncateString($commit['commit']['message'], 25, $break = ' ', $pad = '...') ,'</a></li>';
+					/* End of last commits */
+					echo '
+									</ul>
+								</li>';
 
-				/* End of last commits */
-				echo '
-								</ul>
-							</li>';
+					/* Reported issues */
+					echo '
+								<li class="li_issues">
+									', $txt['modSite_ui_issues'] ,'
+									<ul class="reset">';
 
-				/* Reported issues */
-				echo '
-							<li class="li_issues">
-								', $txt['modSite_ui_issues'] ,'
-								<ul class="reset">';
+					/* There is none, tell them to report */
+					if (empty($mod['info']['issues']))
+						echo '<li>', $txt['modSite_ui_no_issues'] ,'<a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_issues_report_topic'] ,'</a><a href="', $mod['info']['html_url'] ,'/issues">', $txt['modSite_ui_issues_report_github'] ,'</a></li>';
 
-				/* There is none, tell them to report */
-				if (empty($mod['info']['issues']))
-					echo '<li>', $txt['modSite_ui_no_issues'] ,'<a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_issues_report_topic'] ,'</a><a href="', $mod['info']['html_url'] ,'/issues">', $txt['modSite_ui_issues_report_github'] ,'</a></li>';
+					/* There are! oh boy! */
+					else
+						foreach ($mod['info']['issues'] as $issue)
+							echo '<li><a href="', $issue['html_url'] ,'">', $issue['title'] ,'</a></li>';
 
-				/* There are! oh boy! */
-				else
-					foreach ($mod['info']['issues'] as $issue)
-						echo '<li><a href="', $issue['html_url'] ,'">', $issue['title'] ,'</a></li>';
+					/* End of reported  isues */
+					echo '
+									</ul>
+								</li>';
 
-				/* End of reported  isues */
-				echo '
-								</ul>
-							</li>';
-
-				/* The nice buttons to star and fork */
-				echo'
-							<li class="li_fork">
-							', $txt['modSite_ui_contribute'] ,'
+					/* The nice buttons to star and fork */
+					echo'
+								<li class="li_fork">
+								', $txt['modSite_ui_contribute'] ,'
+									<span class="github-btn" id="github-btn">
+										<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/fork" target="_blank">
+											<span class="gh-ico"></span>
+											<span class="gh-text" id="gh-text">Fork it!</span>
+										</a>
+										<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['forks'] ,'</a>
+									</span>
+								</li>
+								<li>
 								<span class="github-btn" id="github-btn">
-									<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/fork" target="_blank">
+									<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/stargazers" target="_blank">
 										<span class="gh-ico"></span>
-										<span class="gh-text" id="gh-text">Fork it!</span>
+										<span class="gh-text" id="gh-text">Star</span>
 									</a>
-									<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['forks'] ,'</a>
+									<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['watchers_count'] ,'</a>
 								</span>
-							</li>
-							<li>
-							<span class="github-btn" id="github-btn">
-								<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/stargazers" target="_blank">
-									<span class="gh-ico"></span>
-									<span class="gh-text" id="gh-text">Star</span>
-								</a>
-								<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['watchers_count'] ,'</a>
-							</span>
-							</li>';
-			}
+								</li>';
+				}
 
 			/* End the list */
 				echo '
@@ -155,7 +154,7 @@ function template_modSite_main()
 			/* Description */
 			if (!empty($mod['info']['desc']))
 				echo '
-					<div style="padding:10px;">', $mod['info']['desc'] ,'</div>';
+					<div style="padding:10px;" class="markdown-body">', $mod['info']['desc'] ,'</div>';
 
 				/* End block */
 			echo

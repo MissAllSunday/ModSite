@@ -10,7 +10,6 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-
 class ModSiteParser
 {
 	protected $_jsonDir = '';
@@ -69,8 +68,7 @@ class ModSiteParser
 		if (is_array($repoInfo))
 			$mod = array_merge($mod, $this->getRepoInfo($mod['githubName']));
 
-		/* Parse the desc
-			@todo this should be replaced with a markdown parser */
+		/* Parse the desc */
 		if (!empty($mod['desc']))
 			$mod['desc'] = parse_bbc($mod['desc']);
 
