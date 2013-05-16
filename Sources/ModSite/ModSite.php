@@ -224,6 +224,9 @@ function modsite_category($mainObj)
 	/* Are you allowed to see this page? */
 	$mainObj->permissions('view', true);
 
+	/* Getting the current page. */
+	$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
+
 	/* Set some needed vars */
 	$context['sub_template'] = 'modSite_main';
 	$context['canonical_url'] = $scripturl . '?action=modsite;sa=category';
@@ -238,10 +241,10 @@ function modsite_category($mainObj)
 	$cat = $mainObj->getSingleCat($catID);
 
 	/* Get all mods within category X, we are gonna reuse the main template ^-^ */
-	$context['modSite']['all'] = $mainObj->getBy('cat', $catID);
+	modsite_pagination($mainObj->getBy('cat', $catID));
 
 	/* We got what we need, pass it to the template */
-	$context['page_title'] = $txt['modSite_ui_cat'] .'-'. $cat['name'];
+	$context['page_title'] = $txt['modSite_ui_cat'] .'-'. $cat['name'] .' - '. $txt['modSite_ui_page'] .' '. $page ;;
 	$context['linktree'][] = array(
 		'url' => $scripturl. '?action=modsite;sa=category;mid='. $catID,
 		'name' => $context['page_title'],
