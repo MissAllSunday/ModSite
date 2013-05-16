@@ -70,7 +70,7 @@ function template_modSite_main()
 			if (!empty($mod['info']))
 			{
 				echo '
-					<div class="description" style="width:25%; float:left; margin:0 1em 1em 0; display: block;">
+					<div class="description" style="width:30%; float:left; margin:0 1em 1em 0; display: block;">
 						<ul class="modsite_info">
 							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;mid=', $mod['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>
 							<li class="li_support"><a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>
@@ -112,6 +112,27 @@ function template_modSite_main()
 				foreach ($mod['info']['commits'] as $commit)
 					echo '<li><a href="', $commit['html_url'] ,'">', $context['modSite']['object']->truncateString($commit['commit']['message'], 25, $break = ' ', $pad = '...') ,'</a></li>';
 
+				/* End of last commits */
+				echo '
+								</ul>
+							</li>';
+
+				/* Reported issues */
+				echo '
+							<li class="li_issues">
+								', $txt['modSite_ui_issues'] ,'
+								<ul class="reset">';
+
+				/* There is none, tell them to report */
+				if (empty($mod['info']['issues']))
+					echo '<li><a href="', $mod['info']['html_url'] ,'/issues">', $txt['modSite_ui_no_issues'] ,'</a></li>';
+
+				/* There are! oh boy! */
+				else
+					foreach ($mod['info']['issues'] as $issue)
+						echo '<li><a href="', $issue['html_url'] ,'">', $issue['title'] ,'</a></li>';
+
+				/* End of reported  isues */
 				echo '
 								</ul>
 							</li>';

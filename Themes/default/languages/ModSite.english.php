@@ -62,6 +62,13 @@ $txt['modSite_ui_smf_versions'] = 'Supported SMF version(s): ';
 $txt['modSite_ui_license'] = 'License: ';
 $txt['modSite_ui_minimize'] = 'Minimize';
 $txt['modSite_ui_last_commits'] = 'Last 5 commits:';
+$txt['modSite_ui_issues'] = 'Reported issues:';
+$txt['modSite_ui_no_issues'] = 'There are no reported issues, if you found a bug please report it';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
+$txt['modSite_ui_'] = '';
 $txt['modSite_ui_'] = '';
 
 // Permissions strings

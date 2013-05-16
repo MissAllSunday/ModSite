@@ -312,3 +312,7 @@
 .li_commits{
 	background:url('../images/modsite/commits.png') 0% 0% no-repeat no-repeat;
 }
+
+.li_issues{
+	background:url('../images/modsite/issues.png') 0% 0% no-repeat no-repeat;
+}
