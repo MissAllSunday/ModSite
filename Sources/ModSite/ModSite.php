@@ -377,18 +377,13 @@ function modsite_single($mainObj)
 	if (empty($id))
 		fatal_lang_error('modSite_error_no_valid_id', false);
 
-	/* Does the data has been already loaded? */
-	if (!empty($context['modSite_all'][$id]))
-		$context['modSite']['single'] = $context['modSite_all'][$id];
-
-	/* No? bugger.. well, get it from the DB */
-	else
-		$context['modSite']['single'] = $mainObj->getSingle($id);
+	/* Get the data, getSingle() uses cache when possible */
+	$context['modSite']['single'] = $mainObj->getSingle($id);
 
 	/* Set all we need */
 	$context['sub_template'] = 'modSite_single';
 	$context['canonical_url'] = $scripturl . '?action=modsite;sa=single;mid=' . $id;
-	$context['page_title'] = $context['modSite']['single']['title'] .' - '. $context['modSite']['single']['artist'];
+	$context['page_title'] = $context['modSite']['single']['publicName'];
 	$context['linktree'][] = array(
 		'url' => $context['canonical_url'],
 		'name' => $context['page_title'],

@@ -185,6 +185,152 @@ function template_modSite_main()
 		<br />';
 }
 
+function template_modSite_single()
+{
+	global $txt, $context, $scripturl, $modSettings, $settings;
+
+	modsite_header();
+
+	/* The main div */
+	echo '
+	<div class="floatright nopadding" style="width:99%;">';
+
+	/* There is no mods or this thing is disable :( */
+	if (empty($context['modSite']['single']) || empty($modSettings['modSite_enable']))
+		echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft">', $txt['modSite_error_message'] ,'</span>
+			</h3>
+		</div>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+			', $txt['modSite_error_enable'] ,'
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>';
+
+	/* Show the goodies */
+	else
+	{
+		echo '
+		<div class="cat_bar">
+			<h3 class="catbg">
+				<span class="ie6_header floatleft">', $context['modSite']['single']['info']['publicName'] ,'</span>
+				<span class="floatright"><img src="', $settings['default_theme_url'] ,'/images/modsite/minimize.png" style="vertical-align:middle" /><a href="javascript:void(0)" onmousedown="toggleDiv(\'content_', $context['modSite']['single']['id'] ,'\', this);">', $txt['modSite_ui_expand'] ,'</a> <a href="', $scripturl ,'?action=modsite;sa=download;mid=', $context['modSite']['single']['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
+			</h3>
+		</div>
+		<div class="windowbg">
+			<span class="topslice"><span></span></span>
+			<div class="content" id="content_', $context['modSite']['single']['id'] ,'" style="display:none;">';
+
+		/* The inner sidebar for each mod */
+		if (!empty($context['modSite']['single']['info']))
+		{
+			echo '
+				<div class="description" style="width:30%; float:left; margin:0 1em 1em 0; display: block;">
+					<ul class="modsite_info">
+						<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=categories;mid=', $context['modSite']['single']['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $context['modSite']['single']['category']['name'] ,'</a></li>
+						<li class="li_support"><a href="', $scripturl ,'?topic=', $context['modSite']['single']['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>
+						<li class="li_supported_versions">', $txt['modSite_ui_smf_versions'] . $context['modSite']['single']['info']['versionSMF'] ,'</li>
+						<li class="li_license">', $txt['modSite_ui_license'] ,'<a href="', $context['modSite']['single']['info']['license']['link'] ,'">', $context['modSite']['single']['info']['license']['name'] ,'</a></li>';
+
+
+		/* These values depend on github so lets check em first */
+		if (!empty($context['modSite']['single']['info']['html_url']))
+		{
+			echo '
+						<li class="li_github"><a href="', $context['modSite']['single']['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>';
+
+			/* Last 5 commits */
+			echo '
+						<li class="li_commits">
+							', $txt['modSite_ui_last_commits'] ,'
+							<ul class="reset">';
+
+			/* Iterate the array */
+			foreach ($context['modSite']['single']['info']['commits'] as $commit)
+				echo '<li><a href="', $commit['html_url'] ,'">', $context['modSite']['object']->truncateString($commit['commit']['message'], 25, $break = ' ', $pad = '...') ,'</a></li>';
+
+			/* End of last commits */
+			echo '
+							</ul>
+						</li>';
+
+			/* Reported issues */
+			echo '
+						<li class="li_issues">
+							', $txt['modSite_ui_issues'] ,'
+							<ul class="reset">';
+
+			/* There is none, tell them to report */
+			if (empty($context['modSite']['single']['info']['issues']))
+				echo '<li>', $txt['modSite_ui_no_issues'] ,'<a href="', $scripturl ,'?topic=', $context['modSite']['single']['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_issues_report_topic'] ,'</a><a href="', $context['modSite']['single']['info']['html_url'] ,'/issues">', $txt['modSite_ui_issues_report_github'] ,'</a></li>';
+
+			/* There are! oh boy! */
+			else
+				foreach ($context['modSite']['single']['info']['issues'] as $issue)
+					echo '<li><a href="', $issue['html_url'] ,'">', $issue['title'] ,'</a></li>';
+
+			/* End of reported  isues */
+			echo '
+							</ul>
+						</li>';
+
+			/* The nice buttons to star and fork */
+			echo'
+						<li class="li_fork">
+						', $txt['modSite_ui_contribute'] ,'
+							<span class="github-btn" id="github-btn">
+								<a class="gh-btn" id="gh-btn" href="', $context['modSite']['single']['info']['html_url'] ,'/fork" target="_blank">
+									<span class="gh-ico"></span>
+									<span class="gh-text" id="gh-text">Fork it!</span>
+								</a>
+								<a class="gh-count" id="gh-count" href="#" target="_blank">', $context['modSite']['single']['info']['forks'] ,'</a>
+							</span>
+						</li>
+						<li>
+						<span class="github-btn" id="github-btn">
+							<a class="gh-btn" id="gh-btn" href="', $context['modSite']['single']['info']['html_url'] ,'/stargazers" target="_blank">
+								<span class="gh-ico"></span>
+								<span class="gh-text" id="gh-text">Star</span>
+							</a>
+							<a class="gh-count" id="gh-count" href="#" target="_blank">', $context['modSite']['single']['info']['watchers_count'] ,'</a>
+						</span>
+						</li>';
+		}
+
+		/* End the list */
+			echo '
+					</ul>';
+
+			/* End of inner sidebar */
+			echo'
+				</div>';
+		}
+
+		/* Description */
+		if (!empty($context['modSite']['single']['info']['desc']))
+			echo '
+				<div style="padding:10px;">', $context['modSite']['single']['info']['desc'] ,'</div>';
+
+			/* End block */
+		echo
+			'<div class="clear"></div>
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>';
+	}
+
+	/* End of main div */
+	echo
+	'</div>';
+
+	echo '
+	<div class="clear"></div><br />';
+}
+
 function template_modSite_add()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
