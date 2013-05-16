@@ -104,13 +104,13 @@ function template_modSite_main()
 
 				/* Last 5 commits */
 				echo '
-							<li>
+							<li class="li_commits">
 								', $txt['modSite_ui_last_commits'] ,'
 								<ul class="reset">';
 
 				/* Iterate the array */
 				foreach ($mod['info']['commits'] as $commit)
-					echo '<li>', $commit['commit']['message'] ,'</li>';
+					echo '<li><a href="', $commit['html_url'] ,'">', $context['modSite']['object']->truncateString($commit['commit']['message'], 25, $break = ' ', $pad = '...') ,'</a></li>';
 
 				echo '
 								</ul>
