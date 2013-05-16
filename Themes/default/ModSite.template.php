@@ -82,25 +82,7 @@ function template_modSite_main()
 			if (!empty($mod['info']['html_url']))
 			{
 				echo '
-							<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>
-							<li>
-							<span class="github-btn" id="github-btn">
-								<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/stargazers" target="_blank">
-									<span class="gh-ico"></span>
-									<span class="gh-text" id="gh-text">Star</span>
-								</a>
-								<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['watchers_count'] ,'</a>
-							</span>
-							</li>
-							<li>
-								<span class="github-btn" id="github-btn">
-									<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/fork" target="_blank">
-										<span class="gh-ico"></span>
-										<span class="gh-text" id="gh-text">Fork it!</span>
-									</a>
-									<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['forks'] ,'</a>
-								</span>
-							</li>';
+							<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>';
 
 				/* Last 5 commits */
 				echo '
@@ -125,7 +107,7 @@ function template_modSite_main()
 
 				/* There is none, tell them to report */
 				if (empty($mod['info']['issues']))
-					echo '<li><a href="', $mod['info']['html_url'] ,'/issues">', $txt['modSite_ui_no_issues'] ,'</a></li>';
+					echo '<li>', $txt['modSite_ui_no_issues'] ,'<a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_issues_report_topic'] ,'</a><a href="', $mod['info']['html_url'] ,'/issues">', $txt['modSite_ui_issues_report_github'] ,'</a></li>';
 
 				/* There are! oh boy! */
 				else
@@ -135,6 +117,28 @@ function template_modSite_main()
 				/* End of reported  isues */
 				echo '
 								</ul>
+							</li>';
+
+				/* The nice buttons to star and fork */
+				echo'
+							<li class="li_fork">
+							', $txt['modSite_ui_contribute'] ,'
+								<span class="github-btn" id="github-btn">
+									<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/fork" target="_blank">
+										<span class="gh-ico"></span>
+										<span class="gh-text" id="gh-text">Fork it!</span>
+									</a>
+									<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['forks'] ,'</a>
+								</span>
+							</li>
+							<li>
+							<span class="github-btn" id="github-btn">
+								<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/stargazers" target="_blank">
+									<span class="gh-ico"></span>
+									<span class="gh-text" id="gh-text">Star</span>
+								</a>
+								<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['watchers_count'] ,'</a>
+							</span>
 							</li>';
 			}
 

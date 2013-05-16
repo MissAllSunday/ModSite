@@ -309,6 +309,10 @@
 	background:url('../images/modsite/license.png') 0% 50% no-repeat no-repeat;
 }
 
+.li_fork{
+	background:url('../images/modsite/star.png') 0% 0% no-repeat no-repeat;
+}
+
 .li_commits{
 	background:url('../images/modsite/commits.png') 0% 0% no-repeat no-repeat;
 }
