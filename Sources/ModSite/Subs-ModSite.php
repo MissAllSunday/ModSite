@@ -162,7 +162,7 @@ class ModSite extends ModSiteParser
 		);
 
 		while ($row = $smcFunc['db_fetch_assoc']($result))
-			$return = array(
+			$return[$row['id']] = array(
 				'id' => $row['id'],
 				'name' => $row['name'],
 				'info' => $this->parse($row['name']),

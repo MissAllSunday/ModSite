@@ -235,12 +235,12 @@ function modsite_category($mainObj)
 	$cat = $mainObj->getSingleCat($catID);
 
 	/* Get all mods within category X, we are gonna reuse the main template ^-^ */
-	$context['modSite']['all'] = $mainObj->getBy('category', $catID);
+	$context['modSite']['all'] = $mainObj->getBy('cat', $catID);
 
 	/* We got what we need, pass it to the template */
 	$context['page_title'] = $txt['modSite_ui_cat'] .'-'. $cat['name'];
 	$context['linktree'][] = array(
-		'url' => $scripturl. '?action=modsite;sa=add',
+		'url' => $scripturl. '?action=modsite;sa=category;mid='. $catID,
 		'name' => $context['page_title'],
 	);
 
