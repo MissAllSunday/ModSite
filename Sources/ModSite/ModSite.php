@@ -309,7 +309,7 @@ function modsite_edit($mainObj)
 	if (empty($temp))
 		fatal_lang_error('modSite_no_valid_id', false);
 
-	$context['modSite']['edit'] = $temp[$mid];
+	$context['modSite']['edit'] = $temp;
 	$context['sub_template'] = 'modSite_add';
 	$context['page_title'] = $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
 	$context['linktree'][] = array(
