@@ -163,8 +163,13 @@
 .li_github {
    background:url('../images/modsite/github.png') 0% 50% no-repeat no-repeat;
 }
+
 .li_cat {
    background:url('../images/modsite/cat.png') 0% 50% no-repeat no-repeat;
+}
+
+.li_version {
+   background:url('../images/modsite/version.png') 0% 50% no-repeat no-repeat;
 }
 
 .li_support {

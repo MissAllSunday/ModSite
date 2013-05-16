@@ -72,6 +72,7 @@ function template_modSite_main()
 				echo '
 					<div class="description" style="width:30%; float:left; margin:0 1em 1em 0; display: block;">
 						<ul class="modsite_info">
+							<li class="li_version">', $txt['modSite_ui_version'] . $mod['info']['version'] ,'</li>
 							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=category;mid=', $mod['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>
 							<li class="li_support"><a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>
 							<li class="li_supported_versions">', $txt['modSite_ui_smf_versions'] . $mod['info']['versionSMF'] ,'</li>
@@ -235,6 +236,7 @@ function template_modSite_single()
 			echo '
 				<div class="description" style="width:30%; float:left; margin:0 1em 1em 0; display: block;">
 					<ul class="modsite_info">
+						<li class="li_version">', $txt['modSite_ui_version'] . $context['modSite']['single']['info']['version'] ,'</li>
 						<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=category;mid=', $context['modSite']['single']['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $context['modSite']['single']['category']['name'] ,'</a></li>
 						<li class="li_support"><a href="', $scripturl ,'?topic=', $context['modSite']['single']['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>
 						<li class="li_supported_versions">', $txt['modSite_ui_smf_versions'] . $context['modSite']['single']['info']['versionSMF'] ,'</li>
