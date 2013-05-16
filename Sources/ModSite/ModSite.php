@@ -146,6 +146,7 @@ function modsite_dispatch()
 			'single',
 			'success',
 			'download',
+			'category',
 		);
 
 		if (empty($mainObj))
@@ -211,6 +212,40 @@ function modsite_main($mainObj)
 
 	/* Get the latest modsite from DB */
 	$context['modSite']['all'] = $mainObj->getAll();
+}
+
+function modsite_category($mainObj)
+{
+	global $context, $scripturl, $txt, $modSettings;
+
+	/* Are you allowed to see this page? */
+	$mainObj->permissions('view', true);
+
+	/* Set some needed vars */
+	$context['sub_template'] = 'modSite_main';
+	$context['canonical_url'] = $scripturl . '?action=modsite;sa=category';
+
+	/* We need a valid ID */
+	if (!isset($_GET['mid']) || empty($_GET['mid']))
+		fatal_lang_error('modSite_error_no_valid_id', false);
+
+	$catID = (int) $mainObj->clean($_GET['mid']);
+
+	/* Get the cat name */
+	$cat = $mainObj->getSingleCat($catID);
+
+	/* Get all mods within category X, we are gonna reuse the main template ^-^ */
+	$context['modSite']['all'] = $mainObj->getBy('category', $catID);
+
+	/* We got what we need, pass it to the template */
+	$context['page_title'] = $txt['modSite_ui_cat'] .'-'. $cat['name'];
+	$context['linktree'][] = array(
+		'url' => $scripturl. '?action=modsite;sa=add',
+		'name' => $context['page_title'],
+	);
+
+	/* Pass the object to the template */
+	$context['modSite']['object'] = $mainObj;
 }
 
 function modsite_add($mainObj)
