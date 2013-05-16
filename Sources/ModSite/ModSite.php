@@ -169,11 +169,13 @@ function modsite_dispatch()
 		$context['html_headers'] .= '
 	<script language="JavaScript"  type="text/javascript">
 	<!--
-	function toggleDiv(divid){
+	function toggleDiv(divid, obj){
 		if(document.getElementById(divid).style.display == \'none\'){
+			obj.innerHTML= "Hide";
 			document.getElementById(divid).style.display = \'block\';
 		}
 		else{
+			obj.innerHTML= "Expand";
 			document.getElementById(divid).style.display = \'none\';
 		}
 	}

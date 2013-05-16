@@ -59,12 +59,12 @@ function template_modSite_main()
 			<div class="cat_bar">
 				<h3 class="catbg">
 					<span class="ie6_header floatleft">', $mod['info']['publicName'] ,'</span>
-					<span class="floatright"><a href="javascript:void(0)" onmousedown="toggleDiv(\'content_', $mod['id'] ,'\');"><img src="', $settings['default_theme_url'] ,'/images/modsite/minimize.png" style="vertical-align:middle" />', $txt['modSite_ui_minimize'] ,'</a> <a href="', $scripturl ,'?action=modsite;sa=download;mid=', $mod['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
+					<span class="floatright"><img src="', $settings['default_theme_url'] ,'/images/modsite/minimize.png" style="vertical-align:middle" /><a href="javascript:void(0)" onmousedown="toggleDiv(\'content_', $mod['id'] ,'\', this);">', $txt['modSite_ui_expand'] ,'</a> <a href="', $scripturl ,'?action=modsite;sa=download;mid=', $mod['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
 				</h3>
 			</div>
 			<div class="windowbg">
 				<span class="topslice"><span></span></span>
-				<div class="content" id="content_', $mod['id'] ,'">';
+				<div class="content" id="content_', $mod['id'] ,'" style="display:none;">';
 
 			/* The inner sidebar for each mod */
 			if (!empty($mod['info']))
