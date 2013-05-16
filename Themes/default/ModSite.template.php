@@ -218,7 +218,7 @@ function template_modSite_single()
 		<div class="cat_bar">
 			<h3 class="catbg">
 				<span class="ie6_header floatleft">', $context['modSite']['single']['info']['publicName'] ,'</span>
-				<span class="floatright"><img src="', $settings['default_theme_url'] ,'/images/modsite/minimize.png" style="vertical-align:middle" /><a href="javascript:void(0)" onmousedown="toggleDiv(\'content_', $context['modSite']['single']['id'] ,'\', this);">', $txt['modSite_ui_expand'] ,'</a> <a href="', $scripturl ,'?action=modsite;sa=download;mid=', $context['modSite']['single']['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
+				<span class="floatright"><a href="', $scripturl ,'?action=modsite;sa=download;mid=', $context['modSite']['single']['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
 			</h3>
 		</div>
 		<div class="windowbg">
