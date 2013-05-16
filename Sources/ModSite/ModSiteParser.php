@@ -56,7 +56,8 @@ class ModSiteParser
 
 		/* Append github repo info */
 		try{
-			$repoInfo = $this->getRepoInfo('ShareThis');
+			$repoInfo = $this->getRepoInfo($mod['githubName']);
+			$mod['commits'] = $this->getRepoCommits($mod['githubName']);
 		}
 		catch (RuntimeException $e)
 		{
@@ -67,7 +68,8 @@ class ModSiteParser
 		if (is_array($repoInfo))
 			$mod = array_merge($mod, $this->getRepoInfo($mod['githubName']));
 
-		/* Parse the desc */
+		/* Parse the desc 
+			@todo this should be replaced with a markdown parser */
 		if (!empty($mod['desc']))
 			$mod['desc'] = parse_bbc($mod['desc']);
 
@@ -86,6 +88,20 @@ class ModSiteParser
 
 		/* Get the repo info */
 		return  $this->client->api('repo')->show($this->githubUser, $repoName);
+	}
+
+	public function getRepoCommits($repoName)
+	{
+		/* Don't even think about it... */
+		if ($this->getAPIStatus() == 'major')
+			return false;
+
+		/* Init github API */
+		if (!isset($this->client))
+			$this->github();
+
+		/* Get the repo info */
+		return $this->client->api('repo')->commits()->all($this->githubUser, $repoName, array('sha' => 'master'));
 	}
 
 	protected function getRepoCollaborators($repoName)
