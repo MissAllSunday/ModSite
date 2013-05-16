@@ -132,7 +132,7 @@ function modsite_permissions(&$permissionGroups, &$permissionList)
 
 function modsite_dispatch()
 {
-	global $txt, $sourcedir, $modSettings, $context, $scripturl;
+	global $txt, $sourcedir, $modSettings, $context, $scripturl, $settings;
 	static $mainObj;
 
 		/* Safety first, hardcode the actions */

@@ -79,8 +79,9 @@ function template_modSite_main()
 
 
 			/* These values depend on github so lets check em first */
-				if (!empty($mod['info']['html_url']))
-					echo '
+			if (!empty($mod['info']['html_url']))
+			{
+				echo '
 							<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>
 							<li>
 							<span class="github-btn" id="github-btn">
@@ -90,16 +91,31 @@ function template_modSite_main()
 								</a>
 								<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['watchers_count'] ,'</a>
 							</span>
-						</li>
-						<li>
-							<span class="github-btn" id="github-btn">
-								<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/fork" target="_blank">
-									<span class="gh-ico"></span>
-									<span class="gh-text" id="gh-text">Fork it!</span>
-								</a>
-								<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['forks'] ,'</a>
-							</span>
-						</li>';
+							</li>
+							<li>
+								<span class="github-btn" id="github-btn">
+									<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/fork" target="_blank">
+										<span class="gh-ico"></span>
+										<span class="gh-text" id="gh-text">Fork it!</span>
+									</a>
+									<a class="gh-count" id="gh-count" href="#" target="_blank">', $mod['info']['forks'] ,'</a>
+								</span>
+							</li>';
+
+				/* Last 5 commits */
+				echo '
+							<li>
+								', $txt['modSite_ui_last_commits'] ,'
+								<ul class="reset">';
+
+				/* Iterate the array */
+				foreach ($mod['info']['commits'] as $commit)
+					echo '<li>', $commit['commit']['message'] ,'</li>';
+
+				echo '
+								</ul>
+							</li>';
+			}
 
 			/* End the list */
 				echo '

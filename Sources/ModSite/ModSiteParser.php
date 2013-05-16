@@ -100,8 +100,8 @@ class ModSiteParser
 		if (!isset($this->client))
 			$this->github();
 
-		/* Get the repo info */
-		return $this->client->api('repo')->commits()->all($this->githubUser, $repoName, array('sha' => 'master'));
+		/* Get the repo info, we only want the first 5 results no more! */
+		return array_slice($this->client->api('repo')->commits()->all($this->githubUser, $repoName, array('sha' => 'master')), 0, 5);
 	}
 
 	protected function getRepoCollaborators($repoName)

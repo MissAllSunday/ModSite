@@ -61,7 +61,7 @@ $txt['modSite_ui_support'] = 'Support topic';
 $txt['modSite_ui_smf_versions'] = 'Supported SMF version(s): ';
 $txt['modSite_ui_license'] = 'License: ';
 $txt['modSite_ui_minimize'] = 'Minimize';
-$txt['modSite_ui_'] = '';
+$txt['modSite_ui_last_commits'] = 'Last 5 commits:';
 $txt['modSite_ui_'] = '';
 
 // Permissions strings

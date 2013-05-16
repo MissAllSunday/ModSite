@@ -187,7 +187,7 @@ class ModSite extends ModSiteParser
 
 	public function clean($string)
 	{
-		global $smcFunc, $sourcedir;
+		global $smcFunc;
 
 		return $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($string, ENT_QUOTES, ENT_QUOTES));
 	}
@@ -206,7 +206,7 @@ class ModSite extends ModSiteParser
 		if (empty($modSettings['modSite_enable']))
 			fatal_lang_error('modSite_error_enable', false);
 
-		/* colect the permissions */
+		/* collect the permissions */
 		foreach ($type as $t)
 				$allowed[] = (allowedTo('modsite_'. $t) == true ? 1 : 0);
 
@@ -224,5 +224,22 @@ class ModSite extends ModSiteParser
 	protected function cleanCache()
 	{
 		cache_put_data(modsite::$name .'_all', null, 120);
+	}
+
+	public function truncateString($string, $limit, $break = ' ', $pad = '...')
+	{
+		if(empty($limit))
+			$limit = 30;
+
+		 // return with no change if string is shorter than $limit
+		if(strlen($string) <= $limit)
+			return $string;
+
+		// is $break present between $limit and the end of the string?
+		if(false !== ($breakpoint = strpos($string, $break, $limit)))
+			if($breakpoint < strlen($string) - 1)
+				$string = substr($string, 0, $breakpoint) . $pad;
+
+		return $string;
 	}
 }
