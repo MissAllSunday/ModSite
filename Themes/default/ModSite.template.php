@@ -171,6 +171,10 @@ function template_modSite_main()
 	echo '
 	<div class="clear">';
 
+	/* Pagination */
+	if (!empty($context['portal']['panel']))
+		echo '<div id="pagination-flickr">', $context['modSite']['panel'] ,'</div><p />';
+
 	/* Button for adding a new entry */
 	if ($context['modSite']['object']->permissions('add') == true)
 		echo '

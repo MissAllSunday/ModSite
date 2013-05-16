@@ -201,17 +201,20 @@ function modsite_main($mainObj)
 {
 	global $context, $scripturl, $txt, $modSettings;
 
+	/* Getting the current page. */
+	$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
+
 	/* Are you allowed to see this page? */
 	$mainObj->permissions('view', true);
 	$context['sub_template'] = 'modSite_main';
 	$context['canonical_url'] = $scripturl . '?action=modsite';
-	$context['page_title'] = $txt['modSite_title_main'];
+	$context['page_title'] = $txt['modSite_title_main'] .' - '. $txt['modSite_ui_page'] .' '. $page ;
 
 	/* Pass the object to the template */
 	$context['modSite']['object'] = $mainObj;
 
-	/* Get the latest modsite from DB */
-	$context['modSite']['all'] = $mainObj->getAll();
+	/* Set the pagination and send everything to the template */
+	modsite_pagination($mainObj->getAll());
 }
 
 function modsite_category($mainObj)
@@ -567,5 +570,37 @@ function modsite_download($mainObj)
 		// done so we need to end
 		exit;
 	}
+}
 
+function modsite_pagination($array)
+{
+	global $sourcedir, $context;
+
+	if (empty($array) || !is_array($array))
+		return false;
+
+	/* Get the pagination class */
+	require_once($sourcedir . '/OharaPagination.php');
+
+	/* Getting the current page. */
+	$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
+
+	/* Applying pagination. */
+	$pagination = new OharaPagination($array, $page,'?page=', '', 5, 5);
+	$pagination->PaginationArray();
+	$pagtrue = $pagination->PagTrue();
+
+	/* Send the array to the template if there is pagination */
+	if ($pagtrue)
+	{
+		$context['modSite']['all'] = $pagination->OutputArray();
+		$context['modSite']['panel'] = $pagination->OutputPanel();
+	}
+
+	/* If not, then let's use the default array */
+	else
+	{
+		$context['modSite']['all'] = $array;
+		$context['modSite']['panel'] = '';
+	}
 }
