@@ -145,6 +145,37 @@ class ModSite extends ModSiteParser
 		return $return;
 	}
 
+	public function getBy($column, $value)
+	{
+		global $smcFunc, $scripturl, $txt;
+
+		/* We need both  */
+		if (empty($column) || empty($value))
+			return false;
+
+		/* Get the data as requested */
+		$result = $smcFunc['db_query']('', '
+			SELECT '. (implode(', ', $this->_table['columns'])) .'
+			FROM {db_prefix}' . ($this->_table['name']) . '
+			WHERE '. ($column) .' = '. ($value) .'',
+			array()
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$return = array(
+				'id' => $row['id'],
+				'name' => $row['name'],
+				'info' => $this->parse($row['name']),
+				'category' => $this->getSingleCat($row['cat']),
+				'downloads' => $row['downloads'],
+			);
+
+		$smcFunc['db_free_result']($result);
+
+		/* Done? */
+		return $return;
+	}
+
 	public function updateCount($id)
 	{
 		global $smcFunc;
