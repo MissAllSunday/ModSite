@@ -58,7 +58,7 @@ function template_modSite_main()
 			echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
-					<span class="ie6_header floatleft">', $mod['info']['publicName'] ,'</span>
+					<span class="ie6_header floatleft"><a href="', $scripturl ,'?action=modsite;sa=single;mid=', $mod['id'] ,'" title="', $mod['info']['publicName'] ,'">', $mod['info']['publicName'] ,'</a></span>
 					<span class="floatright"><img src="', $settings['default_theme_url'] ,'/images/modsite/minimize.png" style="vertical-align:middle" /><a href="javascript:void(0)" onmousedown="toggleDiv(\'content_', $mod['id'] ,'\', this);">', $txt['modSite_ui_expand'] ,'</a> <a href="', $scripturl ,'?action=modsite;sa=download;mid=', $mod['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
 				</h3>
 			</div>
@@ -223,7 +223,7 @@ function template_modSite_single()
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
-			<div class="content" id="content_', $context['modSite']['single']['id'] ,'" style="display:none;">';
+			<div class="content" id="content_', $context['modSite']['single']['id'] ,'">';
 
 		/* The inner sidebar for each mod */
 		if (!empty($context['modSite']['single']['info']))

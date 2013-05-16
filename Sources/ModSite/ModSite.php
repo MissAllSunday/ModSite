@@ -383,7 +383,7 @@ function modsite_single($mainObj)
 	/* Set all we need */
 	$context['sub_template'] = 'modSite_single';
 	$context['canonical_url'] = $scripturl . '?action=modsite;sa=single;mid=' . $id;
-	$context['page_title'] = $context['modSite']['single']['publicName'];
+	$context['page_title'] = $context['modSite']['single']['info']['publicName'];
 	$context['linktree'][] = array(
 		'url' => $context['canonical_url'],
 		'name' => $context['page_title'],
