@@ -165,6 +165,21 @@ function modsite_dispatch()
 			'name' => $txt['modSite_title_main'],
 		);
 
+		/* Set some JavaScript to hide blocks */
+		$context['html_headers'] .= '
+	<script language="JavaScript"  type="text/javascript">
+	<!--
+	function toggleDiv(divid){
+		if(document.getElementById(divid).style.display == \'none\'){
+			document.getElementById(divid).style.display = \'block\';
+		}
+		else{
+			document.getElementById(divid).style.display = \'none\';
+		}
+	}
+	//-->
+	</script>';
+
 		/* It is faster to use $var() than use call_user_func_array */
 		if (isset($_GET['sa']))
 			$func = $mainObj->clean($_GET['sa']);
@@ -459,7 +474,7 @@ function modsite_download($mainObj)
 	global $context, $boarddir, $modSettings, $user_info;
 
 	/* We need a valid ID and a valid downloads dir */
-	if (isset($_GET['mid']) || empty($modSettings['modSite_download_path']))
+	if (!isset($_GET['mid']) || empty($modSettings['modSite_download_path']))
 		fatal_lang_error('modSite_error_no_valid_id', false);
 
 	/* You're not welcome here Mr bot... */
@@ -470,7 +485,7 @@ function modsite_download($mainObj)
 	$mod = $mainObj->getSingle((int) $mainObj->clean($_GET['mid']));
 
 	/* Build a correct path, the downloads dir ideally should be outside the web-accessible dir */
-	$file_path = $boardir .'/'. $modSettings['modSite_download_path'] .'/'. $mod['name'] .'.zip';
+	$file_path = $boarddir .'/'. $modSettings['modSite_download_path'] .'/'. $mod['name'] .'.zip';
 
 	/* Oops! */
 	if(!file_exists($file_path))
