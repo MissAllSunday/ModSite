@@ -65,8 +65,8 @@ class ModSiteParser
 		}
 
 		/* Merge the info */
-		if (is_array($repoInfo))
-			$mod = array_merge($mod, $this->getRepoInfo($mod['githubName']));
+		if (!empty($repoInfo) && is_array($repoInfo))
+			$mod = array_merge($mod, $this->getRepoInfo($repoInfo));
 
 		/* Parse the desc */
 		if (!empty($mod['desc']))
