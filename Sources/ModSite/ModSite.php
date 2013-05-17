@@ -244,7 +244,7 @@ function modsite_category($mainObj)
 	modsite_pagination($mainObj->getBy('cat', $catID));
 
 	/* We got what we need, pass it to the template */
-	$context['page_title'] = $txt['modSite_ui_cat'] .'-'. $cat['name'] .' - '. $txt['modSite_ui_page'] .' '. $page ;;
+	$context['page_title'] = $txt['modSite_ui_cat'] .' - '. $cat['name'] .' - '. $txt['modSite_ui_page'] .' '. $page ;;
 	$context['linktree'][] = array(
 		'url' => $scripturl. '?action=modsite;sa=category;mid='. $catID,
 		'name' => $context['page_title'],
@@ -295,7 +295,7 @@ function modsite_add2($mainObj)
 	);
 
 	/* Are we editing */
-	if($_REQUEST['edit'])
+	if(isset($_REQUEST['edit']))
 	{
 		/* If editing, we need the ID */
 		if (!isset($_GET['mid']) || empty($_GET['mid']))
@@ -577,7 +577,7 @@ function modsite_download($mainObj)
 
 function modsite_pagination($array)
 {
-	global $sourcedir, $context;
+	global $sourcedir, $context, $scripturl;
 
 	if (empty($array) || !is_array($array))
 		return false;
@@ -589,7 +589,7 @@ function modsite_pagination($array)
 	$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
 
 	/* Applying pagination. */
-	$pagination = new OharaPagination($array, $page,'?page=', '', 5, 5);
+	$pagination = new OharaPagination($array, $page,'?action=modsite;page=', '', 5, 2);
 	$pagination->PaginationArray();
 	$pagtrue = $pagination->PagTrue();
 

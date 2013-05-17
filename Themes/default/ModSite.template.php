@@ -164,16 +164,16 @@ function template_modSite_main()
 			</div>';
 		}
 
+	/* Pagination */
+	if (!empty($context['modSite']['panel']))
+		echo '<p /><div id="pagination-flickr">',  $context['modSite']['panel'] ,'</div><p />';
+
 	/* End of main div */
 	echo
 	'</div>';
 
 	echo '
 	<div class="clear">';
-
-	/* Pagination */
-	if (!empty($context['portal']['panel']))
-		echo '<div id="pagination-flickr">', $context['modSite']['panel'] ,'</div><p />';
 
 	/* Button for adding a new entry */
 	if ($context['modSite']['object']->permissions('add') == true)

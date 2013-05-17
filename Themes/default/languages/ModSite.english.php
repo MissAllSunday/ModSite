@@ -71,7 +71,7 @@ $txt['modSite_ui_contribute'] = 'This mod is open source, fork it!';
 $txt['modSite_ui_fork_me'] = 'Fork me on GitHub';
 $txt['modSite_ui_page'] = 'Page';
 $txt['modSite_ui_version'] = 'Version: ';
-$txt['modSite_ui_'] = '';
+$txt['modSite_ui_pagination'] = 'Pagination: ';
 $txt['modSite_ui_'] = '';
 
 // Permissions strings

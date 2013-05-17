@@ -25,7 +25,7 @@ class ModSiteParser
 		$this->_boardurl = $boardurl;
 
 		/* Get the cats! */
-		$this->cats = $this->getCats();
+		$this->getCats();
 	}
 
 	public function getFile($file)
@@ -150,7 +150,7 @@ class ModSiteParser
 	public function getCats()
 	{
 		if (file_exists($this->_boarddir . sprintf($this->_jsonDir, 'categories')))
-			return json_decode(file_get_contents($this->_boarddir . sprintf($this->_jsonDir, 'categories')), true);
+			$this->cats = json_decode(file_get_contents($this->_boarddir . sprintf($this->_jsonDir, 'categories')), true);
 
 		else
 			return false;
