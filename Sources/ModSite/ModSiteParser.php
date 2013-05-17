@@ -217,7 +217,7 @@ class ModSiteParser
 
 	public function getAPIStatus()
 	{
-		if ($return = cache_get_data('modsite_status', 120) == null)
+		if ($return = cache_get_data('modsite_status', 600) == null)
 		{
 			/* Github API url check */
 			$apiUrl = 'https://status.github.com/api/status.json';
@@ -228,14 +228,14 @@ class ModSiteParser
 			/* Site is down :(  */
 			if (empty($check))
 			{
-				cache_put_data('modsite_status', 'major', 120);
+				cache_put_data('modsite_status', 'major', 600);
 				$return = 'major';
 			}
 
 			elseif(!empty($check))
 			{
 				$check = json_decode($check);
-				cache_put_data('modsite_status', $check->status, 120);
+				cache_put_data('modsite_status', $check->status, 600);
 				$return = $check->status;
 			}
 		}
@@ -252,6 +252,6 @@ class ModSiteParser
 			$type = array($type);
 
 		foreach ($type as $t)
-			cache_put_data(modsite::$name .'_'. $type, '', 120);
+			cache_put_data(modsite::$name .'_'. $type, '', 600);
 	}
 }

@@ -81,7 +81,7 @@ class ModSite extends ModSiteParser
 		global $smcFunc, $scripturl, $txt;
 
 		/* Use the cache when possible */
-		if (($return = cache_get_data(modsite::$name .'_all', 120)) == null)
+		if (($return = cache_get_data(modsite::$name .'_all', 600)) == null)
 		{
 			$result = $smcFunc['db_query']('', '
 				SELECT '. (implode(', ', $this->_table['columns'])) .'
@@ -103,7 +103,7 @@ class ModSite extends ModSiteParser
 
 			$smcFunc['db_free_result']($result);
 
-			cache_put_data(modsite::$name .'_all', $return, 120);
+			cache_put_data(modsite::$name .'_all', $return, 600);
 		}
 
 		/* Done? */
@@ -115,7 +115,7 @@ class ModSite extends ModSiteParser
 		global $smcFunc, $scripturl, $txt;
 
 		/* Can we avoid another query? */
-		if (($return = cache_get_data(modsite::$name .'_all', 120)) != null)
+		if (($return = cache_get_data(modsite::$name .'_all', 600)) != null)
 			if (in_array($id, array_keys($return)))
 				return $return[$id];
 
@@ -254,7 +254,7 @@ class ModSite extends ModSiteParser
 
 	protected function cleanCache()
 	{
-		cache_put_data(modsite::$name .'_all', null, 120);
+		cache_put_data(modsite::$name .'_all', null, 600);
 	}
 
 	public function truncateString($string, $limit, $break = ' ', $pad = '...')
