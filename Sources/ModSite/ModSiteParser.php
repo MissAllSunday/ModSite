@@ -55,9 +55,19 @@ class ModSiteParser
 
 		/* Append github repo info */
 		try{
-			$repoInfo = $this->getRepoInfo($mod['githubName']);
-			$mod['commits'] = $this->getRepoCommits($mod['githubName']);
-			$mod['issues'] = $this->getRepoIssues($mod['githubName']);
+			if (!empty($mod['githubName']))
+			{
+				$repoInfo = $this->getRepoInfo($mod['githubName']);
+				$mod['commits'] = $this->getRepoCommits($mod['githubName']);
+				$mod['issues'] = $this->getRepoIssues($mod['githubName']);
+			}
+
+			/* Set these as empty arrays */
+			else
+			{
+				$mod['commits'] = array();
+				$mod['issues'] = array();
+			}
 		}
 		catch (RuntimeException $e)
 		{
@@ -66,7 +76,7 @@ class ModSiteParser
 
 		/* Merge the info */
 		if (!empty($repoInfo) && is_array($repoInfo))
-			$mod = array_merge($mod, $this->getRepoInfo($repoInfo));
+			$mod = array_merge($mod, $repoInfo);
 
 		/* Parse the desc */
 		if (!empty($mod['desc']))
