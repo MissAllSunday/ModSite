@@ -35,6 +35,9 @@ ehthumbs.db
 Icon?
 Thumbs.db
 *.lnk
+
+# Generic files #
+######################
 /nbproject/private/
 /nbproject/
 test.php
