@@ -72,7 +72,8 @@ $txt['modSite_ui_fork_me'] = 'Fork me on GitHub';
 $txt['modSite_ui_page'] = 'Page';
 $txt['modSite_ui_version'] = 'Version: ';
 $txt['modSite_ui_pagination'] = 'Pagination: ';
-$txt['modSite_ui_'] = '';
+$txt['modSite_ui_outdated'] = 'This mod is outdated!';
+$txt['modSite_ui_outdated_desc'] = 'This mod has been archived, it is outdated and its not going to be updated anymore. Use it at your own risk.';
 
 // Permissions strings
 $txt['permissiongroup_simple_modsite_per_simple'] = 'Mod site permissions';

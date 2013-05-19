@@ -66,6 +66,17 @@ function template_modSite_main()
 				<span class="topslice"><span></span></span>
 				<div class="content" id="content_', $mod['id'] ,'" style="display:none;">';
 
+			/* If this is an archived mod, show a nice message about how outdated it is! */
+			if (!empty($mod['category']['key']) && $mod['category']['key'] == 12)
+				echo '
+				<div class="errorbox">
+					<p class="alert">!!</p>
+					<h3>', $txt['modSite_ui_outdated'] ,'</h3>
+					<p>
+						', $txt['modSite_ui_outdated_desc'] ,'<br/>
+					</p>
+				</div>';
+
 			/* The inner sidebar for each mod */
 			if (!empty($mod['info']))
 			{
