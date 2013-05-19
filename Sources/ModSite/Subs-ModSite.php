@@ -153,24 +153,31 @@ class ModSite extends ModSiteParser
 		if (empty($column) || empty($value))
 			return false;
 
-		/* Get the data as requested */
-		$result = $smcFunc['db_query']('', '
-			SELECT '. (implode(', ', $this->_table['columns'])) .'
-			FROM {db_prefix}' . ($this->_table['name']) . '
-			WHERE '. ($column) .' = '. ($value) .'',
-			array()
-		);
+		/* Use the cache when possible */
+		if (($return = cache_get_data(modsite::$name .'_'. $column.'_'. $value, 600)) == null)
+		{
 
-		while ($row = $smcFunc['db_fetch_assoc']($result))
-			$return[$row['id']] = array(
-				'id' => $row['id'],
-				'name' => $row['name'],
-				'info' => $this->parse($row['name']),
-				'category' => $this->getSingleCat($row['cat']),
-				'downloads' => $row['downloads'],
+			/* Get the data as requested */
+			$result = $smcFunc['db_query']('', '
+				SELECT '. (implode(', ', $this->_table['columns'])) .'
+				FROM {db_prefix}' . ($this->_table['name']) . '
+				WHERE '. ($column) .' = '. ($value) .'',
+				array()
 			);
 
-		$smcFunc['db_free_result']($result);
+			while ($row = $smcFunc['db_fetch_assoc']($result))
+				$return[$row['id']] = array(
+					'id' => $row['id'],
+					'name' => $row['name'],
+					'info' => $this->parse($row['name']),
+					'category' => $this->getSingleCat($row['cat']),
+					'downloads' => $row['downloads'],
+				);
+
+			$smcFunc['db_free_result']($result);
+
+			cache_put_data(modsite::$name .'_'. $column.'_'. $value, $return, 600);
+		}
 
 		/* Done? */
 		return $return;
