@@ -123,6 +123,7 @@ class ModSite extends ModSiteParser
 		$result = $smcFunc['db_query']('', '
 			SELECT '. (implode(', ', $this->_table['columns'])) .'
 			FROM {db_prefix}' . ($this->_table['name']) . '
+			WHERE id = {int:id}
 			LIMIT {int:limit}',
 			array(
 				'id' => (int) $id,
