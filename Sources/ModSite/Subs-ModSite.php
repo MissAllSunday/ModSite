@@ -80,7 +80,7 @@ class ModSite extends ModSiteParser
 		global $smcFunc, $scripturl, $txt;
 
 		/* Use the cache when possible */
-		if (($return = cache_get_data(modsite::$name .'_all', 600)) == null)
+		if (($return = cache_get_data(modsite::$name .'_all', 3600)) == null)
 		{
 			$result = $smcFunc['db_query']('', '
 				SELECT '. (implode(', ', $this->_table['columns'])) .'
@@ -102,7 +102,7 @@ class ModSite extends ModSiteParser
 
 			$smcFunc['db_free_result']($result);
 
-			cache_put_data(modsite::$name .'_all', $return, 600);
+			cache_put_data(modsite::$name .'_all', $return, 3600);
 		}
 
 		/* Done? */
@@ -114,7 +114,7 @@ class ModSite extends ModSiteParser
 		global $smcFunc, $scripturl, $txt;
 
 		/* Can we avoid another query? */
-		if (($return = cache_get_data(modsite::$name .'_all', 600)) != null)
+		if (($return = cache_get_data(modsite::$name .'_all', 3600)) != null)
 			if (in_array($id, array_keys($return)))
 				return $return[$id];
 
@@ -154,7 +154,7 @@ class ModSite extends ModSiteParser
 			return false;
 
 		/* Use the cache when possible */
-		if (($return = cache_get_data(modsite::$name .'_'. $column.'_'. $value, 600)) == null)
+		if (($return = cache_get_data(modsite::$name .'_'. $column.'_'. $value, 3600)) == null)
 		{
 
 			/* Get the data as requested */
@@ -176,7 +176,7 @@ class ModSite extends ModSiteParser
 
 			$smcFunc['db_free_result']($result);
 
-			cache_put_data(modsite::$name .'_'. $column.'_'. $value, $return, 600);
+			cache_put_data(modsite::$name .'_'. $column.'_'. $value, $return, 3600);
 		}
 
 		/* Done? */
@@ -261,7 +261,7 @@ class ModSite extends ModSiteParser
 
 	protected function cleanCache()
 	{
-		cache_put_data(modsite::$name .'_all', null, 600);
+		cache_put_data(modsite::$name .'_all', null, 3600);
 	}
 
 	public function truncateString($string, $limit, $break = ' ', $pad = '...')

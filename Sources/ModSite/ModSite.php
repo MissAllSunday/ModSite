@@ -194,7 +194,7 @@ function modsite_dispatch()
 			$call($mainObj);
 
 		else
-		fatal_lang_error('modSite_error_enable', false);
+			fatal_lang_error('modSite_error_enable', false);
 }
 
 function modsite_main($mainObj)
@@ -589,7 +589,7 @@ function modsite_pagination($array)
 	$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
 
 	/* Applying pagination. */
-	$pagination = new OharaPagination($array, $page,'?action=modsite;page=', '', 5, 3);
+	$pagination = new OharaPagination($array, $page,'?action=modsite;page=', '', 10, 3);
 	$pagination->PaginationArray();
 	$pagtrue = $pagination->PagTrue();
 
