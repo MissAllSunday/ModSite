@@ -87,10 +87,6 @@ class ModSiteParser
 
 	public function getRepoInfo($repoName)
 	{
-		/* Don't even think about it... */
-		if ($this->getAPIStatus() == 'major')
-			return false;
-
 		/* Init github API */
 		if (!isset($this->client))
 			$this->github();
@@ -101,10 +97,6 @@ class ModSiteParser
 
 	public function getRepoCommits($repoName)
 	{
-		/* Don't even think about it... */
-		if ($this->getAPIStatus() == 'major')
-			return false;
-
 		/* Init github API */
 		if (!isset($this->client))
 			$this->github();
@@ -115,10 +107,6 @@ class ModSiteParser
 
 	public function getRepoIssues($repoName)
 	{
-		/* Don't even think about it... */
-		if ($this->getAPIStatus() == 'major')
-			return false;
-
 		/* Init github API */
 		if (!isset($this->client))
 			$this->github();
@@ -129,10 +117,6 @@ class ModSiteParser
 
 	protected function getRepoCollaborators($repoName)
 	{
-		/* Don't even think about it... */
-		if ($this->getAPIStatus() == 'major')
-			return false;
-
 		/* Init github API */
 		if (!isset($this->client))
 			$this->github($this->githubUser);
