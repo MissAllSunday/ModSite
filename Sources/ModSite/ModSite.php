@@ -81,11 +81,11 @@ class ActivityBar extends Ohara
 
 		$config_vars = array(
 			array('desc', self::$className .'_admin_sub'),
-			array('check', self::$className .'_enable', 'subtext' => $txt['ModSite_enable_sub']),
-			array('int', self::$className .'_latest_limit', 'subtext' => $txt['ModSite_latest_limit_sub'], 'size' => 3),
-			array('int', self::$className .'_pag_limit', 'subtext' => $txt['ModSite_pag_limit_sub'], 'size' => 3),
-			array('text', self::$className .'_json_dir', 'subtext' => $txt['ModSite_json_dir_sub']),
-			array('text', self::$className .'_github_username', 'subtext' => $txt['ModSite_github_username_sub']),
+			array('check', self::$className .'_enable', 'subtext' => $this->text('enable_sub')),
+			array('int', self::$className .'_latest_limit', 'subtext' => $this->text('latest_limit_sub'), 'size' => 3),
+			array('int', self::$className .'_pag_limit', 'subtext' => $this->text('pag_limit_sub'), 'size' => 3),
+			array('text', self::$className .'_json_dir', 'subtext' => $this->text('json_dir_sub')),
+			array('text', self::$className .'_github_username', 'subtext' => $this->text('github_username_sub')),
 			array(
 				'select',
 				'ModSite_menu_position',
@@ -96,9 +96,9 @@ class ActivityBar extends Ohara
 					'login' => $txt['login'],
 					'register' => $txt['register']
 				),
-				'subtext' => $txt['ModSite_menu_position_sub']
+				'subtext' => $this->text('menu_position_sub')
 			),
-			array('text', 'ModSite_download_path'),
+			array('text', self::$className .'_download_path'),
 		);
 
 		if ($return_config)
@@ -125,34 +125,33 @@ class ActivityBar extends Ohara
 		prepareDBSettingContext($config_vars);
 	}
 
-	function modsite_permissions(&$permissionGroups, &$permissionList)
+	function permissions(&$permissionGroups, &$permissionList)
 	{
-		$permissionGroups['membergroup']['simple'] = array('ModSite_per_simple');
-		$permissionGroups['membergroup']['classic'] = array('ModSite_per_classic');
+		$permissionGroups['membergroup']['simple'] = array(self::$className .'_per_simple');
+		$permissionGroups['membergroup']['classic'] = array(self::$className .'_per_classic');
 
-		$permissionList['membergroup']['ModSite_view'] = array(
+		$permissionList['membergroup'][self::$className .'_view'] = array(
 			false,
-			'ModSite_per_classic',
-			'ModSite_per_simple');
+			self::$className .'_classic',
+			self::$className .'_per_simple');
 
-		$permissionList['membergroup']['ModSite_delete'] = array(
+		$permissionList['membergroup'][self::$className .'_delete'] = array(
 			false,
-			'ModSite_per_classic',
-			'ModSite_per_simple');
-		$permissionList['membergroup']['ModSite_add'] = array(
+			self::$className .'_per_classic',
+			self::$className .'_per_simple');
+		$permissionList['membergroup'][self::$className .'_add'] = array(
 			false,
-			'ModSite_per_classic',
-			'ModSite_per_simple');
-		$permissionList['membergroup']['ModSite_edit'] = array(
+			self::$className .'_per_classic',
+			self::$className .'_simple');
+		$permissionList['membergroup'][self::$className .'_edit'] = array(
 			false,
-			'ModSite_per_classic',
-			'ModSite_per_simple');
+			self::$className .'_per_classic',
+			self::$className .'_per_simple');
 	}
 
-	function modsite_dispatch()
+	function dispatch()
 	{
-		global $txt, $sourcedir, $modSettings, $context, $scripturl, $settings;
-		static $mainObj;
+		global $txt, $sourcedir, $context, $scripturl, $settings;
 
 			/* Safety first, hardcode the actions */
 			$subActions = array(
@@ -208,7 +207,7 @@ class ActivityBar extends Ohara
 
 			$call = 'ModSite_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
 
-			// Call the appropiate method if the mod is enable
+			// Call the appropriate method if the mod is enable
 			if (!empty($this->setting('enable')))
 				$call($mainObj);
 
