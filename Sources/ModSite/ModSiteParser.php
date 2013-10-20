@@ -71,7 +71,7 @@ class ModSiteParser
 		}
 		catch (RuntimeException $e)
 		{
-			log_error('issues with github API'. $e->getMessage());
+			log_error('issues with github API '. $e->getMessage());
 		}
 
 		/* Merge the info */
