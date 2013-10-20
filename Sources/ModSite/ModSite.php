@@ -25,10 +25,10 @@ class ActivityBar extends Ohara
 	{
 		$this->hooks = array(
 			'integrate_menu_buttons' => 'menu',
-			'integrate_actions' => 'dispatch',
+			'integrate_actions' => 'actions',
 			'integrate_load_permissions' => 'permissions',
 			'integrate_admin_areas' => 'adminAreas',
-			'integrate_modify_modifications' => 'settings',
+			'integrate_modify_modifications' => 'modifications',
 		);
 
 		// Call the helper
@@ -37,25 +37,19 @@ class ActivityBar extends Ohara
 
 	protected function adminAreas(&$areas)
 	{
-		global $txt;
-
-		loadLanguage('ModSite');
-
-		$areas['config']['areas']['modsettings']['subsections']['modsite'] = array($txt['modSite_title_main']);
+		$areas['config']['areas']['modsettings']['subsections']['modsite'] = array($this->text('title_main'));
 	}
 
-	function modsite_actions(&$actions)
+	function actions(&$actions)
 	{
-		$actions['modsite'] = array('ModSite/ModSite.php', 'modSite_dispatch');
+		$actions['modsite'] = array('ModSite/ModSite.php', 'ModSite::dispatch');
 	}
 
-	function modsite_menu(&$menu_buttons)
+	function menu(&$menu_buttons)
 	{
-			global $scripturl, $modSettings, $txt;
+			global $scripturl;
 
-			loadLanguage('ModSite');
-
-			$insert = !empty($modSettings['modSite_menu_position']) ? $modSettings['modSite_menu_position'] : 'home';
+			$insert = $this->setting('menu_position') ? $this->setting('menu_position') : 'home';
 			$counter = 0;
 
 			foreach ($menu_buttons as $area => $dummy)
@@ -65,15 +59,15 @@ class ActivityBar extends Ohara
 			$menu_buttons = array_merge(
 				array_slice($menu_buttons, 0, $counter),
 				array('modsite' => array(
-					'title' => $txt['modSite_title_main'],
+					'title' => $this->text('title_main'),
 					'href' => $scripturl . '?action=modsite',
-					'show' => empty($modSettings['modSite_enable']) ? false : true,
+					'show' => $this->setting('enable') ? true : false,
 				)),
 				array_slice($menu_buttons, $counter)
 			);
 	}
 
-	function modsite_modify_modifications(&$sub_actions)
+	function modifications(&$sub_actions)
 	{
 		global $context;
 
@@ -81,20 +75,20 @@ class ActivityBar extends Ohara
 		$context[$context['admin_menu_name']]['tab_data']['tabs']['modsite'] = array();
 	}
 
-	function modify_modsite_post_settings(&$return_config = false)
+	function settings(&$return_config = false)
 	{
 		global $context, $scripturl, $txt;
 
 		$config_vars = array(
-			array('desc', 'modSite_admin_desc'),
-			array('check', 'modSite_enable', 'subtext' => $txt['modSite_enable_desc']),
-			array('int', 'modSite_latest_limit', 'subtext' => $txt['modSite_latest_limit_desc'], 'size' => 3),
-			array('int', 'modSite_pag_limit', 'subtext' => $txt['modSite_pag_limit_desc'], 'size' => 3),
-			array('text', 'modsite_json_dir', 'subtext' => $txt['modSite_json_dir_desc']),
-			array('text', 'modsite_github_username', 'subtext' => $txt['modSite_github_username_desc']),
+			array('desc', self::$className .'_admin_sub'),
+			array('check', self::$className .'_enable', 'subtext' => $txt['ModSite_enable_sub']),
+			array('int', self::$className .'_latest_limit', 'subtext' => $txt['ModSite_latest_limit_sub'], 'size' => 3),
+			array('int', self::$className .'_pag_limit', 'subtext' => $txt['ModSite_pag_limit_sub'], 'size' => 3),
+			array('text', self::$className .'_json_dir', 'subtext' => $txt['ModSite_json_dir_sub']),
+			array('text', self::$className .'_github_username', 'subtext' => $txt['ModSite_github_username_sub']),
 			array(
 				'select',
-				'modSite_menu_position',
+				'ModSite_menu_position',
 				array(
 					'home' => $txt['home'],
 					'help' => $txt['help'],
@@ -102,16 +96,16 @@ class ActivityBar extends Ohara
 					'login' => $txt['login'],
 					'register' => $txt['register']
 				),
-				'subtext' => $txt['modSite_menu_position_desc']
+				'subtext' => $txt['ModSite_menu_position_sub']
 			),
-			array('text', 'modSite_download_path'),
+			array('text', 'ModSite_download_path'),
 		);
 
 		if ($return_config)
 			return $config_vars;
 
 		$context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=modsite';
-		$context['settings_title'] = $txt['modSite_title_main'];
+		$context['settings_title'] = $this->text('title_main');
 
 		if (empty($config_vars))
 		{
@@ -133,26 +127,26 @@ class ActivityBar extends Ohara
 
 	function modsite_permissions(&$permissionGroups, &$permissionList)
 	{
-		$permissionGroups['membergroup']['simple'] = array('modsite_per_simple');
-		$permissionGroups['membergroup']['classic'] = array('modsite_per_classic');
+		$permissionGroups['membergroup']['simple'] = array('ModSite_per_simple');
+		$permissionGroups['membergroup']['classic'] = array('ModSite_per_classic');
 
-		$permissionList['membergroup']['modsite_view'] = array(
+		$permissionList['membergroup']['ModSite_view'] = array(
 			false,
-			'modsite_per_classic',
-			'modsite_per_simple');
+			'ModSite_per_classic',
+			'ModSite_per_simple');
 
-		$permissionList['membergroup']['modsite_delete'] = array(
+		$permissionList['membergroup']['ModSite_delete'] = array(
 			false,
-			'modsite_per_classic',
-			'modsite_per_simple');
-		$permissionList['membergroup']['modsite_add'] = array(
+			'ModSite_per_classic',
+			'ModSite_per_simple');
+		$permissionList['membergroup']['ModSite_add'] = array(
 			false,
-			'modsite_per_classic',
-			'modsite_per_simple');
-		$permissionList['membergroup']['modsite_edit'] = array(
+			'ModSite_per_classic',
+			'ModSite_per_simple');
+		$permissionList['membergroup']['ModSite_edit'] = array(
 			false,
-			'modsite_per_classic',
-			'modsite_per_simple');
+			'ModSite_per_classic',
+			'ModSite_per_simple');
 	}
 
 	function modsite_dispatch()
@@ -188,7 +182,7 @@ class ActivityBar extends Ohara
 
 			$context['linktree'][] = array(
 				'url' => $scripturl. '?action=modsite',
-				'name' => $txt['modSite_title_main'],
+				'name' => $this->text('title_main'),
 			);
 
 			/* Set some JavaScript to hide blocks */
@@ -212,14 +206,14 @@ class ActivityBar extends Ohara
 			if (isset($_GET['sa']))
 				$func = $mainObj->clean($_GET['sa']);
 
-			$call = 'modSite_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
+			$call = 'ModSite_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
 
 			// Call the appropiate method if the mod is enable
-			if (!empty($modSettings['modSite_enable']))
+			if (!empty($this->setting('enable')))
 				$call($mainObj);
 
 			else
-				fatal_lang_error('modSite_error_enable', false);
+				fatal_lang_error('ModSite_error_enable', false);
 	}
 
 	function modsite_main($mainObj)
@@ -231,9 +225,9 @@ class ActivityBar extends Ohara
 
 		/* Are you allowed to see this page? */
 		$mainObj->permissions('view', true);
-		$context['sub_template'] = 'modSite_main';
+		$context['sub_template'] = 'ModSite_main';
 		$context['canonical_url'] = $scripturl . '?action=modsite';
-		$context['page_title'] = $txt['modSite_title_main'] .' - '. $txt['modSite_ui_page'] .' '. $page ;
+		$context['page_title'] = $this->text('title_main') .' - '. $txt['ModSite_ui_page'] .' '. $page ;
 
 		/* Pass the object to the template */
 		$context['modSite']['object'] = $mainObj;
@@ -253,12 +247,12 @@ class ActivityBar extends Ohara
 		$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
 
 		/* Set some needed vars */
-		$context['sub_template'] = 'modSite_main';
+		$context['sub_template'] = 'ModSite_main';
 		$context['canonical_url'] = $scripturl . '?action=modsite;sa=category';
 
 		/* We need a valid ID */
 		if (!isset($_GET['mid']) || empty($_GET['mid']))
-			fatal_lang_error('modSite_error_no_valid_id', false);
+			fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		$catID = (int) $mainObj->clean($_GET['mid']);
 
@@ -269,7 +263,7 @@ class ActivityBar extends Ohara
 		modsite_pagination($mainObj->getBy('cat', $catID));
 
 		/* We got what we need, pass it to the template */
-		$context['page_title'] = $txt['modSite_ui_cat'] .' - '. $cat['name'] .' - '. $txt['modSite_ui_page'] .' '. $page ;;
+		$context['page_title'] = $txt['ModSite_ui_cat'] .' - '. $cat['name'] .' - '. $txt['ModSite_ui_page'] .' '. $page ;;
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite;sa=category;mid='. $catID,
 			'name' => $context['page_title'],
@@ -286,8 +280,8 @@ class ActivityBar extends Ohara
 		/* Check permissions */
 		$mainObj->permissions('add', true);
 
-		$context['sub_template'] = 'modSite_add';
-		$context['page_title'] = $txt['modSite_edit_creating'];
+		$context['sub_template'] = 'ModSite_add';
+		$context['page_title'] = $txt['ModSite_edit_creating'];
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite;sa=add',
 			'name' => $context['page_title'],
@@ -336,7 +330,7 @@ class ActivityBar extends Ohara
 
 				/* Tell the user this entry doesn't exists anymore */
 				if (empty($current))
-					fatal_lang_error('modSite_error_no_valid_id', false);
+					fatal_lang_error('ModSite_error_no_valid_id', false);
 			}
 
 			/* All good, append the ID */
@@ -373,14 +367,14 @@ class ActivityBar extends Ohara
 		$temp = $mainObj->getSingle($mid);
 
 		if (empty($temp))
-			fatal_lang_error('modSite_no_valid_id', false);
+			fatal_lang_error('ModSite_no_valid_id', false);
 
 		$context['modSite']['edit'] = $temp;
-		$context['sub_template'] = 'modSite_add';
-		$context['page_title'] = $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
+		$context['sub_template'] = 'ModSite_add';
+		$context['page_title'] = $txt['ModSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite;sa=edit;mid='. $mid,
-			'name' => $txt['modSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
+			'name' => $txt['ModSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
 		);
 	}
 
@@ -413,14 +407,14 @@ class ActivityBar extends Ohara
 		$context['modSite']['pin'] = $mainObj->clean($_GET['pin']);
 
 		/* Build the link tree.... */
-		$context['page_title'] = $txt['modSite_success_message_title'];
+		$context['page_title'] = $txt['ModSite_success_message_title'];
 		$context['linktree'][] = array(
 			'url' => $scripturl . '?action=modsite;sa=success',
 			'name' => $context['page_title'],
 		);
 
-		$context['sub_template'] = 'modSite_success';
-		$context['modSite']['message'] = $txt['modSite_success_message_'. $context['modSite']['pin']];
+		$context['sub_template'] = 'ModSite_success';
+		$context['modSite']['message'] = $txt['ModSite_success_message_'. $context['modSite']['pin']];
 
 		/* Pass the object to the template */
 		$context['modSite']['object'] = $mainObj;
@@ -432,7 +426,7 @@ class ActivityBar extends Ohara
 
 		/* Forget it... */
 		if (!isset($_GET['mid']) || empty($_GET['mid']))
-			fatal_lang_error('modSite_error_no_valid_id', false);
+			fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		/* Are you allowed to see this page? */
 		$mainObj->permissions('view', true);
@@ -441,13 +435,13 @@ class ActivityBar extends Ohara
 		$id = $mainObj->clean($_GET['mid']);
 
 		if (empty($id))
-			fatal_lang_error('modSite_error_no_valid_id', false);
+			fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		/* Get the data, getSingle() uses cache when possible */
 		$context['modSite']['single'] = $mainObj->getSingle($id);
 
 		/* Set all we need */
-		$context['sub_template'] = 'modSite_single';
+		$context['sub_template'] = 'ModSite_single';
 		$context['canonical_url'] = $scripturl . '?action=modsite;sa=single;mid=' . $id;
 		$context['page_title'] = $context['modSite']['single']['info']['publicName'];
 		$context['linktree'][] = array(
@@ -467,11 +461,11 @@ class ActivityBar extends Ohara
 		$mainObj->permissions('view', true);
 
 		/* Page stuff */
-		$context['sub_template'] = 'modSite_list';
-		$context['page_title'] = $txt['modSite_list_title'];
+		$context['sub_template'] = 'ModSite_list';
+		$context['page_title'] = $txt['ModSite_list_title'];
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite;sa=list',
-			'name' => $txt['modSite_list_title'],
+			'name' => $txt['ModSite_list_title'],
 		);
 
 		/* No letter? then show the main page */
@@ -484,16 +478,16 @@ class ActivityBar extends Ohara
 			$midletter = $mainObj->clean($_GET['lidletter']);
 
 			/* Replace the linktree and title with something more specific */
-			$context['page_title'] = $txt['modSite_list_title_by_letter'] . $midletter;
+			$context['page_title'] = $txt['ModSite_list_title_by_letter'] . $midletter;
 			$context['linktree'][] = array(
 				'url' => $scripturl. '?action=modsite;sa=list;lidletter='. $midletter,
-				'name' => $txt['modSite_list_title_by_letter'] . $midletter,
+				'name' => $txt['ModSite_list_title_by_letter'] . $midletter,
 			);
 
 			$context['modSite']['list'] = $mainObj->getBy('title', $midletter .'%');
 
 			if (empty($context['modSite']['list']))
-				fatal_lang_error('modSite_no_modsite_with_letter', false);
+				fatal_lang_error('ModSite_no_modsite_with_letter', false);
 		}
 
 		/* Pass the object to the template */
@@ -509,23 +503,23 @@ class ActivityBar extends Ohara
 
 		/* We need a valur to serch and a column */
 		if (!isset($_REQUEST['l_search_value']) || empty($_REQUEST['l_search_value']) || !isset($_REQUEST['l_column']) || empty($_REQUEST['l_column']))
-			fatal_lang_error('modSite_error_no_valid_id', false);
+			fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		$value = urlencode($mainObj->clean($_REQUEST['l_search_value']));
 		$column = $mainObj->clean($_REQUEST['l_column']);
 
 		/* Page stuff */
-		$context['sub_template'] = 'modSite_list';
-		$context['page_title'] = $txt['modSite_search_title'] . $value;
+		$context['sub_template'] = 'ModSite_list';
+		$context['page_title'] = $txt['ModSite_search_title'] . $value;
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite;sa=search',
-			'name' => $txt['modSite_list_title_by_letter'] . $value,
+			'name' => $txt['ModSite_list_title_by_letter'] . $value,
 		);
 
 		$context['modSite']['list'] = $mainObj->getBy($column, '%'. $value .'%');
 
 		if (empty($context['modSite']['list']))
-			fatal_lang_error('modSite_no_modsite_with_letter', false);
+			fatal_lang_error('ModSite_no_modsite_with_letter', false);
 
 
 		/* Pass the object to the template */
@@ -537,8 +531,8 @@ class ActivityBar extends Ohara
 		global $context, $boarddir, $modSettings, $user_info;
 
 		/* We need a valid ID and a valid downloads dir */
-		if (!isset($_GET['mid']) || empty($modSettings['modSite_download_path']))
-			fatal_lang_error('modSite_error_no_valid_id', false);
+		if (!isset($_GET['mid']) || empty($modSettings['ModSite_download_path']))
+			fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		/* You're not welcome here Mr bot... */
 		if (true == $user_info['possibly_robot'])
@@ -548,7 +542,7 @@ class ActivityBar extends Ohara
 		$mod = $mainObj->getSingle((int) $mainObj->clean($_GET['mid']));
 
 		/* Build a correct path, the downloads dir ideally should be outside the web-accessible dir */
-		$file_path = $boarddir .'/'. $modSettings['modSite_download_path'] .'/'. $mod['name'] .'.zip';
+		$file_path = $boarddir .'/'. $modSettings['ModSite_download_path'] .'/'. $mod['name'] .'.zip';
 
 		/* Oops! */
 		if(!file_exists($file_path))

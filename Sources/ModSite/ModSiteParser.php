@@ -19,8 +19,8 @@ class ModSiteParser
 	{
 		global $boarddir, $boardurl, $modSettings;
 
-		$this->_jsonDir = !empty($modSettings['modsite_json_dir']) ? '/'. $modSettings['modsite_json_dir'] .'/%s.json' : '%s';
-		$this->githubUser = $modSettings['modsite_github_username'];
+		$this->_jsonDir = !empty($modSettings['ModSite_json_dir']) ? '/'. $modSettings['ModSite_json_dir'] .'/%s.json' : '%s';
+		$this->githubUser = $modSettings['ModSite_github_username'];
 		$this->_boarddir = $boarddir;
 		$this->_boardurl = $boardurl;
 
@@ -211,7 +211,7 @@ class ModSiteParser
 
 	public function getAPIStatus()
 	{
-		if ($return = cache_get_data('modsite_status', 600) == null)
+		if ($return = cache_get_data('ModSite_status', 600) == null)
 		{
 			/* Github API url check */
 			$apiUrl = 'https://status.github.com/api/status.json';
@@ -222,14 +222,14 @@ class ModSiteParser
 			/* Site is down :(  */
 			if (empty($check))
 			{
-				cache_put_data('modsite_status', 'major', 600);
+				cache_put_data('ModSite_status', 'major', 600);
 				$return = 'major';
 			}
 
 			elseif(!empty($check))
 			{
 				$check = json_decode($check);
-				cache_put_data('modsite_status', $check->status, 600);
+				cache_put_data('ModSite_status', $check->status, 600);
 				$return = $check->status;
 			}
 		}

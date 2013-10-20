@@ -36,17 +36,17 @@ function template_modSite_main()
 	<div class="floatright nopadding" style="width:99%;">';
 
 	/* There is no mods or this thing is disable :( */
-	if (empty($context['modSite']['all']) || empty($modSettings['modSite_enable']))
+	if (empty($context['modSite']['all']) || empty($this->setting('enable')))
 		echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<span class="ie6_header floatleft">', $txt['modSite_error_message'] ,'</span>
+				<span class="ie6_header floatleft">', $txt['ModSite_error_message'] ,'</span>
 			</h3>
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-			', $txt['modSite_error_enable'] ,'
+			', $txt['ModSite_error_enable'] ,'
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
@@ -59,7 +59,7 @@ function template_modSite_main()
 			<div class="cat_bar">
 				<h3 class="catbg">
 					<span class="ie6_header floatleft"><a href="', $scripturl ,'?action=modsite;sa=single;mid=', $mod['id'] ,'" title="', $mod['info']['publicName'] ,'">', $mod['info']['publicName'] ,'</a></span>
-					<span class="floatright"><img src="', $settings['default_theme_url'] ,'/images/modsite/minimize.png" style="vertical-align:middle" /><a href="javascript:void(0)" onmousedown="toggleDiv(\'content_', $mod['id'] ,'\', this);">', $txt['modSite_ui_expand'] ,'</a> <a href="', $scripturl ,'?action=modsite;sa=download;mid=', $mod['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
+					<span class="floatright"><img src="', $settings['default_theme_url'] ,'/images/modsite/minimize.png" style="vertical-align:middle" /><a href="javascript:void(0)" onmousedown="toggleDiv(\'content_', $mod['id'] ,'\', this);">', $txt['ModSite_ui_expand'] ,'</a> <a href="', $scripturl ,'?action=modsite;sa=download;mid=', $mod['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['ModSite_ui_download'] ,'</a></span>
 				</h3>
 			</div>
 			<div class="windowbg">
@@ -71,9 +71,9 @@ function template_modSite_main()
 				echo '
 				<div class="errorbox">
 					<p class="alert">!!</p>
-					<h3>', $txt['modSite_ui_outdated'] ,'</h3>
+					<h3>', $txt['ModSite_ui_outdated'] ,'</h3>
 					<p>
-						', $txt['modSite_ui_outdated_desc'] ,'<br/>
+						', $txt['ModSite_ui_outdated_sub'] ,'<br/>
 					</p>
 				</div>';
 
@@ -83,22 +83,22 @@ function template_modSite_main()
 				echo '
 					<div class="description" style="width:30%; float:left; margin:0 1em 1em 0; display: block;">
 						<ul class="modsite_info">
-							<li class="li_version">', $txt['modSite_ui_version'] . $mod['info']['version'] ,'</li>
-							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=category;mid=', $mod['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>
-							<li class="li_support"><a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>
-							<li class="li_supported_versions">', $txt['modSite_ui_smf_versions'] . $mod['info']['versionSMF'] ,'</li>
-							<li class="li_license">', $txt['modSite_ui_license'] ,'<a href="', $mod['info']['license']['link'] ,'">', $mod['info']['license']['name'] ,'</a></li>';
+							<li class="li_version">', $txt['ModSite_ui_version'] . $mod['info']['version'] ,'</li>
+							<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=category;mid=', $mod['category']['key'] ,'" title="', $txt['ModSite_ui_cat'] ,'">', $mod['category']['name'] ,'</a></li>
+							<li class="li_support"><a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['ModSite_ui_support'] ,'">', $txt['ModSite_ui_support'] ,'</a></li>
+							<li class="li_supported_versions">', $txt['ModSite_ui_smf_versions'] . $mod['info']['versionSMF'] ,'</li>
+							<li class="li_license">', $txt['ModSite_ui_license'] ,'<a href="', $mod['info']['license']['link'] ,'">', $mod['info']['license']['name'] ,'</a></li>';
 
 				/* These values depend on github so lets check em first */
 				if (!empty($mod['info']['html_url']))
 				{
 					echo '
-								<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>';
+								<li class="li_github"><a href="', $mod['info']['html_url'] ,'" title="', $txt['ModSite_ui_github'] ,'">', $txt['ModSite_ui_github'] ,'</a></li>';
 
 					/* Last 5 commits */
 					echo '
 								<li class="li_commits">
-									', $txt['modSite_ui_last_commits'] ,'
+									', $txt['ModSite_ui_last_commits'] ,'
 									<ul class="reset">';
 
 					/* Iterate the array */
@@ -113,12 +113,12 @@ function template_modSite_main()
 					/* Reported issues */
 					echo '
 								<li class="li_issues">
-									', $txt['modSite_ui_issues'] ,'
+									', $txt['ModSite_ui_issues'] ,'
 									<ul class="reset">';
 
 					/* There is none, tell them to report */
 					if (empty($mod['info']['issues']))
-						echo '<li>', $txt['modSite_ui_no_issues'] ,'<a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_issues_report_topic'] ,'</a><a href="', $mod['info']['html_url'] ,'/issues">', $txt['modSite_ui_issues_report_github'] ,'</a></li>';
+						echo '<li>', $txt['ModSite_ui_no_issues'] ,'<a href="', $scripturl ,'?topic=', $mod['info']['supportID'] ,'" title="', $txt['ModSite_ui_support'] ,'">', $txt['ModSite_ui_issues_report_topic'] ,'</a><a href="', $mod['info']['html_url'] ,'/issues">', $txt['ModSite_ui_issues_report_github'] ,'</a></li>';
 
 					/* There are! oh boy! */
 					else
@@ -133,7 +133,7 @@ function template_modSite_main()
 					/* The nice buttons to star and fork */
 					echo'
 								<li class="li_fork">
-								', $txt['modSite_ui_contribute'] ,'
+								', $txt['ModSite_ui_contribute'] ,'
 									<span class="github-btn" id="github-btn">
 										<a class="gh-btn" id="gh-btn" href="', $mod['info']['html_url'] ,'/fork" target="_blank">
 											<span class="gh-ico"></span>
@@ -211,17 +211,17 @@ function template_modSite_single()
 	<div class="floatright nopadding" style="width:99%;">';
 
 	/* There is no mods or this thing is disable :( */
-	if (empty($context['modSite']['single']) || empty($modSettings['modSite_enable']))
+	if (empty($context['modSite']['single']) || empty($this->setting('enable')))
 		echo '
 		<div class="cat_bar">
 			<h3 class="catbg">
-				<span class="ie6_header floatleft">', $txt['modSite_error_message'] ,'</span>
+				<span class="ie6_header floatleft">', $txt['ModSite_error_message'] ,'</span>
 			</h3>
 		</div>
 		<div class="windowbg">
 			<span class="topslice"><span></span></span>
 			<div class="content">
-			', $txt['modSite_error_enable'] ,'
+			', $txt['ModSite_error_enable'] ,'
 			</div>
 			<span class="botslice"><span></span></span>
 		</div>';
@@ -233,7 +233,7 @@ function template_modSite_single()
 		<div class="cat_bar">
 			<h3 class="catbg">
 				<span class="ie6_header floatleft">', $context['modSite']['single']['info']['publicName'] ,'</span>
-				<span class="floatright"><a href="', $scripturl ,'?action=modsite;sa=download;mid=', $context['modSite']['single']['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['modSite_ui_download'] ,'</a></span>
+				<span class="floatright"><a href="', $scripturl ,'?action=modsite;sa=download;mid=', $context['modSite']['single']['id'] ,'"><img src="', $settings['default_theme_url'] ,'/images/modsite/disk.png" style="vertical-align:middle" /> ', $txt['ModSite_ui_download'] ,'</a></span>
 			</h3>
 		</div>
 		<div class="windowbg">
@@ -246,23 +246,23 @@ function template_modSite_single()
 			echo '
 				<div class="description" style="width:30%; float:left; margin:0 1em 1em 0; display: block;">
 					<ul class="modsite_info">
-						<li class="li_version">', $txt['modSite_ui_version'] . $context['modSite']['single']['info']['version'] ,'</li>
-						<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=category;mid=', $context['modSite']['single']['category']['key'] ,'" title="', $txt['modSite_ui_cat'] ,'">', $context['modSite']['single']['category']['name'] ,'</a></li>
-						<li class="li_support"><a href="', $scripturl ,'?topic=', $context['modSite']['single']['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_support'] ,'</a></li>
-						<li class="li_supported_versions">', $txt['modSite_ui_smf_versions'] . $context['modSite']['single']['info']['versionSMF'] ,'</li>
-						<li class="li_license">', $txt['modSite_ui_license'] ,'<a href="', $context['modSite']['single']['info']['license']['link'] ,'">', $context['modSite']['single']['info']['license']['name'] ,'</a></li>';
+						<li class="li_version">', $txt['ModSite_ui_version'] . $context['modSite']['single']['info']['version'] ,'</li>
+						<li class="li_cat"><a href="', $scripturl ,'?action=modsite;sa=category;mid=', $context['modSite']['single']['category']['key'] ,'" title="', $txt['ModSite_ui_cat'] ,'">', $context['modSite']['single']['category']['name'] ,'</a></li>
+						<li class="li_support"><a href="', $scripturl ,'?topic=', $context['modSite']['single']['info']['supportID'] ,'" title="', $txt['ModSite_ui_support'] ,'">', $txt['ModSite_ui_support'] ,'</a></li>
+						<li class="li_supported_versions">', $txt['ModSite_ui_smf_versions'] . $context['modSite']['single']['info']['versionSMF'] ,'</li>
+						<li class="li_license">', $txt['ModSite_ui_license'] ,'<a href="', $context['modSite']['single']['info']['license']['link'] ,'">', $context['modSite']['single']['info']['license']['name'] ,'</a></li>';
 
 
 		/* These values depend on github so lets check em first */
 		if (!empty($context['modSite']['single']['info']['html_url']))
 		{
 			echo '
-						<li class="li_github"><a href="', $context['modSite']['single']['info']['html_url'] ,'" title="', $txt['modSite_ui_github'] ,'">', $txt['modSite_ui_github'] ,'</a></li>';
+						<li class="li_github"><a href="', $context['modSite']['single']['info']['html_url'] ,'" title="', $txt['ModSite_ui_github'] ,'">', $txt['ModSite_ui_github'] ,'</a></li>';
 
 			/* Last 5 commits */
 			echo '
 						<li class="li_commits">
-							', $txt['modSite_ui_last_commits'] ,'
+							', $txt['ModSite_ui_last_commits'] ,'
 							<ul class="reset">';
 
 			/* Iterate the array */
@@ -277,12 +277,12 @@ function template_modSite_single()
 			/* Reported issues */
 			echo '
 						<li class="li_issues">
-							', $txt['modSite_ui_issues'] ,'
+							', $txt['ModSite_ui_issues'] ,'
 							<ul class="reset">';
 
 			/* There is none, tell them to report */
 			if (empty($context['modSite']['single']['info']['issues']))
-				echo '<li>', $txt['modSite_ui_no_issues'] ,'<a href="', $scripturl ,'?topic=', $context['modSite']['single']['info']['supportID'] ,'" title="', $txt['modSite_ui_support'] ,'">', $txt['modSite_ui_issues_report_topic'] ,'</a><a href="', $context['modSite']['single']['info']['html_url'] ,'/issues">', $txt['modSite_ui_issues_report_github'] ,'</a></li>';
+				echo '<li>', $txt['ModSite_ui_no_issues'] ,'<a href="', $scripturl ,'?topic=', $context['modSite']['single']['info']['supportID'] ,'" title="', $txt['ModSite_ui_support'] ,'">', $txt['ModSite_ui_issues_report_topic'] ,'</a><a href="', $context['modSite']['single']['info']['html_url'] ,'/issues">', $txt['ModSite_ui_issues_report_github'] ,'</a></li>';
 
 			/* There are! oh boy! */
 			else
@@ -297,7 +297,7 @@ function template_modSite_single()
 			/* The nice buttons to star and fork */
 			echo'
 						<li class="li_fork">
-						', $txt['modSite_ui_contribute'] ,'
+						', $txt['ModSite_ui_contribute'] ,'
 							<span class="github-btn" id="github-btn">
 								<a class="gh-btn" id="gh-btn" href="', $context['modSite']['single']['info']['html_url'] ,'/fork" target="_blank">
 									<span class="gh-ico"></span>
@@ -362,9 +362,9 @@ function template_modSite_add()
 		echo '
 	<div class="errorbox">
 <p class="alert">
-	<h3>', $txt['modSite_error_message'] ,'</h3>
+	<h3>', $txt['ModSite_error_message'] ,'</h3>
 	<p>
-		', $_GET['missing'] . $txt['modSite_error_empty_field'] ,'
+		', $_GET['missing'] . $txt['ModSite_error_empty_field'] ,'
 	</p>
 </div>';
 	/* A nice form for adding a new cat */
@@ -378,11 +378,11 @@ function template_modSite_add()
 				<form action="', $scripturl, '?action='. modsite::$name .';sa=add2', !empty($context['modSite']['edit']) ? ';edit;mid='. $context['modSite']['id'] : '' ,'" method="post" target="_self">
 					<dl id="post_header">
 						<dt>
-							<span id="caption_subject">', $txt['modSite_edit_name'] ,'</span>
+							<span id="caption_subject">', $txt['ModSite_edit_name'] ,'</span>
 						</dt>
 						<dd>
 							<input type="hidden" id="', $context['session_var'], '" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-							<input type="text" name="name" size="55" tabindex="1" maxlength="255" value="', !empty($context['modSite']['edit']) ? $context['modSite']['edit']['name'] : '' ,'" class="input_text" /> <input type="submit" name="send" class="sbtn" value="', !empty($context['modSite']['edit']) ? $txt['modSite_edit_edit'] : $txt['modSite_edit_add'] ,'" />
+							<input type="text" name="name" size="55" tabindex="1" maxlength="255" value="', !empty($context['modSite']['edit']) ? $context['modSite']['edit']['name'] : '' ,'" class="input_text" /> <input type="submit" name="send" class="sbtn" value="', !empty($context['modSite']['edit']) ? $txt['ModSite_edit_edit'] : $txt['ModSite_edit_add'] ,'" />
 						</dd>
 					</dl>
 				</form>

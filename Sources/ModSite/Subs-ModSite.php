@@ -241,16 +241,16 @@ class ModSite extends ModSiteParser
 			return false;
 
 		/* The mod must be enable */
-		if (empty($modSettings['modSite_enable']))
-			fatal_lang_error('modSite_error_enable', false);
+		if (empty($this->setting('enable')))
+			fatal_lang_error('ModSite_error_enable', false);
 
 		/* collect the permissions */
 		foreach ($type as $t)
-				$allowed[] = (allowedTo('modsite_'. $t) == true ? 1 : 0);
+				$allowed[] = (allowedTo('ModSite_'. $t) == true ? 1 : 0);
 
 		/* You need at least 1 permission to be true */
 		if ($fatal_error == true && !in_array(1, $allowed))
-			isAllowedTo('modsite_'. $t);
+			isAllowedTo('ModSite_'. $t);
 
 		elseif ($fatal_error == false && !in_array(1, $allowed))
 			return false;
