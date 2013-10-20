@@ -35,11 +35,11 @@ $txt['modSite_success_message_title'] = 'You have successfully completed this ac
 $txt['modSite_success_message_add'] = 'You have successfully added this mod';
 $txt['modSite_success_message_edit'] = 'You have successfully edited this mod';
 $txt['modSite_success_message_delete'] = 'You have successfully deleted this mod';
-$txt['modsite_json_dir'] = 'json dir path';
-$txt['modsite_json_dir_desc'] = 'Relative path where all the json files are stored';
-$txt['modsite_github_username'] = 'github username';
-$txt['modsite_github_username_desc'] = 'The name of the main repo where the mods are stored';
-$txt['modsite_sidebar_cats_title'] = 'Category list';
+$txt['modSite_json_dir'] = 'json dir path';
+$txt['modSite_json_dir_desc'] = 'Relative path where all the json files are stored';
+$txt['modSite_github_username'] = 'github username';
+$txt['modSite_github_username_desc'] = 'The name of the main repo where the mods are stored';
+$txt['modSite_sidebar_cats_title'] = 'Category list';
 $txt['modSite_download_path'] = 'Path to the downloads dir';
 
 // Error

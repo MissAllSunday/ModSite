@@ -90,8 +90,8 @@ class ActivityBar extends Ohara
 			array('check', 'modSite_enable', 'subtext' => $txt['modSite_enable_desc']),
 			array('int', 'modSite_latest_limit', 'subtext' => $txt['modSite_latest_limit_desc'], 'size' => 3),
 			array('int', 'modSite_pag_limit', 'subtext' => $txt['modSite_pag_limit_desc'], 'size' => 3),
-			array('text', 'modsite_json_dir', 'subtext' => $txt['modsite_json_dir_desc']),
-			array('text', 'modsite_github_username', 'subtext' => $txt['modsite_github_username_desc']),
+			array('text', 'modsite_json_dir', 'subtext' => $txt['modSite_json_dir_desc']),
+			array('text', 'modsite_github_username', 'subtext' => $txt['modSite_github_username_desc']),
 			array(
 				'select',
 				'modSite_menu_position',
