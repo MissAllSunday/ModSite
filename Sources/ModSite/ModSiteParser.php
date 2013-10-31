@@ -242,8 +242,7 @@ class ModSiteParser extends ModSite
 		if (empty($type))
 			return;
 
-		if (!is_array($type))
-			$type = array($type);
+		$type = (array) $type;
 
 		foreach ($type as $t)
 			cache_put_data(modsite::$name .'_'. $type, '', 600);
