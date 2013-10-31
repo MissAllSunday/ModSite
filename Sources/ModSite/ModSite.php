@@ -13,7 +13,7 @@ if (!defined('SMF'))
 
 require_once($sourcedir . '/Ohara.php');
 
-class ActivityBar extends Ohara
+class ModSite extends Ohara
 {
 	protected static $className = __CLASS__;
 	protected $hooks = array();

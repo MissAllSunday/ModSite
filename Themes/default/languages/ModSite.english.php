@@ -3,7 +3,7 @@
 global $txt, $scripturl;
 
 // Add/Edit strings
-$this->text('title_main') = 'Mod Site';
+$txt['ModSite_title_main'] = 'Mod Site';
 $txt['ModSite_mods'] = 'Mods';
 $txt['ModSite_edit_name'] = 'Name: ';
 $txt['ModSite_edit_add'] = 'Add this mod';
