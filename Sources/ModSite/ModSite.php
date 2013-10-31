@@ -17,6 +17,18 @@ class ModSite extends Ohara
 {
 	protected static $className = __CLASS__;
 	protected $hooks = array();
+	protected $subActions = array(
+		'add',
+		'add2',
+		'delete',
+		'edit',
+		'list',
+		'search',
+		'single',
+		'success',
+		'download',
+		'category',
+	);
 
 	/**
 	 * Setup the object, gather all of the relevant settings
@@ -153,26 +165,13 @@ class ModSite extends Ohara
 	{
 		global $txt, $sourcedir, $context, $scripturl, $settings;
 
-			/* Safety first, hardcode the actions */
-			$subActions = array(
-				'add',
-				'add2',
-				'delete',
-				'edit',
-				'list',
-				'search',
-				'single',
-				'success',
-				'download',
-				'category',
-			);
 
-			if (empty($mainObj))
+			if (empty($pages))
 			{
 				require_once($sourcedir .'/ModSite/ModSiteParser.php');
-				require_once($sourcedir .'/ModSite/Subs-ModSite.php');
+				require_once($sourcedir .'/ModSite/ModSitePages.php');
 
-				$mainObj = new modsite();
+				$pages = new ModSitePages($this);
 			}
 
 			/* Load both language and template files */
@@ -202,20 +201,20 @@ class ModSite extends Ohara
 		</script>';
 
 			/* It is faster to use $var() than use call_user_func_array */
-			if (isset($_GET['sa']))
-				$func = $mainObj->clean($_GET['sa']);
+			if ($this->data('sa'))
+				$func = $pages->data('sa');
 
 			$call = 'ModSite_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
 
 			// Call the appropriate method if the mod is enable
 			if (!empty($this->setting('enable')))
-				$call($mainObj);
+				$call($pages);
 
 			else
 				fatal_lang_error('ModSite_error_enable', false);
 	}
 
-	function modsite_main($mainObj)
+	function modsite_main($pages)
 	{
 		global $context, $scripturl, $txt, $modSettings;
 
@@ -223,24 +222,24 @@ class ModSite extends Ohara
 		$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
 
 		/* Are you allowed to see this page? */
-		$mainObj->permissions('view', true);
+		$pages->permissions('view', true);
 		$context['sub_template'] = 'ModSite_main';
 		$context['canonical_url'] = $scripturl . '?action=modsite';
 		$context['page_title'] = $this->text('title_main') .' - '. $txt['ModSite_ui_page'] .' '. $page ;
 
 		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+		$context['modSite']['object'] = $pages;
 
 		/* Set the pagination and send everything to the template */
-		modsite_pagination($mainObj->getAll());
+		modsite_pagination($pages->getAll());
 	}
 
-	function modsite_category($mainObj)
+	function modsite_category($pages)
 	{
 		global $context, $scripturl, $txt, $modSettings;
 
 		/* Are you allowed to see this page? */
-		$mainObj->permissions('view', true);
+		$pages->permissions('view', true);
 
 		/* Getting the current page. */
 		$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
@@ -253,13 +252,13 @@ class ModSite extends Ohara
 		if (!isset($_GET['mid']) || empty($_GET['mid']))
 			fatal_lang_error('ModSite_error_no_valid_id', false);
 
-		$catID = (int) $mainObj->clean($_GET['mid']);
+		$catID = (int) $pages->clean($_GET['mid']);
 
 		/* Get the cat name */
-		$cat = $mainObj->getSingleCat($catID);
+		$cat = $pages->getSingleCat($catID);
 
 		/* Get all mods within category X, we are gonna reuse the main template ^-^ */
-		modsite_pagination($mainObj->getBy('cat', $catID));
+		modsite_pagination($pages->getBy('cat', $catID));
 
 		/* We got what we need, pass it to the template */
 		$context['page_title'] = $txt['ModSite_ui_cat'] .' - '. $cat['name'] .' - '. $txt['ModSite_ui_page'] .' '. $page ;;
@@ -269,15 +268,15 @@ class ModSite extends Ohara
 		);
 
 		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_add($mainObj)
+	function modsite_add($pages)
 	{
 		global $context, $scripturl, $txt, $sourcedir;
 
 		/* Check permissions */
-		$mainObj->permissions('add', true);
+		$pages->permissions('add', true);
 
 		$context['sub_template'] = 'ModSite_add';
 		$context['page_title'] = $txt['ModSite_edit_creating'];
@@ -287,18 +286,18 @@ class ModSite extends Ohara
 		);
 
 		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+		$context['modSite']['object'] = $pages;
 
 		/* Tell the template we are adding, not editing */
 		$context['modSite']['edit'] = false;
 	}
 
-	function modsite_add2($mainObj)
+	function modsite_add2($pages)
 	{
 		checkSession('post', '', true);
 
 		/* Check permissions */
-		$mainObj->permissions(isset($_REQUEST['edit']) ? 'edit' : 'add', true);
+		$pages->permissions(isset($_REQUEST['edit']) ? 'edit' : 'add', true);
 
 		/* Gotta send the user back to the form and tell them theres a missing field */
 		if (empty($_REQUEST['name']))
@@ -309,7 +308,7 @@ class ModSite extends Ohara
 
 		/* Let us continue... */
 		$data = array(
-			$mainObj->clean($_REQUEST['name']),
+			$pages->clean($_REQUEST['name']),
 		);
 
 		/* Are we editing */
@@ -322,10 +321,10 @@ class ModSite extends Ohara
 			/* Make some checks if we are editing */
 			else
 			{
-				$mid = (int) $mainObj->clean($_GET['mid']);
+				$mid = (int) $pages->clean($_GET['mid']);
 
 				/* Make sure it does exists... */
-				$current = $mainObj->doesExists($mid);
+				$current = $pages->doesExists($mid);
 
 				/* Tell the user this entry doesn't exists anymore */
 				if (empty($current))
@@ -342,28 +341,28 @@ class ModSite extends Ohara
 		}
 
 		/* Call the DB */
-		$mainObj->$method($data);
+		$pages->$method($data);
 
 		/* All done, show a nice page */
 		redirectexit('action=modsite;sa=success;pin='. $method);
 	}
 
-	function modsite_edit($mainObj)
+	function modsite_edit($pages)
 	{
 		global $context, $scripturl, $modSettings, $sourcedir, $txt;
 
-		$mainObj->permissions('edit', true);
+		$pages->permissions('edit', true);
 
 		if (!isset($_GET['mid']) || empty($_GET['mid']))
 			redirectexit('action=modsite');
 
 		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+		$context['modSite']['object'] = $pages;
 
-		$mid = (int) $mainObj->clean($_GET['mid']);
+		$mid = (int) $pages->clean($_GET['mid']);
 
 		/* Get the mod */
-		$temp = $mainObj->getSingle($mid);
+		$temp = $pages->getSingle($mid);
 
 		if (empty($temp))
 			fatal_lang_error('ModSite_no_valid_id', false);
@@ -377,11 +376,11 @@ class ModSite extends Ohara
 		);
 	}
 
-	function modsite_delete($mainObj)
+	function modsite_delete($pages)
 	{
 		global $context, $txt;
 
-		$mainObj->permissions('delete', true);
+		$pages->permissions('delete', true);
 
 		/* Gotta have an ID to work with */
 		if (!isset($_GET['mid']) || empty($_GET['mid']))
@@ -389,13 +388,13 @@ class ModSite extends Ohara
 
 		else
 		{
-			$mid = (int) $mainObj->clean($_GET['mid']);
-			$mainObj->delete($mid);
+			$mid = (int) $pages->clean($_GET['mid']);
+			$pages->delete($mid);
 			redirectexit('action=modsite;sa=success;pin=delete');
 		}
 	}
 
-	function modsite_success($mainObj)
+	function modsite_success($pages)
 	{
 		global $context, $scripturl, $txt;
 
@@ -403,7 +402,7 @@ class ModSite extends Ohara
 		if (!isset($_GET['pin']) || empty($_GET['pin']))
 			redirectexit('action=modsite');
 
-		$context['modSite']['pin'] = $mainObj->clean($_GET['pin']);
+		$context['modSite']['pin'] = $pages->clean($_GET['pin']);
 
 		/* Build the link tree.... */
 		$context['page_title'] = $txt['ModSite_success_message_title'];
@@ -416,10 +415,10 @@ class ModSite extends Ohara
 		$context['modSite']['message'] = $txt['ModSite_success_message_'. $context['modSite']['pin']];
 
 		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_single($mainObj)
+	function modsite_single($pages)
 	{
 		global $context, $scripturl, $txt, $user_info;
 
@@ -428,16 +427,16 @@ class ModSite extends Ohara
 			fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		/* Are you allowed to see this page? */
-		$mainObj->permissions('view', true);
+		$pages->permissions('view', true);
 
 		/* Get a valid ID */
-		$id = $mainObj->clean($_GET['mid']);
+		$id = $pages->clean($_GET['mid']);
 
 		if (empty($id))
 			fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		/* Get the data, getSingle() uses cache when possible */
-		$context['modSite']['single'] = $mainObj->getSingle($id);
+		$context['modSite']['single'] = $pages->getSingle($id);
 
 		/* Set all we need */
 		$context['sub_template'] = 'ModSite_single';
@@ -449,15 +448,15 @@ class ModSite extends Ohara
 		);
 
 		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_list($mainObj)
+	function modsite_list($pages)
 	{
 		global $context, $txt, $scripturl;
 
 		/* Are you allowed to see this page? */
-		$mainObj->permissions('view', true);
+		$pages->permissions('view', true);
 
 		/* Page stuff */
 		$context['sub_template'] = 'ModSite_list';
@@ -469,12 +468,12 @@ class ModSite extends Ohara
 
 		/* No letter? then show the main page */
 		if (!isset($_GET['lidletter']) || empty($_GET['lidletter']))
-			$context['modSite']['list'] = $mainObj->getAll();
+			$context['modSite']['list'] = $pages->getAll();
 
 		/* Show a list of modsite starting with X letter */
 		elseif (isset($_GET['lidletter']))
 		{
-			$midletter = $mainObj->clean($_GET['lidletter']);
+			$midletter = $pages->clean($_GET['lidletter']);
 
 			/* Replace the linktree and title with something more specific */
 			$context['page_title'] = $txt['ModSite_list_title_by_letter'] . $midletter;
@@ -483,29 +482,29 @@ class ModSite extends Ohara
 				'name' => $txt['ModSite_list_title_by_letter'] . $midletter,
 			);
 
-			$context['modSite']['list'] = $mainObj->getBy('title', $midletter .'%');
+			$context['modSite']['list'] = $pages->getBy('title', $midletter .'%');
 
 			if (empty($context['modSite']['list']))
 				fatal_lang_error('ModSite_no_modsite_with_letter', false);
 		}
 
 		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_search($mainObj)
+	function modsite_search($pages)
 	{
 		global $context, $txt, $scripturl;
 
 		/* Are you allowed to see this page? */
-		$mainObj->permissions('view', true);
+		$pages->permissions('view', true);
 
 		/* We need a valur to serch and a column */
 		if (!isset($_REQUEST['l_search_value']) || empty($_REQUEST['l_search_value']) || !isset($_REQUEST['l_column']) || empty($_REQUEST['l_column']))
 			fatal_lang_error('ModSite_error_no_valid_id', false);
 
-		$value = urlencode($mainObj->clean($_REQUEST['l_search_value']));
-		$column = $mainObj->clean($_REQUEST['l_column']);
+		$value = urlencode($pages->clean($_REQUEST['l_search_value']));
+		$column = $pages->clean($_REQUEST['l_column']);
 
 		/* Page stuff */
 		$context['sub_template'] = 'ModSite_list';
@@ -515,17 +514,17 @@ class ModSite extends Ohara
 			'name' => $txt['ModSite_list_title_by_letter'] . $value,
 		);
 
-		$context['modSite']['list'] = $mainObj->getBy($column, '%'. $value .'%');
+		$context['modSite']['list'] = $pages->getBy($column, '%'. $value .'%');
 
 		if (empty($context['modSite']['list']))
 			fatal_lang_error('ModSite_no_modsite_with_letter', false);
 
 
 		/* Pass the object to the template */
-		$context['modSite']['object'] = $mainObj;
+		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_download($mainObj)
+	function modsite_download($pages)
 	{
 		global $context, $boarddir, $modSettings, $user_info;
 
@@ -538,7 +537,7 @@ class ModSite extends Ohara
 			redirectexit();
 
 		/* All good, get the file info */
-		$mod = $mainObj->getSingle((int) $mainObj->clean($_GET['mid']));
+		$mod = $pages->getSingle((int) $pages->clean($_GET['mid']));
 
 		/* Build a correct path, the downloads dir ideally should be outside the web-accessible dir */
 		$file_path = $boarddir .'/'. $modSettings['ModSite_download_path'] .'/'. $mod['name'] .'.zip';
@@ -559,7 +558,7 @@ class ModSite extends Ohara
 		else
 		{
 			/* Update the downloads stat */
-			$mainObj->updateCount($mod['id']);
+			$pages->updateCount($mod['id']);
 
 			// Get the file's extension
 			$ext = substr($file_path, strrpos($file_path, '.') + 1);
