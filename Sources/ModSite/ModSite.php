@@ -207,9 +207,12 @@ class ModSite extends Ohara
 
 		$call = !empty($func) && isset($this->subActions[$func]) ?  $func : 'main';
 
-		// Call the appropriate method if the mod is enable
-		if (!empty($this->setting('enable')))
+		// Call the appropriate method if the mod is enable and also set some trivial template stuff...
+		if (!empty($this->setting('enable')) && allowedTo(self::$className .'_view'))
+		{
 			$call();
+			$this->render();
+		}
 
 		else
 			fatal_lang_error(self::$className .'_error_enable', false);
@@ -219,16 +222,18 @@ class ModSite extends Ohara
 	{
 		global $context, $scripturl, $txt, $modSettings;
 
-		/* Set the pagination and send everything to the template */
-		$this->render();
+		// Getting the current page.
+		$page = $this->data('page') ? $this->data('page') : 0;
+
+		// Get stuff
+
+		// Pagination
+
 	}
 
-	function category($pages)
+	function category()
 	{
 		global $context, $scripturl, $txt, $modSettings;
-
-		/* Are you allowed to see this page? */
-		$pages->permissions('view', true);
 
 		/* Getting the current page. */
 		$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
@@ -581,81 +586,13 @@ class ModSite extends Ohara
 		}
 	}
 
-	function pagination($array)
-	{
-		global $sourcedir, $context, $scripturl;
-
-		if (empty($array) || !is_array($array))
-			return false;
-
-		/* Get the pagination class */
-		require_once($sourcedir . '/OharaPagination.php');
-
-		/* Getting the current page. */
-		$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
-
-		/* Applying pagination. */
-		$pagination = new OharaPagination($array, $page,'?action=modsite;page=', '', 10, 3);
-		$pagination->PaginationArray();
-		$pagtrue = $pagination->PagTrue();
-
-		/* Send the array to the template if there is pagination */
-		if ($pagtrue)
-		{
-			$context['modSite']['all'] = $pagination->OutputArray();
-			$context['modSite']['panel'] = $pagination->OutputPanel();
-		}
-
-		/* If not, then let's use the default array */
-		else
-		{
-			$context['modSite']['all'] = $array;
-			$context['modSite']['panel'] = '';
-		}
-	}
-
-	protected function permissions($type, $fatal_error = false)
-	{
-		global $modSettings;
-
-		$type = is_array($type) ? array_unique($type) : array($type);
-		$allowed = array();
-
-		if (empty($type))
-			return false;
-
-		/* The mod must be enable */
-		if (empty($this->setting('enable')))
-			fatal_lang_error('ModSite_error_enable', false);
-
-		/* collect the permissions */
-		foreach ($type as $t)
-				$allowed[] = (allowedTo('ModSite_'. $t) == true ? 1 : 0);
-
-		/* You need at least 1 permission to be true */
-		if ($fatal_error == true && !in_array(1, $allowed))
-			isAllowedTo('ModSite_'. $t);
-
-		elseif ($fatal_error == false && !in_array(1, $allowed))
-			return false;
-
-		elseif ($fatal_error == false && in_array(1, $allowed))
-			return true;
-	}
-
 	protected function render($type)
 	{
-		global $context,
-
-		/* Getting the current page. */
-		$page = $this->data('page') ? $this->data('page') : 0;
-
-		/* Are you allowed to see this page? */
-		isAllowedTo(self::$className .'_view');
+		global $context;
 
 		// Template stuff.
 		$context['sub_template'] = self::$className .'_'. $type;
 		$context['canonical_url'] = $scripturl . '?action=modsite';
-		$context['page_title'] = $this->text('title_main') . ' - '. $this->text('title_'. $type) . (!empty($page) ? ' - '. $this->text('ui_page') .' '. $page : '');
+		$context['page_title'] = $this->text('title_main') . ' - '. (!empty($type) ? $this->text('title_'. $type) : '') . (!empty($this->page) ? ' - '. $this->text('ui_page') .' '. $this->page : '');
 	}
 }
