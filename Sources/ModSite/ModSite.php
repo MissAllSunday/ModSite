@@ -55,7 +55,7 @@ class ModSite extends Ohara
 
 	function actions(&$actions)
 	{
-		$actions['modsite'] = array('ModSite/ModSite.php', 'ModSite::dispatch');
+		$actions['modsite'] = array(self::$className .'/'. self::$className .'.php', self::$className .'::dispatch');
 	}
 
 	function menu(&$menu_buttons)
@@ -166,7 +166,7 @@ class ModSite extends Ohara
 
 	function dispatch()
 	{
-		global $txt, $sourcedir, $context, $scripturl, $settings;
+		global $sourcedir, $context;
 
 		/* Load both language and template files */
 		loadLanguage('ModSite');
@@ -177,6 +177,7 @@ class ModSite extends Ohara
 		require_once($sourcedir . '/ModSite/ModSiteParser.php');
 
 		$this->db = new ModSiteDB();
+		$this->parser = new ModSiteParser();
 
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite',
@@ -201,8 +202,7 @@ class ModSite extends Ohara
 		</script>';
 
 		/* It is faster to use $var() than use call_user_func_array */
-		if ($this->data('sa'))
-			$func = $pages->data('sa');
+		$func = $this->data('sa');
 
 		$call = !empty($func) && isset($this->subActions[$func]) ?  $func : 'main';
 
@@ -214,18 +214,20 @@ class ModSite extends Ohara
 			fatal_lang_error(self::$className .'_error_enable', false);
 	}
 
-	function modsite_main($pages)
+	function main()
 	{
 		global $context, $scripturl, $txt, $modSettings;
 
 		/* Getting the current page. */
-		$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
+		$page = $this->data('page') ? $this->data('page') : 0;
 
 		/* Are you allowed to see this page? */
-		$pages->permissions('view', true);
-		$context['sub_template'] = 'ModSite_main';
+		$this->permissions('view', true);
+
+		// Template stuff.
+		$context['sub_template'] = self::$className .'_main';
 		$context['canonical_url'] = $scripturl . '?action=modsite';
-		$context['page_title'] = $this->text('title_main') .' - '. $txt['ModSite_ui_page'] .' '. $page ;
+		$context['page_title'] = $this->text('title_main') . (!empty($page) ? ' - '. $this->text('ui_page') .' '. $page : '');
 
 		/* Pass the object to the template */
 		$context['modSite']['object'] = $pages;
@@ -623,5 +625,34 @@ class ModSite extends Ohara
 			$context['modSite']['all'] = $array;
 			$context['modSite']['panel'] = '';
 		}
+	}
+
+	protected function permissions($type, $fatal_error = false)
+	{
+		global $modSettings;
+
+		$type = is_array($type) ? array_unique($type) : array($type);
+		$allowed = array();
+
+		if (empty($type))
+			return false;
+
+		/* The mod must be enable */
+		if (empty($this->setting('enable')))
+			fatal_lang_error('ModSite_error_enable', false);
+
+		/* collect the permissions */
+		foreach ($type as $t)
+				$allowed[] = (allowedTo('ModSite_'. $t) == true ? 1 : 0);
+
+		/* You need at least 1 permission to be true */
+		if ($fatal_error == true && !in_array(1, $allowed))
+			isAllowedTo('ModSite_'. $t);
+
+		elseif ($fatal_error == false && !in_array(1, $allowed))
+			return false;
+
+		elseif ($fatal_error == false && in_array(1, $allowed))
+			return true;
 	}
 }
