@@ -11,6 +11,7 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
+// Not that it matters where I require this since this very ow file is require EVERYWHERE!
 require_once($sourcedir . '/Ohara.php');
 
 class ModSite extends Ohara
@@ -100,7 +101,7 @@ class ModSite extends Ohara
 			array('text', self::$className .'_github_username', 'subtext' => $this->text('github_username_sub')),
 			array(
 				'select',
-				'ModSite_menu_position',
+				self::$className .'_menu_position',
 				array(
 					'home' => $txt['home'],
 					'help' => $txt['help'],
@@ -130,13 +131,15 @@ class ModSite extends Ohara
 		if (isset($_GET['save']))
 		{
 			checkSession();
-			$save_vars = $config_vars;
-			saveDBSettings($save_vars);
+
+			// Should put some checks here but then again, this mod isn't intended for the regular "dumb" user...
+			saveDBSettings($config_vars);
 			redirectexit('action=admin;area=modsettings;sa=modsite');
 		}
 		prepareDBSettingContext($config_vars);
 	}
 
+	// Should really build a function on Ohara to handle adding permissions and avoid building redundant code...
 	function permissions(&$permissionGroups, &$permissionList)
 	{
 		$permissionGroups['membergroup']['simple'] = array(self::$className .'_per_simple');
@@ -165,26 +168,23 @@ class ModSite extends Ohara
 	{
 		global $txt, $sourcedir, $context, $scripturl, $settings;
 
+		/* Load both language and template files */
+		loadLanguage('ModSite');
+		loadtemplate('ModSite', 'gh-fork-ribbon');
 
-			if (empty($pages))
-			{
-				require_once($sourcedir .'/ModSite/ModSiteParser.php');
-				require_once($sourcedir .'/ModSite/ModSitePages.php');
+		// This is a good time to stuff the memory with yet moar files!
+		require_once($sourcedir . '/ModSite/ModSiteDB.php');
+		require_once($sourcedir . '/ModSite/ModSiteParser.php');
 
-				$pages = new ModSitePages($this);
-			}
+		$this->db = new ModSiteDB();
 
-			/* Load both language and template files */
-			loadLanguage('ModSite');
-			loadtemplate('ModSite', 'gh-fork-ribbon');
+		$context['linktree'][] = array(
+			'url' => $scripturl. '?action=modsite',
+			'name' => $this->text('title_main'),
+		);
 
-			$context['linktree'][] = array(
-				'url' => $scripturl. '?action=modsite',
-				'name' => $this->text('title_main'),
-			);
-
-			/* Set some JavaScript to hide blocks */
-			$context['html_headers'] .= '
+		/* Set some JavaScript to hide blocks */
+		$context['html_headers'] .= '
 		<script language="JavaScript"  type="text/javascript">
 		<!--
 		function toggleDiv(divid, obj){
@@ -200,18 +200,18 @@ class ModSite extends Ohara
 		//-->
 		</script>';
 
-			/* It is faster to use $var() than use call_user_func_array */
-			if ($this->data('sa'))
-				$func = $pages->data('sa');
+		/* It is faster to use $var() than use call_user_func_array */
+		if ($this->data('sa'))
+			$func = $pages->data('sa');
 
-			$call = 'ModSite_' .(!empty($func) && in_array($func, array_values($subActions)) ?  $func : 'main');
+		$call = !empty($func) && isset($this->subActions[$func]) ?  $func : 'main';
 
-			// Call the appropriate method if the mod is enable
-			if (!empty($this->setting('enable')))
-				$call($pages);
+		// Call the appropriate method if the mod is enable
+		if (!empty($this->setting('enable')))
+			$call();
 
-			else
-				fatal_lang_error('ModSite_error_enable', false);
+		else
+			fatal_lang_error(self::$className .'_error_enable', false);
 	}
 
 	function modsite_main($pages)

@@ -10,7 +10,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-class ModSitePages
+class ModSiteDB extends ModSite
 {
 	protected $_table = array(
 		'name' => 'mod_site',
@@ -19,10 +19,7 @@ class ModSitePages
 
 	public static $name = 'modsite';
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
+	public function __construct(){}
 
 	public function add($data)
 	{
