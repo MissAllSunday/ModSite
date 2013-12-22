@@ -47,11 +47,11 @@ $txt['ModSite_error_message'] = 'There was an error:';
 $txt['ModSite_error_empty_field'] = ' field was left empty';
 $txt['ModSite_error_enable'] = 'The mod is not enable';
 $txt['ModSite_error_no_valid_id'] = 'No valid action';
-$txt['cannot_modsite_view'] = 'I\'m sorry you cannot view the modsite';
-$txt['cannot_modsite_search'] = 'I\'m sorry you cannot search the modsite';
-$txt['cannot_modsite_edit'] = 'I\'m sorry you cannot edit the modsite';
-$txt['cannot_modsite_add'] = 'I\'m sorry you cannot add new items to the modsite';
-$txt['cannot_modsite_delete'] = 'I\'m sorry you cannot delete items from the modsite';
+$txt['cannot_ModSite_view'] = 'I\'m sorry you cannot view the modsite';
+$txt['cannot_ModSite_search'] = 'I\'m sorry you cannot search the modsite';
+$txt['cannot_ModSite_edit'] = 'I\'m sorry you cannot edit the modsite';
+$txt['cannot_ModSite_add'] = 'I\'m sorry you cannot add new items to the modsite';
+$txt['cannot_ModSite_delete'] = 'I\'m sorry you cannot delete items from the modsite';
 
 /* UI */
 $txt['ModSite_ui_github'] = 'Github repo';
@@ -76,15 +76,15 @@ $txt['ModSite_ui_outdated'] = 'This mod is outdated!';
 $txt['ModSite_ui_outdated_sub'] = 'This mod has been archived, it is outdated and its not going to be updated anymore. Use it at your own risk.';
 
 // Permissions strings
-$txt['permissiongroup_simple_modsite_per_simple'] = 'Mod site permissions';
-$txt['permissiongroup_modsite_per_classic'] = 'Mod site permissions';
-$txt['permissionname_modsite_search'] = 'Search the Mod site';
-$txt['permissionname_modsite_editOwn'] = 'Edit own mods';
-$txt['permissionname_modsite_edit'] = 'Edit any mod';
-$txt['permissionname_modsite_view'] = 'View mods';
-$txt['permissionname_modsite_add'] = 'Add mods';
-$txt['permissionname_modsite_delete'] = 'Delete any mods';
-$txt['permissionname_modsite_deleteOwn'] = 'Delete own mods';
+$txt['permissiongroup_simple_ModSite_per_simple'] = 'Mod site permissions';
+$txt['permissiongroup_ModSite_per_classic'] = 'Mod site permissions';
+$txt['permissionname_ModSite_search'] = 'Search the Mod site';
+$txt['permissionname_ModSite_editOwn'] = 'Edit own mods';
+$txt['permissionname_ModSite_edit'] = 'Edit any mod';
+$txt['permissionname_ModSite_view'] = 'View mods';
+$txt['permissionname_ModSite_add'] = 'Add mods';
+$txt['permissionname_ModSite_delete'] = 'Delete any mods';
+$txt['permissionname_ModSite_deleteOwn'] = 'Delete own mods';
 
 // Who's online strings
 $txt['whoall_modsite'] = 'Viewing the <a href="'. $scripturl. '?action=faq">Mod site</a>.';

@@ -178,6 +178,7 @@ class ModSite extends Ohara
 
 		$this->db = new ModSiteDB();
 		$this->parser = new ModSiteParser();
+		$this->tools = new ModSiteTools();
 
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite',
@@ -218,22 +219,11 @@ class ModSite extends Ohara
 	{
 		global $context, $scripturl, $txt, $modSettings;
 
-		/* Getting the current page. */
-		$page = $this->data('page') ? $this->data('page') : 0;
-
-		/* Are you allowed to see this page? */
-		$this->permissions('view', true);
-
-		// Template stuff.
-		$context['sub_template'] = self::$className .'_main';
-		$context['canonical_url'] = $scripturl . '?action=modsite';
-		$context['page_title'] = $this->text('title_main') . (!empty($page) ? ' - '. $this->text('ui_page') .' '. $page : '');
-
 		/* Set the pagination and send everything to the template */
-		modsite_pagination($pages->getAll());
+		$this->render();
 	}
 
-	function modsite_category($pages)
+	function category($pages)
 	{
 		global $context, $scripturl, $txt, $modSettings;
 
@@ -270,7 +260,7 @@ class ModSite extends Ohara
 		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_add($pages)
+	function add($pages)
 	{
 		global $context, $scripturl, $txt, $sourcedir;
 
@@ -291,7 +281,7 @@ class ModSite extends Ohara
 		$context['modSite']['edit'] = false;
 	}
 
-	function modsite_add2($pages)
+	function add2($pages)
 	{
 		checkSession('post', '', true);
 
@@ -346,7 +336,7 @@ class ModSite extends Ohara
 		redirectexit('action=modsite;sa=success;pin='. $method);
 	}
 
-	function modsite_edit($pages)
+	function edit($pages)
 	{
 		global $context, $scripturl, $modSettings, $sourcedir, $txt;
 
@@ -375,7 +365,7 @@ class ModSite extends Ohara
 		);
 	}
 
-	function modsite_delete($pages)
+	function delete($pages)
 	{
 		global $context, $txt;
 
@@ -393,7 +383,7 @@ class ModSite extends Ohara
 		}
 	}
 
-	function modsite_success($pages)
+	function success($pages)
 	{
 		global $context, $scripturl, $txt;
 
@@ -417,7 +407,7 @@ class ModSite extends Ohara
 		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_single($pages)
+	function single($pages)
 	{
 		global $context, $scripturl, $txt, $user_info;
 
@@ -450,7 +440,7 @@ class ModSite extends Ohara
 		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_list($pages)
+	function list($pages)
 	{
 		global $context, $txt, $scripturl;
 
@@ -491,7 +481,7 @@ class ModSite extends Ohara
 		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_search($pages)
+	function search($pages)
 	{
 		global $context, $txt, $scripturl;
 
@@ -523,7 +513,7 @@ class ModSite extends Ohara
 		$context['modSite']['object'] = $pages;
 	}
 
-	function modsite_download($pages)
+	function download($pages)
 	{
 		global $context, $boarddir, $modSettings, $user_info;
 
@@ -591,7 +581,7 @@ class ModSite extends Ohara
 		}
 	}
 
-	function modsite_pagination($array)
+	function pagination($array)
 	{
 		global $sourcedir, $context, $scripturl;
 
@@ -651,5 +641,21 @@ class ModSite extends Ohara
 
 		elseif ($fatal_error == false && in_array(1, $allowed))
 			return true;
+	}
+
+	protected function render($type)
+	{
+		global $context,
+
+		/* Getting the current page. */
+		$page = $this->data('page') ? $this->data('page') : 0;
+
+		/* Are you allowed to see this page? */
+		isAllowedTo(self::$className .'_view');
+
+		// Template stuff.
+		$context['sub_template'] = self::$className .'_'. $type;
+		$context['canonical_url'] = $scripturl . '?action=modsite';
+		$context['page_title'] = $this->text('title_main') . ' - '. $this->text('title_'. $type) . (!empty($page) ? ' - '. $this->text('ui_page') .' '. $page : '');
 	}
 }

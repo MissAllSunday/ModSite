@@ -10,7 +10,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-class ModSiteDB
+class ModSiteDB extends ModSite
 {
 	protected $_table = array(
 		'name' => 'mod_site',
@@ -225,6 +225,35 @@ class ModSiteDB
 		global $smcFunc;
 
 		return $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($string, ENT_QUOTES, ENT_QUOTES));
+	}
+
+	public function permissions($type, $fatal_error = false)
+	{
+		global $modSettings;
+
+		$type = is_array($type) ? array_unique($type) : array($type);
+		$allowed = array();
+
+		if (empty($type))
+			return false;
+
+		/* The mod must be enable */
+		if (empty($this->setting('enable')))
+			fatal_lang_error('ModSite_error_enable', false);
+
+		/* collect the permissions */
+		foreach ($type as $t)
+				$allowed[] = (allowedTo('ModSite_'. $t) == true ? 1 : 0);
+
+		/* You need at least 1 permission to be true */
+		if ($fatal_error == true && !in_array(1, $allowed))
+			isAllowedTo('ModSite_'. $t);
+
+		elseif ($fatal_error == false && !in_array(1, $allowed))
+			return false;
+
+		elseif ($fatal_error == false && in_array(1, $allowed))
+			return true;
 	}
 
 	protected function cleanCache()
