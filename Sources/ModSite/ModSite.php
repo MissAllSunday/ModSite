@@ -229,9 +229,6 @@ class ModSite extends Ohara
 		$context['canonical_url'] = $scripturl . '?action=modsite';
 		$context['page_title'] = $this->text('title_main') . (!empty($page) ? ' - '. $this->text('ui_page') .' '. $page : '');
 
-		/* Pass the object to the template */
-		$context['modSite']['object'] = $pages;
-
 		/* Set the pagination and send everything to the template */
 		modsite_pagination($pages->getAll());
 	}
