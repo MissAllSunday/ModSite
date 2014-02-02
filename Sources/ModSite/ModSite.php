@@ -11,12 +11,12 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-// Not that it matters where I require this since this very ow file is require EVERYWHERE!
+// Not that it matters where I require this since this very own file is required EVERYWHERE!
 require_once($sourcedir . '/Ohara.php');
 
 class ModSite extends Ohara
 {
-	protected static $className = __CLASS__;
+	protected static $name = __CLASS__;
 	protected $hooks = array();
 	protected $subActions = array(
 		'add',
@@ -211,58 +211,49 @@ class ModSite extends Ohara
 		if (!empty($this->setting('enable')) && allowedTo(self::$className .'_view'))
 		{
 			$call();
-			$this->render();
+			$this->render($call);
 		}
 
+		// Ain't nobody got time for that!
 		else
 			fatal_lang_error(self::$className .'_error_enable', false);
 	}
 
-	function main()
+	protected function main()
 	{
 		global $context, $scripturl, $txt, $modSettings;
 
 		// Getting the current page.
-		$page = $this->data('page') ? $this->data('page') : 0;
+		$this->page = $this->data('page') ? $this->data('page') : 0;
 
 		// Get stuff
 
 		// Pagination
-
+		$this->pagination();
 	}
 
-	function category()
+	protected function category()
 	{
 		global $context, $scripturl, $txt, $modSettings;
 
-		/* Getting the current page. */
-		$page = !empty($_GET['page']) ? ( int) trim($_GET['page']) : 1;
+		// Getting the current page.
+		$this->page = $this->data('page') ? $this->data('page') : 0;
 
 		/* Set some needed vars */
 		$context['sub_template'] = 'ModSite_main';
 		$context['canonical_url'] = $scripturl . '?action=modsite;sa=category';
 
 		/* We need a valid ID */
-		if (!isset($_GET['mid']) || empty($_GET['mid']))
-			fatal_lang_error('ModSite_error_no_valid_id', false);
+		$catID = $this->data('mid');
 
-		$catID = (int) $pages->clean($_GET['mid']);
+		if (!$catID)
+			fatal_lang_error(self::$className .'_error_no_valid_id', false);
 
 		/* Get the cat name */
-		$cat = $pages->getSingleCat($catID);
+		$cat = $this->db->getSingleCat($catID);
 
 		/* Get all mods within category X, we are gonna reuse the main template ^-^ */
-		modsite_pagination($pages->getBy('cat', $catID));
-
-		/* We got what we need, pass it to the template */
-		$context['page_title'] = $txt['ModSite_ui_cat'] .' - '. $cat['name'] .' - '. $txt['ModSite_ui_page'] .' '. $page ;;
-		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=category;mid='. $catID,
-			'name' => $context['page_title'],
-		);
-
-		/* Pass the object to the template */
-		$context['modSite']['object'] = $pages;
+		$context[self::$className]['data'] = $this->db->getBy('cat', $catID);
 	}
 
 	function add($pages)
