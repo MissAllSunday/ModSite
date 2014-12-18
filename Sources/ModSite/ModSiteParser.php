@@ -10,7 +10,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-class ModSiteParser extends ModSite
+class ModSiteParser extends ModSiteDB
 {
 	protected $_jsonDir = '';
 	protected $_apiAcceptableStatus = array('good', 'minor');

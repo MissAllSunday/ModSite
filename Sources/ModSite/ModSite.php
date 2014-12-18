@@ -11,10 +11,7 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-// Not that it matters where I require this since this very own file is required EVERYWHERE!
-require_once($sourcedir . '/Ohara.php');
-
-class ModSite extends Ohara
+class ModSite extends ModSiteDB
 {
 	protected static $name = __CLASS__;
 	protected $hooks = array();
@@ -36,16 +33,6 @@ class ModSite extends Ohara
 	 */
 	protected function __construct()
 	{
-		$this->hooks = array(
-			'integrate_menu_buttons' => 'menu',
-			'integrate_actions' => 'actions',
-			'integrate_load_permissions' => 'permissions',
-			'integrate_admin_areas' => 'adminAreas',
-			'integrate_modify_modifications' => 'modifications',
-		);
-
-		// Call the helper
-		parent::__construct();
 	}
 
 	protected function adminAreas(&$areas)

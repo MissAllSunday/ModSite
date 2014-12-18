@@ -10,7 +10,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-class ModSiteDB extends ModSite
+class ModSiteDB extends Suki\Ohara
 {
 	protected $_table = array(
 		'name' => 'mod_site',
