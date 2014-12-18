@@ -32,9 +32,11 @@
 		exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
 
 	$hooks = array(
-		'integrate_pre_include' => '$sourcedir/ModSite/ModSite.php',
-		'integrate_menu_buttons' => 'ModSite::menu',
-		'integrate_actions' => 'ModSite::actions',
+		'integrate_menu_buttons' => 'ModSite.php|ModSite::menu#',
+		'integrate_actions' => 'ModSite.php|ModSite::actions',
+		'integrate_load_permissions' => 'ModSite.php|ModSite::permissions',
+		'integrate_admin_areas' => 'ModSite.php|ModSite::adminAreas',
+		'integrate_modify_modifications' => 'ModSite.php|ModSite::modifications',
 	);
 
 		$call = 'remove_integration_function';
