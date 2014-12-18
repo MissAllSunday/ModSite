@@ -11,10 +11,9 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-class ModSite extends ModSiteDB
+class ModSite extends suki\Ohara
 {
-	protected static $name = __CLASS__;
-	protected $hooks = array();
+	public $name = __CLASS__;
 	protected $subActions = array(
 		'add',
 		'add2',
@@ -31,8 +30,26 @@ class ModSite extends ModSiteDB
 	/**
 	 * Setup the object, gather all of the relevant settings
 	 */
-	protected function __construct()
+	public function __construct()
 	{
+		$this->setRegistry();
+		$this->set();
+	}
+
+	protected function set()
+	{
+
+		$_services = array('db' => 'ModSiteDB', 'parser' => 'ModSiteParser');
+
+		foreach($services as $key => $s)
+		{
+			require_once $this->sourceDir .'/'. $s .'.php';
+
+			$this[$k] = function ()
+			{
+				return new $s();
+			};
+		}
 	}
 
 	protected function adminAreas(&$areas)

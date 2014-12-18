@@ -10,14 +10,12 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-class ModSiteDB extends Suki\Ohara
+class ModSiteDB
 {
 	protected $_table = array(
 		'name' => 'mod_site',
 		'columns' => array('id', 'name', 'cat', 'downloads'),
 	);
-
-	public static $name = 'modsite';
 
 	public function __construct(){}
 
