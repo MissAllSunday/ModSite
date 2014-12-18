@@ -59,7 +59,7 @@ class ModSite extends suki\Ohara
 
 	function actions(&$actions)
 	{
-		$actions['modsite'] = array(self::$className .'/'. self::$className .'.php', self::$className .'::dispatch');
+		$actions['modsite'] = array($this->name .'.php', $this->name .'::call#');
 	}
 
 	function menu(&$menu_buttons)
@@ -97,15 +97,15 @@ class ModSite extends suki\Ohara
 		global $context, $scripturl, $txt;
 
 		$config_vars = array(
-			array('desc', self::$className .'_admin_sub'),
-			array('check', self::$className .'_enable', 'subtext' => $this->text('enable_sub')),
-			array('int', self::$className .'_latest_limit', 'subtext' => $this->text('latest_limit_sub'), 'size' => 3),
-			array('int', self::$className .'_pag_limit', 'subtext' => $this->text('pag_limit_sub'), 'size' => 3),
-			array('text', self::$className .'_json_dir', 'subtext' => $this->text('json_dir_sub')),
-			array('text', self::$className .'_github_username', 'subtext' => $this->text('github_username_sub')),
+			array('desc', $this->name .'_admin_sub'),
+			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub')),
+			array('int', $this->name .'_latest_limit', 'subtext' => $this->text('latest_limit_sub'), 'size' => 3),
+			array('int', $this->name .'_pag_limit', 'subtext' => $this->text('pag_limit_sub'), 'size' => 3),
+			array('text', $this->name .'_json_dir', 'subtext' => $this->text('json_dir_sub')),
+			array('text', $this->name .'_github_username', 'subtext' => $this->text('github_username_sub')),
 			array(
 				'select',
-				self::$className .'_menu_position',
+				$this->name .'_menu_position',
 				array(
 					'home' => $txt['home'],
 					'help' => $txt['help'],
@@ -115,7 +115,7 @@ class ModSite extends suki\Ohara
 				),
 				'subtext' => $this->text('menu_position_sub')
 			),
-			array('text', self::$className .'_download_path'),
+			array('text', $this->name .'_download_path'),
 		);
 
 		if ($return_config)
@@ -146,43 +146,35 @@ class ModSite extends suki\Ohara
 	// Should really build a function on Ohara to handle adding permissions and avoid building redundant code...
 	function permissions(&$permissionGroups, &$permissionList)
 	{
-		$permissionGroups['membergroup']['simple'] = array(self::$className .'_per_simple');
-		$permissionGroups['membergroup']['classic'] = array(self::$className .'_per_classic');
+		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
+		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
 
-		$permissionList['membergroup'][self::$className .'_view'] = array(
+		$permissionList['membergroup'][$this->name .'_view'] = array(
 			false,
-			self::$className .'_classic',
-			self::$className .'_per_simple');
+			$this->name .'_classic',
+			$this->name .'_per_simple');
 
-		$permissionList['membergroup'][self::$className .'_delete'] = array(
+		$permissionList['membergroup'][$this->name .'_delete'] = array(
 			false,
-			self::$className .'_per_classic',
-			self::$className .'_per_simple');
-		$permissionList['membergroup'][self::$className .'_add'] = array(
+			$this->name .'_per_classic',
+			$this->name .'_per_simple');
+		$permissionList['membergroup'][$this->name .'_add'] = array(
 			false,
-			self::$className .'_per_classic',
-			self::$className .'_simple');
-		$permissionList['membergroup'][self::$className .'_edit'] = array(
+			$this->name .'_per_classic',
+			$this->name .'_simple');
+		$permissionList['membergroup'][$this->name .'_edit'] = array(
 			false,
-			self::$className .'_per_classic',
-			self::$className .'_per_simple');
+			$this->name .'_per_classic',
+			$this->name .'_per_simple');
 	}
 
-	function dispatch()
+	function call()
 	{
 		global $sourcedir, $context;
 
 		/* Load both language and template files */
-		loadLanguage('ModSite');
-		loadtemplate('ModSite', 'gh-fork-ribbon');
-
-		// This is a good time to stuff the memory with yet moar files!
-		require_once($sourcedir . '/ModSite/ModSiteDB.php');
-		require_once($sourcedir . '/ModSite/ModSiteParser.php');
-
-		$this->db = new ModSiteDB();
-		$this->parser = new ModSiteParser();
-		$this->tools = new ModSiteTools();
+		loadLanguage($this->name);
+		loadtemplate($this->name, 'gh-fork-ribbon');
 
 		$context['linktree'][] = array(
 			'url' => $scripturl. '?action=modsite',
@@ -212,7 +204,7 @@ class ModSite extends suki\Ohara
 		$call = !empty($func) && isset($this->subActions[$func]) ?  $func : 'main';
 
 		// Call the appropriate method if the mod is enable and also set some trivial template stuff...
-		if (!empty($this->setting('enable')) && allowedTo(self::$className .'_view'))
+		if (!empty($this->setting('enable')) && allowedTo($this->name .'_view'))
 		{
 			$call();
 			$this->render($call);
@@ -220,7 +212,7 @@ class ModSite extends suki\Ohara
 
 		// Ain't nobody got time for that!
 		else
-			fatal_lang_error(self::$className .'_error_enable', false);
+			fatal_lang_error($this->name .'_error_enable', false);
 	}
 
 	protected function main()
@@ -251,13 +243,13 @@ class ModSite extends suki\Ohara
 		$catID = $this->data('mid');
 
 		if (!$catID)
-			fatal_lang_error(self::$className .'_error_no_valid_id', false);
+			fatal_lang_error($this->name .'_error_no_valid_id', false);
 
 		/* Get the cat name */
 		$cat = $this->db->getSingleCat($catID);
 
 		/* Get all mods within category X, we are gonna reuse the main template ^-^ */
-		$context[self::$className]['data'] = $this->db->getBy('cat', $catID);
+		$context[$this->name]['data'] = $this->db->getBy('cat', $catID);
 	}
 
 	function add($pages)
@@ -586,7 +578,7 @@ class ModSite extends suki\Ohara
 		global $context;
 
 		// Template stuff.
-		$context['sub_template'] = self::$className .'_'. $type;
+		$context['sub_template'] = $this->name .'_'. $type;
 		$context['canonical_url'] = $scripturl . '?action=modsite';
 		$context['page_title'] = $this->text('title_main') . ' - '. (!empty($type) ? $this->text('title_'. $type) : '') . (!empty($this->page) ? ' - '. $this->text('ui_page') .' '. $this->page : '');
 	}
