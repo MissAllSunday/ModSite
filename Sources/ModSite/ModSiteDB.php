@@ -101,7 +101,6 @@ class ModSiteDB extends ModSiteParser
 			ORDER BY {literal:name DESC}
 			LIMIT {int:start}, {int:maxIndex}',
 			array(
-				'sort' => 'name DESC',
 				'start' => !empty($start) ? $start : 0,
 				'maxIndex' => !empty($maxIndex) ? $maxIndex : 0,
 			)

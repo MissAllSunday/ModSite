@@ -192,15 +192,18 @@ class ModSite extends ModSiteDB
 
 	protected function main()
 	{
-		global $context, $txt, $modSettings;
+		global $context;
 
-		// Getting the current page.
-		$this->page = $this->data('page') ? $this->data('page') : 0;
+		// Prepare the pagination vars.
+		$maxIndex = 10;
+		$start = $this->data('start') ? $this->data('start') : 0;
+		$count =  $this->countMods();
 
-		// Get stuff
+		// Get stuff.
+		$context[$this->name]['data'] = $this->getAll($start, $maxIndex);
 
-		// Pagination
-		$this->pagination();
+		// Pagination.
+		$context['pagination'] = constructPageIndex($scripturl . '?action=modsite', $start, $count, $maxIndex, false);
 	}
 
 	protected function category()
