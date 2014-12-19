@@ -26,8 +26,6 @@ class ModSite extends ModSiteDB
 		'download',
 		'category',
 	);
-	protected $_jsonDir = '';
-	protected $_apiAcceptableStatus = array('good', 'minor');
 
 	public function __construct()
 	{
@@ -183,7 +181,19 @@ class ModSite extends ModSiteDB
 
 		// Call the appropriate method.
 		if (!empty($this->setting('enable')) && allowedTo($this->name .'_view'))
+		{
+			// Use the default template unless a method says otherwise.
+			$context['sub_template'] = 'main';
+
+			// Set a nice canonical page.
+			$context['canonical_url'] = $this->scriptUrl . '?action=modsite;' .($call != 'main' ? ('sa='. $call) : '');
+
+			// Prepare the pagination vars.
+			$this->maxIndex = 10;
+			$this->start = $this->data('start') ? $this->data('start') : 0;
+
 			$this->$call();
+		}
 
 		// Ain't nobody got time for that!
 		else
@@ -194,187 +204,29 @@ class ModSite extends ModSiteDB
 	{
 		global $context;
 
-		// Prepare the pagination vars.
-		$maxIndex = 10;
-		$start = $this->data('start') ? $this->data('start') : 0;
-		$count =  $this->countMods();
-
 		// Get stuff.
 		$context[$this->name]['data'] = $this->getAll($start, $maxIndex);
 
 		// Pagination.
-		$context['pagination'] = constructPageIndex($scripturl . '?action=modsite', $start, $count, $maxIndex, false);
+		$context['pagination'] = constructPageIndex($this->scriptUrl . '?action=modsite', $this->start, $this->countMods(), $this->maxIndex, false);
 	}
 
 	protected function category()
 	{
 		global $context, $txt, $modSettings;
 
-		// Getting the current page.
-		$this->page = $this->data('page') ? $this->data('page') : 0;
 
-		/* Set some needed vars */
-		$context['sub_template'] = 'ModSite_main';
-		$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa=category';
-
-		/* We need a valid ID */
+		// We need a valid ID.
 		$catID = $this->data('mid');
 
 		if (!$catID)
 			fatal_lang_error($this->name .'_error_no_valid_id', false);
 
-		/* Get the cat name */
-		$cat = $this->db->getSingleCat($catID);
+		// Get the cat name.
+		$cat = $this->getSingleCat($catID);
 
-		/* Get all mods within category X, we are gonna reuse the main template ^-^ */
-		$context[$this->name]['data'] = $this->db->getBy('cat', $catID);
-	}
-
-	function add($pages)
-	{
-		global $context, $txt;
-
-		/* Check permissions */
-		$pages->permissions('add', true);
-
-		$context['sub_template'] = 'ModSite_add';
-		$context['page_title'] = $txt['ModSite_edit_creating'];
-		$context['linktree'][] = array(
-			'url' => $this->scriptUrl. '?action=modsite;sa=add',
-			'name' => $context['page_title'],
-		);
-
-		/* Pass the object to the template */
-		$context['modSite']['object'] = $pages;
-
-		/* Tell the template we are adding, not editing */
-		$context['modSite']['edit'] = false;
-	}
-
-	function add2($pages)
-	{
-		checkSession('post', '', true);
-
-		/* Check permissions */
-		$pages->permissions(isset($_REQUEST['edit']) ? 'edit' : 'add', true);
-
-		/* Gotta send the user back to the form and tell them theres a missing field */
-		if (empty($_REQUEST['name']))
-			redirectexit('action=modsite;sa=add;missing=name');
-
-		/* Set the method name */
-		$method = 'add';
-
-		/* Let us continue... */
-		$data = array(
-			$pages->clean($_REQUEST['name']),
-		);
-
-		/* Are we editing */
-		if(isset($_REQUEST['edit']))
-		{
-			/* If editing, we need the ID */
-			if (!isset($_GET['mid']) || empty($_GET['mid']))
-				redirectexit('action=modsite;sa=add;missing=ID');
-
-			/* Make some checks if we are editing */
-			else
-			{
-				$mid = (int) $pages->clean($_GET['mid']);
-
-				/* Make sure it does exists... */
-				$current = $pages->doesExists($mid);
-
-				/* Tell the user this entry doesn't exists anymore */
-				if (empty($current))
-					fatal_lang_error('ModSite_error_no_valid_id', false);
-			}
-
-			/* All good, append the ID */
-			$data += array(
-				!empty($mid) ? $mid : 0,
-			);
-
-			/* And finally, change the method */
-			$method = 'edit';
-		}
-
-		/* Call the DB */
-		$pages->$method($data);
-
-		/* All done, show a nice page */
-		redirectexit('action=modsite;sa=success;pin='. $method);
-	}
-
-	function edit($pages)
-	{
-		global $context, $modSettings, $txt;
-
-		$pages->permissions('edit', true);
-
-		if (!isset($_GET['mid']) || empty($_GET['mid']))
-			redirectexit('action=modsite');
-
-		/* Pass the object to the template */
-		$context['modSite']['object'] = $pages;
-
-		$mid = (int) $pages->clean($_GET['mid']);
-
-		/* Get the mod */
-		$temp = $pages->getSingle($mid);
-
-		if (empty($temp))
-			fatal_lang_error('ModSite_no_valid_id', false);
-
-		$context['modSite']['edit'] = $temp;
-		$context['sub_template'] = 'ModSite_add';
-		$context['page_title'] = $txt['ModSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
-		$context['linktree'][] = array(
-			'url' => $this->scriptUrl. '?action=modsite;sa=edit;mid='. $mid,
-			'name' => $txt['ModSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
-		);
-	}
-
-	function delete($pages)
-	{
-		global $context, $txt;
-
-		$pages->permissions('delete', true);
-
-		/* Gotta have an ID to work with */
-		if (!isset($_GET['mid']) || empty($_GET['mid']))
-			redirectexit('action=modsite');
-
-		else
-		{
-			$mid = (int) $pages->clean($_GET['mid']);
-			$pages->delete($mid);
-			redirectexit('action=modsite;sa=success;pin=delete');
-		}
-	}
-
-	function success($pages)
-	{
-		global $context, $txt;
-
-		/* No direct access */
-		if (!isset($_GET['pin']) || empty($_GET['pin']))
-			redirectexit('action=modsite');
-
-		$context['modSite']['pin'] = $pages->clean($_GET['pin']);
-
-		/* Build the link tree.... */
-		$context['page_title'] = $txt['ModSite_success_message_title'];
-		$context['linktree'][] = array(
-			'url' => $this->scriptUrl . '?action=modsite;sa=success',
-			'name' => $context['page_title'],
-		);
-
-		$context['sub_template'] = 'ModSite_success';
-		$context['modSite']['message'] = $txt['ModSite_success_message_'. $context['modSite']['pin']];
-
-		/* Pass the object to the template */
-		$context['modSite']['object'] = $pages;
+		// Get all mods within category X, we are gonna reuse the main template ^-^
+		$context[$this->name]['data'] = $this->getBy('cat', $catID);
 	}
 
 	function single($pages)

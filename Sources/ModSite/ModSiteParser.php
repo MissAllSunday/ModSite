@@ -14,6 +14,8 @@ class ModSiteParser extends Suki\Ohara
 {
 	// Cheating!
 	public $name = 'ModSite';
+	protected $_jsonDir = '';
+	protected $_apiAcceptableStatus = array('good', 'minor');
 
 	public function __construct()
 	{
