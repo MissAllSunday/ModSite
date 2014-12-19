@@ -14,7 +14,7 @@ if (!defined('SMF'))
 class ModSite extends ModSiteDB
 {
 	public $name = __CLASS__;
-	protected $_subActions = array(
+	public $subActions = array(
 		'add',
 		'add2',
 		'delete',
@@ -179,7 +179,7 @@ class ModSite extends ModSiteDB
 		</script>';
 
 		// Get the right subaction.
-		$call = $this->data('sa') && in_array($this->data('sa'), $this->_subActions) ?  $this->data('sa') : 'main';
+		$call = $this->data('sa') && in_array($this->data('sa'), $this->subActions) ?  $this->data('sa') : 'main';
 
 		// Call the appropriate method.
 		if (!empty($this->setting('enable')) && allowedTo($this->name .'_view'))
