@@ -10,14 +10,35 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-class ModSiteDB
+class ModSiteDB extends ModSiteParser
 {
 	protected $_table = array(
 		'name' => 'mod_site',
 		'columns' => array('id', 'name', 'cat', 'downloads'),
 	);
+	protected static $_count = 0;
 
 	public function __construct(){}
+
+	public function countMods()
+	{
+		global $smcFunc;
+
+		// Don't need to do this that often.
+		if (!empty(static::$_count))
+			return static::$_count;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id
+			FROM {db_prefix}' . $this->_table['name'],
+			array()
+		);
+
+		static::$_count =  $smcFunc['db_num_rows']($request);
+		$smcFunc['db_free_result']($request);
+
+		return static::$_count;
+	}
 
 	public function add($data)
 	{
@@ -70,37 +91,34 @@ class ModSiteDB
 		return $smcFunc['db_num_rows']($query);
 	}
 
-	public function getAll()
+	public function getAll($start, $maxIndex)
 	{
-		global $smcFunc, $scripturl, $txt;
+		global $smcFunc;
 
-		/* Use the cache when possible */
-		if (($return = cache_get_data(modsite::$name .'_all', 3600)) == null)
-		{
-			$result = $smcFunc['db_query']('', '
-				SELECT '. (implode(', ', $this->_table['columns'])) .'
-				FROM {db_prefix}' . ($this->_table['name']) . '
-				ORDER BY {raw:sort}',
-				array(
-					'sort' => 'name DESC',
-				)
+		$result = $smcFunc['db_query']('', '
+			SELECT '. (implode(', ', $this->_table['columns'])) .'
+			FROM {db_prefix}' . ($this->_table['name']) . '
+			ORDER BY {literal:name DESC}
+			LIMIT {int:start}, {int:maxIndex}',
+			array(
+				'sort' => 'name DESC',
+				'start' => !empty($start) ? $start : 0,
+				'maxIndex' => !empty($maxIndex) ? $maxIndex : 0,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$return[$row['id']] = array(
+				'id' => $row['id'],
+				'name' => $row['name'],
+				'info' => $this->parse($row['name']),
+				'category' => $this->getSingleCat($row['cat']),
+				'downloads' => $row['downloads'],
 			);
 
-			while ($row = $smcFunc['db_fetch_assoc']($result))
-				$return[$row['id']] = array(
-					'id' => $row['id'],
-					'name' => $row['name'],
-					'info' => $this->parse($row['name']),
-					'category' => $this->getSingleCat($row['cat']),
-					'downloads' => $row['downloads'],
-				);
+		$smcFunc['db_free_result']($result);
 
-			$smcFunc['db_free_result']($result);
-
-			cache_put_data(modsite::$name .'_all', $return, 3600);
-		}
-
-		/* Done? */
+		// Done!
 		return $return;
 	}
 
@@ -225,7 +243,7 @@ class ModSiteDB
 		return $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($string, ENT_QUOTES, ENT_QUOTES));
 	}
 
-	public function permissions($type, $fatal_error = false)
+	public function getPermissions($type, $fatal_error = false)
 	{
 		global $modSettings;
 

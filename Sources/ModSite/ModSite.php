@@ -11,46 +11,23 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-class ModSite extends suki\Ohara
+class ModSite extends ModSiteDB
 {
 	public $name = __CLASS__;
-	protected $subActions = array(
+	protected $_subActions = array(
 		'add',
 		'add2',
 		'delete',
 		'edit',
-		'list',
+		'listing',
 		'search',
 		'single',
 		'success',
 		'download',
 		'category',
 	);
-
-	/**
-	 * Setup the object, gather all of the relevant settings
-	 */
-	public function __construct()
-	{
-		$this->setRegistry();
-		$this->set();
-	}
-
-	protected function set()
-	{
-
-		$_services = array('db' => 'ModSiteDB', 'parser' => 'ModSiteParser');
-
-		foreach($services as $key => $s)
-		{
-			require_once $this->sourceDir .'/'. $s .'.php';
-
-			$this[$k] = function ()
-			{
-				return new $s();
-			};
-		}
-	}
+	protected $_jsonDir = '';
+	protected $_apiAcceptableStatus = array('good', 'minor');
 
 	protected function adminAreas(&$areas)
 	{
@@ -64,24 +41,22 @@ class ModSite extends suki\Ohara
 
 	function menu(&$menu_buttons)
 	{
-			global $scripturl;
+		$insert = $this->setting('menu_position') ? $this->setting('menu_position') : 'home';
+		$counter = 0;
 
-			$insert = $this->setting('menu_position') ? $this->setting('menu_position') : 'home';
-			$counter = 0;
+		foreach ($menu_buttons as $area => $dummy)
+			if (++$counter && $area == $insert )
+				break;
 
-			foreach ($menu_buttons as $area => $dummy)
-				if (++$counter && $area == $insert )
-					break;
-
-			$menu_buttons = array_merge(
-				array_slice($menu_buttons, 0, $counter),
-				array('modsite' => array(
-					'title' => $this->text('title_main'),
-					'href' => $scripturl . '?action=modsite',
-					'show' => $this->setting('enable') ? true : false,
-				)),
-				array_slice($menu_buttons, $counter)
-			);
+		$menu_buttons = array_merge(
+			array_slice($menu_buttons, 0, $counter),
+			array('modsite' => array(
+				'title' => $this->text('title_main'),
+				'href' => $this->scriptUrl . '?action=modsite',
+				'show' => $this->setting('enable') ? true : false,
+			)),
+			array_slice($menu_buttons, $counter)
+		);
 	}
 
 	function modifications(&$sub_actions)
@@ -94,7 +69,7 @@ class ModSite extends suki\Ohara
 
 	function settings(&$return_config = false)
 	{
-		global $context, $scripturl, $txt;
+		global $context, $txt;
 
 		$config_vars = array(
 			array('desc', $this->name .'_admin_sub'),
@@ -121,7 +96,7 @@ class ModSite extends suki\Ohara
 		if ($return_config)
 			return $config_vars;
 
-		$context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=modsite';
+		$context['post_url'] = $this->scriptUrl . '?action=admin;area=modsettings;save;sa=modsite';
 		$context['settings_title'] = $this->text('title_main');
 
 		if (empty($config_vars))
@@ -136,7 +111,7 @@ class ModSite extends suki\Ohara
 		{
 			checkSession();
 
-			// Should put some checks here but then again, this mod isn't intended for the regular "dumb" user...
+			// Should put some checks here but then again, this mod isn't intended for the regular "noob" user...
 			saveDBSettings($config_vars);
 			redirectexit('action=admin;area=modsettings;sa=modsite');
 		}
@@ -170,14 +145,14 @@ class ModSite extends suki\Ohara
 
 	function call()
 	{
-		global $sourcedir, $context;
+		global $context;
 
 		/* Load both language and template files */
 		loadLanguage($this->name);
 		loadtemplate($this->name, 'gh-fork-ribbon');
 
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite',
+			'url' => $this->scriptUrl .'?action=modsite',
 			'name' => $this->text('title_main'),
 		);
 
@@ -198,17 +173,12 @@ class ModSite extends suki\Ohara
 		//-->
 		</script>';
 
-		/* It is faster to use $var() than use call_user_func_array */
-		$func = $this->data('sa');
+		// Get the right subaction.
+		$call = $this->data('sa') && in_array($this->data('sa'), $this->_subActions) ?  $this->data('sa') : 'main';
 
-		$call = !empty($func) && isset($this->subActions[$func]) ?  $func : 'main';
-
-		// Call the appropriate method if the mod is enable and also set some trivial template stuff...
+		// Call the appropriate method.
 		if (!empty($this->setting('enable')) && allowedTo($this->name .'_view'))
-		{
-			$call();
-			$this->render($call);
-		}
+			$this->$call();
 
 		// Ain't nobody got time for that!
 		else
@@ -217,7 +187,7 @@ class ModSite extends suki\Ohara
 
 	protected function main()
 	{
-		global $context, $scripturl, $txt, $modSettings;
+		global $context, $txt, $modSettings;
 
 		// Getting the current page.
 		$this->page = $this->data('page') ? $this->data('page') : 0;
@@ -230,14 +200,14 @@ class ModSite extends suki\Ohara
 
 	protected function category()
 	{
-		global $context, $scripturl, $txt, $modSettings;
+		global $context, $txt, $modSettings;
 
 		// Getting the current page.
 		$this->page = $this->data('page') ? $this->data('page') : 0;
 
 		/* Set some needed vars */
 		$context['sub_template'] = 'ModSite_main';
-		$context['canonical_url'] = $scripturl . '?action=modsite;sa=category';
+		$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa=category';
 
 		/* We need a valid ID */
 		$catID = $this->data('mid');
@@ -254,7 +224,7 @@ class ModSite extends suki\Ohara
 
 	function add($pages)
 	{
-		global $context, $scripturl, $txt, $sourcedir;
+		global $context, $txt;
 
 		/* Check permissions */
 		$pages->permissions('add', true);
@@ -262,7 +232,7 @@ class ModSite extends suki\Ohara
 		$context['sub_template'] = 'ModSite_add';
 		$context['page_title'] = $txt['ModSite_edit_creating'];
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=add',
+			'url' => $this->scriptUrl. '?action=modsite;sa=add',
 			'name' => $context['page_title'],
 		);
 
@@ -330,7 +300,7 @@ class ModSite extends suki\Ohara
 
 	function edit($pages)
 	{
-		global $context, $scripturl, $modSettings, $sourcedir, $txt;
+		global $context, $modSettings, $txt;
 
 		$pages->permissions('edit', true);
 
@@ -352,7 +322,7 @@ class ModSite extends suki\Ohara
 		$context['sub_template'] = 'ModSite_add';
 		$context['page_title'] = $txt['ModSite_preview_edit'] .' - '. $context['modSite']['edit']['title'];
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=edit;mid='. $mid,
+			'url' => $this->scriptUrl. '?action=modsite;sa=edit;mid='. $mid,
 			'name' => $txt['ModSite_preview_edit'] .' - '. $context['modSite']['edit']['title'],
 		);
 	}
@@ -377,7 +347,7 @@ class ModSite extends suki\Ohara
 
 	function success($pages)
 	{
-		global $context, $scripturl, $txt;
+		global $context, $txt;
 
 		/* No direct access */
 		if (!isset($_GET['pin']) || empty($_GET['pin']))
@@ -388,7 +358,7 @@ class ModSite extends suki\Ohara
 		/* Build the link tree.... */
 		$context['page_title'] = $txt['ModSite_success_message_title'];
 		$context['linktree'][] = array(
-			'url' => $scripturl . '?action=modsite;sa=success',
+			'url' => $this->scriptUrl . '?action=modsite;sa=success',
 			'name' => $context['page_title'],
 		);
 
@@ -401,7 +371,7 @@ class ModSite extends suki\Ohara
 
 	function single($pages)
 	{
-		global $context, $scripturl, $txt, $user_info;
+		global $context, $txt, $user_info;
 
 		/* Forget it... */
 		if (!isset($_GET['mid']) || empty($_GET['mid']))
@@ -421,7 +391,7 @@ class ModSite extends suki\Ohara
 
 		/* Set all we need */
 		$context['sub_template'] = 'ModSite_single';
-		$context['canonical_url'] = $scripturl . '?action=modsite;sa=single;mid=' . $id;
+		$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa=single;mid=' . $id;
 		$context['page_title'] = $context['modSite']['single']['info']['publicName'];
 		$context['linktree'][] = array(
 			'url' => $context['canonical_url'],
@@ -432,9 +402,9 @@ class ModSite extends suki\Ohara
 		$context['modSite']['object'] = $pages;
 	}
 
-	function list($pages)
+	function listing($pages)
 	{
-		global $context, $txt, $scripturl;
+		global $context, $txt;
 
 		/* Are you allowed to see this page? */
 		$pages->permissions('view', true);
@@ -443,7 +413,7 @@ class ModSite extends suki\Ohara
 		$context['sub_template'] = 'ModSite_list';
 		$context['page_title'] = $txt['ModSite_list_title'];
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=list',
+			'url' => $this->scriptUrl. '?action=modsite;sa=list',
 			'name' => $txt['ModSite_list_title'],
 		);
 
@@ -459,7 +429,7 @@ class ModSite extends suki\Ohara
 			/* Replace the linktree and title with something more specific */
 			$context['page_title'] = $txt['ModSite_list_title_by_letter'] . $midletter;
 			$context['linktree'][] = array(
-				'url' => $scripturl. '?action=modsite;sa=list;lidletter='. $midletter,
+				'url' => $this->scriptUrl. '?action=modsite;sa=list;lidletter='. $midletter,
 				'name' => $txt['ModSite_list_title_by_letter'] . $midletter,
 			);
 
@@ -475,7 +445,7 @@ class ModSite extends suki\Ohara
 
 	function search($pages)
 	{
-		global $context, $txt, $scripturl;
+		global $context, $txt;
 
 		/* Are you allowed to see this page? */
 		$pages->permissions('view', true);
@@ -491,7 +461,7 @@ class ModSite extends suki\Ohara
 		$context['sub_template'] = 'ModSite_list';
 		$context['page_title'] = $txt['ModSite_search_title'] . $value;
 		$context['linktree'][] = array(
-			'url' => $scripturl. '?action=modsite;sa=search',
+			'url' => $this->scriptUrl. '?action=modsite;sa=search',
 			'name' => $txt['ModSite_list_title_by_letter'] . $value,
 		);
 
@@ -579,7 +549,7 @@ class ModSite extends suki\Ohara
 
 		// Template stuff.
 		$context['sub_template'] = $this->name .'_'. $type;
-		$context['canonical_url'] = $scripturl . '?action=modsite';
+		$context['canonical_url'] = $this->scriptUrl . '?action=modsite';
 		$context['page_title'] = $this->text('title_main') . ' - '. (!empty($type) ? $this->text('title_'. $type) : '') . (!empty($this->page) ? ' - '. $this->text('ui_page') .' '. $this->page : '');
 	}
 }

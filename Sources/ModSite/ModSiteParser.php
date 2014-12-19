@@ -10,19 +10,16 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-class ModSiteParser extends ModSiteDB
+class ModSiteParser extends Suki\Ohara
 {
-	protected $_jsonDir = '';
-	protected $_apiAcceptableStatus = array('good', 'minor');
+	// Cheating!
+	public $name = 'ModSite';
 
 	public function __construct()
 	{
-		global $boarddir, $boardurl, $modSettings;
+		$this->setRegistry();
 
-		$this->_jsonDir = !empty($modSettings['ModSite_json_dir']) ? '/'. $modSettings['ModSite_json_dir'] .'/%s.json' : '%s';
-		$this->githubUser = $modSettings['ModSite_github_username'];
-		$this->_boarddir = $boarddir;
-		$this->_boardurl = $boardurl;
+		$this->_jsonDir = $this->enable('json_dir') ? '/'. $this->setting('json_dir') .'/%s.json' : '%s';
 
 		/* Get the cats! */
 		$this->getCats();
@@ -34,8 +31,8 @@ class ModSiteParser extends ModSiteDB
 		if (empty($file))
 			return false;
 
-		if (file_exists($this->_boarddir . sprintf($this->_jsonDir, $file)))
-			return file_get_contents($this->_boarddir . sprintf($this->_jsonDir, $file));
+		if (file_exists($this->boardDir . sprintf($this->_jsonDir, $file)))
+			return file_get_contents($this->boardDir . sprintf($this->_jsonDir, $file));
 
 		else
 			return false;
@@ -92,7 +89,7 @@ class ModSiteParser extends ModSiteDB
 			$this->github();
 
 		/* Get the repo info */
-		return  $this->client->api('repo')->show($this->githubUser, $repoName);
+		return  $this->client->api('repo')->show($this->setting('github_username'), $repoName);
 	}
 
 	public function getRepoCommits($repoName)
@@ -102,7 +99,7 @@ class ModSiteParser extends ModSiteDB
 			$this->github();
 
 		/* Get the repo info, we only want the first 5 results no more! */
-		return array_slice($this->client->api('repo')->commits()->all($this->githubUser, $repoName, array('sha' => 'master')), 0, 5);
+		return array_slice($this->client->api('repo')->commits()->all($this->setting('github_username'), $repoName, array('sha' => 'master')), 0, 5);
 	}
 
 	public function getRepoIssues($repoName)
@@ -112,27 +109,27 @@ class ModSiteParser extends ModSiteDB
 			$this->github();
 
 		/* Get the repo info, we only want the first 5 results no more! */
-		return $this->client->api('issue')->all($this->githubUser, $repoName, array('state' => 'open'));
+		return $this->client->api('issue')->all($this->setting('github_username'), $repoName, array('state' => 'open'));
 	}
 
 	protected function getRepoCollaborators($repoName)
 	{
 		/* Init github API */
 		if (!isset($this->client))
-			$this->github($this->githubUser);
+			$this->github($this->setting('github_username'));
 
 		/* Get the collaborators for a repository if any */
-		return $this->client->api('repo')->collaborators()->all($this->githubUser, $repoName);
+		return $this->client->api('repo')->collaborators()->all($this->setting('github_username'), $repoName);
 	}
 
 	public function github()
 	{
 		global $githubClient, $githubPass;
 
-		require_once ($this->_boarddir .'/vendor/autoload.php');
+		require_once ($this->boardDir .'/vendor/autoload.php');
 
 		$this->client = new Github\Client(
-			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $this->_boarddir .'/cache/github-api-cache'))
+			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $this->boardDir .'/cache/github-api-cache'))
 		);
 
 		/* Make this an authenticate call */
@@ -143,8 +140,8 @@ class ModSiteParser extends ModSiteDB
 
 	public function getCats()
 	{
-		if (file_exists($this->_boarddir . sprintf($this->_jsonDir, 'categories')))
-			$this->cats = json_decode(file_get_contents($this->_boarddir . sprintf($this->_jsonDir, 'categories')), true);
+		if (file_exists($this->boardDir . sprintf($this->_jsonDir, 'categories')))
+			$this->cats = json_decode(file_get_contents($this->boardDir . sprintf($this->_jsonDir, 'categories')), true);
 
 		else
 			return false;
@@ -235,16 +232,5 @@ class ModSiteParser extends ModSiteDB
 		}
 
 		return $return;
-	}
-
-	protected function cleanCache($type)
-	{
-		if (empty($type))
-			return;
-
-		$type = (array) $type;
-
-		foreach ($type as $t)
-			cache_put_data(modsite::$name .'_'. $type, '', 600);
 	}
 }
