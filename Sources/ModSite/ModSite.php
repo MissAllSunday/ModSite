@@ -29,6 +29,11 @@ class ModSite extends ModSiteDB
 	protected $_jsonDir = '';
 	protected $_apiAcceptableStatus = array('good', 'minor');
 
+	public function __construct()
+	{
+		$this->setRegistry();
+	}
+
 	protected function adminAreas(&$areas)
 	{
 		$areas['config']['areas']['modsettings']['subsections']['modsite'] = array($this->text('title_main'));
