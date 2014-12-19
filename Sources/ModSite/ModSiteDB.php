@@ -18,7 +18,10 @@ class ModSiteDB extends ModSiteParser
 	);
 	protected static $_count = 0;
 
-	public function __construct(){}
+	public function __construct()
+	{
+		parent::__construct();
+	}
 
 	public function countMods()
 	{

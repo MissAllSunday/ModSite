@@ -19,6 +19,9 @@ class ModSiteParser extends Suki\Ohara
 
 	public function __construct()
 	{
+		// Be nice!
+		$this->setRegistry();
+
 		$this->_jsonDir = $this->enable('json_dir') ? '/'. $this->setting('json_dir') .'/%s.json' : '%s';
 
 		/* Get the cats! */

@@ -15,21 +15,16 @@ class ModSite extends ModSiteDB
 {
 	public $name = __CLASS__;
 	public $subActions = array(
-		'add',
-		'add2',
-		'delete',
-		'edit',
 		'listing',
 		'search',
 		'single',
-		'success',
 		'download',
 		'category',
 	);
 
 	public function __construct()
 	{
-		$this->setRegistry();
+		parent::__construct();
 	}
 
 	protected function adminAreas(&$areas)
