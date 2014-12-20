@@ -50,9 +50,6 @@ class ModSiteDB extends ModSiteParser
 		if (empty($data))
 			return false;
 
-		/* Clear the cache */
-		$this->cleanCache();
-
 		$smcFunc['db_insert']('',
 			'{db_prefix}'. $this->_table['name'],
 			array('name' => 'string-255'),
@@ -69,9 +66,6 @@ class ModSiteDB extends ModSiteParser
 
 		if (empty($data))
 			return false;
-
-		/* Clear the cache */
-		$this->cleanCache();
 
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}' . ($this->_table['name']) . '
@@ -126,22 +120,17 @@ class ModSiteDB extends ModSiteParser
 
 	public function getSingle($id)
 	{
-		global $smcFunc, $scripturl, $txt;
+		global $smcFunc;
 
-		/* Can we avoid another query? */
-		if (($return = cache_get_data(modsite::$name .'_all', 3600)) != null)
-			if (in_array($id, array_keys($return)))
-				return $return[$id];
+		if (empty($id))
+			return array();
 
-		/* No? :( */
 		$result = $smcFunc['db_query']('', '
 			SELECT '. (implode(', ', $this->_table['columns'])) .'
 			FROM {db_prefix}' . ($this->_table['name']) . '
-			WHERE id = {int:id}
-			LIMIT {int:limit}',
+			WHERE id = {int:id}',
 			array(
-				'id' => (int) $id,
-				'limit' => 1
+				'id' => $id,
 			)
 		);
 
@@ -156,7 +145,7 @@ class ModSiteDB extends ModSiteParser
 
 		$smcFunc['db_free_result']($result);
 
-		/* Done? */
+		// Done!
 		return $return;
 	}
 
@@ -164,37 +153,30 @@ class ModSiteDB extends ModSiteParser
 	{
 		global $smcFunc, $scripturl, $txt;
 
-		/* We need both  */
+		// We need both.
 		if (empty($column) || empty($value))
 			return false;
 
-		/* Use the cache when possible */
-		if (($return = cache_get_data(modsite::$name .'_'. $column.'_'. $value, 3600)) == null)
-		{
+		// Get the data as requested.
+		$result = $smcFunc['db_query']('', '
+			SELECT '. (implode(', ', $this->_table['columns'])) .'
+			FROM {db_prefix}' . ($this->_table['name']) . '
+			WHERE '. ($column) .' = '. ($value) .'',
+			array()
+		);
 
-			/* Get the data as requested */
-			$result = $smcFunc['db_query']('', '
-				SELECT '. (implode(', ', $this->_table['columns'])) .'
-				FROM {db_prefix}' . ($this->_table['name']) . '
-				WHERE '. ($column) .' = '. ($value) .'',
-				array()
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$return[$row['id']] = array(
+				'id' => $row['id'],
+				'name' => $row['name'],
+				'info' => $this->parse($row['name']),
+				'category' => $this->getSingleCat($row['cat']),
+				'downloads' => $row['downloads'],
 			);
 
-			while ($row = $smcFunc['db_fetch_assoc']($result))
-				$return[$row['id']] = array(
-					'id' => $row['id'],
-					'name' => $row['name'],
-					'info' => $this->parse($row['name']),
-					'category' => $this->getSingleCat($row['cat']),
-					'downloads' => $row['downloads'],
-				);
+		$smcFunc['db_free_result']($result);
 
-			$smcFunc['db_free_result']($result);
-
-			cache_put_data(modsite::$name .'_'. $column.'_'. $value, $return, 3600);
-		}
-
-		/* Done? */
+		// Done!
 		return $return;
 	}
 
@@ -204,9 +186,6 @@ class ModSiteDB extends ModSiteParser
 
 		if (empty($id))
 			return false;
-
-		/* Clear the cache */
-		$this->cleanCache();
 
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}' . ($this->_table['name']) . '
@@ -225,9 +204,6 @@ class ModSiteDB extends ModSiteParser
 		/* Do not waste my time... */
 		if (empty($id))
 			return false;
-
-		/* Clear the cache */
-		$this->cleanCache();
 
 		$smcFunc['db_query']('', '
 			DELETE FROM {db_prefix}' . ($this->_table['table']) .'
@@ -272,27 +248,5 @@ class ModSiteDB extends ModSiteParser
 
 		elseif ($fatal_error == false && in_array(1, $allowed))
 			return true;
-	}
-
-	protected function cleanCache()
-	{
-		cache_put_data(modsite::$name .'_all', null, 3600);
-	}
-
-	public function truncateString($string, $limit, $break = ' ', $pad = '...')
-	{
-		if(empty($limit))
-			$limit = 30;
-
-		 // return with no change if string is shorter than $limit
-		if(strlen($string) <= $limit)
-			return $string;
-
-		// is $break present between $limit and the end of the string?
-		if(false !== ($breakpoint = strpos($string, $break, $limit)))
-			if($breakpoint < strlen($string) - 1)
-				$string = substr($string, 0, $breakpoint) . $pad;
-
-		return $string;
 	}
 }
