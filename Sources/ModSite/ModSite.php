@@ -233,7 +233,7 @@ class ModSite extends ModSiteDB
 			fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		/* Are you allowed to see this page? */
-		$pages->permissions('view', true);
+		$pages->getPermissions('view', true);
 
 		/* Get a valid ID */
 		$id = $pages->clean($_GET['mid']);
@@ -262,7 +262,7 @@ class ModSite extends ModSiteDB
 		global $context, $txt;
 
 		/* Are you allowed to see this page? */
-		$pages->permissions('view', true);
+		$pages->getPermissions('view', true);
 
 		/* Page stuff */
 		$context['sub_template'] = 'ModSite_list';
@@ -303,7 +303,7 @@ class ModSite extends ModSiteDB
 		global $context, $txt;
 
 		/* Are you allowed to see this page? */
-		$pages->permissions('view', true);
+		$pages->getPermissions('view', true);
 
 		/* We need a valur to serch and a column */
 		if (!isset($_REQUEST['l_search_value']) || empty($_REQUEST['l_search_value']) || !isset($_REQUEST['l_column']) || empty($_REQUEST['l_column']))

@@ -214,13 +214,6 @@ class ModSiteDB extends ModSiteParser
 		);
 	}
 
-	public function clean($string)
-	{
-		global $smcFunc;
-
-		return $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($string, ENT_QUOTES, ENT_QUOTES));
-	}
-
 	public function getPermissions($type, $fatal_error = false)
 	{
 		global $modSettings;

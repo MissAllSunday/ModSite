@@ -187,7 +187,7 @@ function template_modSite_main()
 	<div class="clear">';
 
 	/* Button for adding a new entry */
-	if ($context['modSite']['object']->permissions('add') == true)
+	if ($context['modSite']['object']->getPermissions('add') == true)
 		echo '
 			<div id="confirm_buttons">
 				<form action="', $scripturl, '?action=modsite;sa=add" method="post" target="_self">
@@ -368,7 +368,7 @@ function template_modSite_add()
 	</p>
 </div>';
 	/* A nice form for adding a new cat */
-	// if ($context['modsite']['object']->permissions('add') == true)
+	// if ($context['modsite']['object']->getPermissions('add') == true)
 		echo '
 		<span class="clear upperframe">
 			<span></span>
