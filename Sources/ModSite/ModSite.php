@@ -145,7 +145,7 @@ class ModSite extends ModSiteDB
 	{
 		global $context;
 
-		/* Load both language and template files */
+		// Load both language and template files.
 		loadLanguage($this->name);
 		loadtemplate($this->name, 'gh-fork-ribbon');
 
@@ -154,7 +154,7 @@ class ModSite extends ModSiteDB
 			'name' => $this->text('title_main'),
 		);
 
-		/* Set some JavaScript to hide blocks */
+		// Set some JavaScript to hide blocks.
 		$context['html_headers'] .= '
 		<script language="JavaScript"  type="text/javascript">
 		<!--
@@ -228,43 +228,31 @@ class ModSite extends ModSiteDB
 	{
 		global $context, $txt, $user_info;
 
-		/* Forget it... */
-		if (!isset($_GET['mid']) || empty($_GET['mid']))
+		// Kinda need an ID.
+		if (!$this->data('mid'))
 			fatal_lang_error('ModSite_error_no_valid_id', false);
 
-		/* Are you allowed to see this page? */
-		$pages->getPermissions('view', true);
+		// Get the data, getSingle() uses cache when possible.
+		$context[$this->name]['data'] = $pages->getSingle($id);
 
-		/* Get a valid ID */
-		$id = $pages->clean($_GET['mid']);
-
-		if (empty($id))
-			fatal_lang_error('ModSite_error_no_valid_id', false);
-
-		/* Get the data, getSingle() uses cache when possible */
-		$context['modSite']['single'] = $pages->getSingle($id);
-
-		/* Set all we need */
+		// Set all we need.
 		$context['sub_template'] = 'ModSite_single';
 		$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa=single;mid=' . $id;
-		$context['page_title'] = $context['modSite']['single']['info']['publicName'];
+		$context['page_title'] = $context[$this->name]['data']['info']['publicName'];
 		$context['linktree'][] = array(
 			'url' => $context['canonical_url'],
 			'name' => $context['page_title'],
 		);
-
-		/* Pass the object to the template */
-		$context['modSite']['object'] = $pages;
 	}
 
 	function listing($pages)
 	{
 		global $context, $txt;
 
-		/* Are you allowed to see this page? */
+		// Are you allowed to see this page?.
 		$pages->getPermissions('view', true);
 
-		/* Page stuff */
+		// Page stuff.
 		$context['sub_template'] = 'ModSite_list';
 		$context['page_title'] = $txt['ModSite_list_title'];
 		$context['linktree'][] = array(
@@ -272,16 +260,16 @@ class ModSite extends ModSiteDB
 			'name' => $txt['ModSite_list_title'],
 		);
 
-		/* No letter? then show the main page */
+		// No letter? then show the main page.
 		if (!isset($_GET['lidletter']) || empty($_GET['lidletter']))
 			$context['modSite']['list'] = $pages->getAll();
 
-		/* Show a list of modsite starting with X letter */
+		// Show a list of modsite starting with X letter.
 		elseif (isset($_GET['lidletter']))
 		{
 			$midletter = $pages->clean($_GET['lidletter']);
 
-			/* Replace the linktree and title with something more specific */
+			// Replace the linktree and title with something more specific.
 			$context['page_title'] = $txt['ModSite_list_title_by_letter'] . $midletter;
 			$context['linktree'][] = array(
 				'url' => $this->scriptUrl. '?action=modsite;sa=list;lidletter='. $midletter,
@@ -294,7 +282,7 @@ class ModSite extends ModSiteDB
 				fatal_lang_error('ModSite_no_modsite_with_letter', false);
 		}
 
-		/* Pass the object to the template */
+		// Pass the object to the template.
 		$context['modSite']['object'] = $pages;
 	}
 
@@ -302,21 +290,21 @@ class ModSite extends ModSiteDB
 	{
 		global $context, $boarddir, $modSettings, $user_info;
 
-		/* We need a valid ID and a valid downloads dir */
-		if (!isset($_GET['mid']) || empty($modSettings['ModSite_download_path']))
-			fatal_lang_error('ModSite_error_no_valid_id', false);
+		// We need a valid ID and a valid downloads dir.
+		if (!$this->data('mid') || !$this->setting('download_path'))
+			return fatal_lang_error('ModSite_error_no_valid_id', false);
 
-		/* You're not welcome here Mr bot... */
+		// You're not welcome here Mr. Roboto...
 		if (true == $user_info['possibly_robot'])
 			redirectexit();
 
-		/* All good, get the file info */
+		// All good, get the file info.
 		$mod = $pages->getSingle((int) $pages->clean($_GET['mid']));
 
-		/* Build a correct path, the downloads dir ideally should be outside the web-accessible dir */
+		// Build a correct path, the downloads dir ideally should be outside the web-accessible dir.
 		$file_path = $boarddir .'/'. $modSettings['ModSite_download_path'] .'/'. $mod['name'] .'.zip';
 
-		/* Oops! */
+		// Oops!.
 		if(!file_exists($file_path))
 		{
 			global $txt;
@@ -325,13 +313,13 @@ class ModSite extends ModSiteDB
 			header('HTTP/1.0 404 ' . $txt['attachment_not_found']);
 			header('Content-Type: text/plain; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
 
-			/* Nothing more to say really */
+			// Nothing more to say really.
 			die('404 - ' . $txt['attachment_not_found']);
 		}
 
 		else
 		{
-			/* Update the downloads stat */
+			// Update the downloads stat.
 			$pages->updateCount($mod['id']);
 
 			// Get the file's extension
