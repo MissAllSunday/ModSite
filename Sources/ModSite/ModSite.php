@@ -298,38 +298,6 @@ class ModSite extends ModSiteDB
 		$context['modSite']['object'] = $pages;
 	}
 
-	function search($pages)
-	{
-		global $context, $txt;
-
-		/* Are you allowed to see this page? */
-		$pages->getPermissions('view', true);
-
-		/* We need a valur to serch and a column */
-		if (!isset($_REQUEST['l_search_value']) || empty($_REQUEST['l_search_value']) || !isset($_REQUEST['l_column']) || empty($_REQUEST['l_column']))
-			fatal_lang_error('ModSite_error_no_valid_id', false);
-
-		$value = urlencode($pages->clean($_REQUEST['l_search_value']));
-		$column = $pages->clean($_REQUEST['l_column']);
-
-		/* Page stuff */
-		$context['sub_template'] = 'ModSite_list';
-		$context['page_title'] = $txt['ModSite_search_title'] . $value;
-		$context['linktree'][] = array(
-			'url' => $this->scriptUrl. '?action=modsite;sa=search',
-			'name' => $txt['ModSite_list_title_by_letter'] . $value,
-		);
-
-		$context['modSite']['list'] = $pages->getBy($column, '%'. $value .'%');
-
-		if (empty($context['modSite']['list']))
-			fatal_lang_error('ModSite_no_modsite_with_letter', false);
-
-
-		/* Pass the object to the template */
-		$context['modSite']['object'] = $pages;
-	}
-
 	function download($pages)
 	{
 		global $context, $boarddir, $modSettings, $user_info;
