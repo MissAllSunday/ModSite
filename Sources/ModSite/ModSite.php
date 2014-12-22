@@ -105,7 +105,7 @@ class ModSite extends ModSiteDB
 			return prepareDBSettingContext($config_vars);
 		}
 
-		if (isset($_GET['save']))
+		if ($this->data('save'))
 		{
 			checkSession();
 
@@ -178,7 +178,7 @@ class ModSite extends ModSiteDB
 		if (!empty($this->setting('enable')) && allowedTo($this->name .'_view'))
 		{
 			// Use the default template unless a method says otherwise.
-			$context['sub_template'] = 'main';
+			$context['sub_template'] = $this->name .'main';
 
 			// Set a nice canonical page.
 			$context['canonical_url'] = $this->scriptUrl . '?action=modsite;' .($call != 'main' ? ('sa='. $call) : '');
@@ -224,7 +224,7 @@ class ModSite extends ModSiteDB
 		$context[$this->name]['data'] = $this->getBy('cat', $catID);
 	}
 
-	function single($pages)
+	function single()
 	{
 		global $context, $txt, $user_info;
 
@@ -236,7 +236,7 @@ class ModSite extends ModSiteDB
 		$context[$this->name]['data'] = $pages->getSingle($id);
 
 		// Set all we need.
-		$context['sub_template'] = 'ModSite_single';
+		$context['sub_template'] = $this->name .'_single';
 		$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa=single;mid=' . $id;
 		$context['page_title'] = $context[$this->name]['data']['info']['publicName'];
 		$context['linktree'][] = array(
@@ -245,24 +245,21 @@ class ModSite extends ModSiteDB
 		);
 	}
 
-	function listing($pages)
+	function listing()
 	{
 		global $context, $txt;
 
-		// Are you allowed to see this page?.
-		$pages->getPermissions('view', true);
-
 		// Page stuff.
-		$context['sub_template'] = 'ModSite_list';
-		$context['page_title'] = $txt['ModSite_list_title'];
+		$context['sub_template'] = $this->name .'_list';
+		$context['page_title'] = $this->text('list_title');
 		$context['linktree'][] = array(
 			'url' => $this->scriptUrl. '?action=modsite;sa=list',
-			'name' => $txt['ModSite_list_title'],
+			'name' => $context['page_title'],
 		);
 
 		// No letter? then show the main page.
-		if (!isset($_GET['lidletter']) || empty($_GET['lidletter']))
-			$context['modSite']['list'] = $pages->getAll();
+		if (!$this->data('lidletter'))
+			$context[$this->name]['data'] = $this->getAll();
 
 		// Show a list of modsite starting with X letter.
 		elseif (isset($_GET['lidletter']))
@@ -286,7 +283,7 @@ class ModSite extends ModSiteDB
 		$context['modSite']['object'] = $pages;
 	}
 
-	function download($pages)
+	function download()
 	{
 		global $context, $boarddir, $modSettings, $user_info;
 
@@ -353,14 +350,5 @@ class ModSite extends ModSiteDB
 			exit;
 		}
 	}
-
-	protected function render($type)
-	{
-		global $context;
-
-		// Template stuff.
-		$context['sub_template'] = $this->name .'_'. $type;
-		$context['canonical_url'] = $this->scriptUrl . '?action=modsite';
-		$context['page_title'] = $this->text('title_main') . ' - '. (!empty($type) ? $this->text('title_'. $type) : '') . (!empty($this->page) ? ' - '. $this->text('ui_page') .' '. $this->page : '');
-	}
+}
 }
