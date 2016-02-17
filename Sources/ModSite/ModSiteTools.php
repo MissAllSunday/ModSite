@@ -11,25 +11,9 @@
 if (!defined('SMF'))
 	die('No direct access...');
 
-// Use Ohara! manually :(
-require_once ($sourcedir .'/ohara/src/Suki/Ohara.php');
-require_once ($sourcedir .'/ModSiteTools.php');
-
-class ModSite extends ModSiteTools
+class ModSiteTools extends Suki\Ohara
 {
-	public $name = __CLASS__;
-	public $subActions = array(
-		'listing',
-		'search',
-		'single',
-		'download',
-		'category',
-	);
-
-	public function __construct()
-	{
-		parent::__construct();
-	}
+	public $name = 'ModSite';
 
 	function actions(&$actions)
 	{
@@ -54,6 +38,90 @@ class ModSite extends ModSiteTools
 			)),
 			array_slice($menu_buttons, $counter)
 		);
+	}
+
+	function modifications(&$sub_actions)
+	{
+		global $context;
+
+		$sub_actions['modsite'] = 'modify_modsite_post_settings';
+		$context[$context['admin_menu_name']]['tab_data']['tabs']['modsite'] = array();
+	}
+
+	function settings(&$return_config = false)
+	{
+		global $context, $txt;
+
+		$config_vars = array(
+			array('desc', $this->name .'_admin_sub'),
+			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub')),
+			array('int', $this->name .'_latest_limit', 'subtext' => $this->text('latest_limit_sub'), 'size' => 3),
+			array('int', $this->name .'_pag_limit', 'subtext' => $this->text('pag_limit_sub'), 'size' => 3),
+			array('text', $this->name .'_json_dir', 'subtext' => $this->text('json_dir_sub')),
+			array('text', $this->name .'_github_username', 'subtext' => $this->text('github_username_sub')),
+			array(
+				'select',
+				$this->name .'_menu_position',
+				array(
+					'home' => $txt['home'],
+					'help' => $txt['help'],
+					'search' => $txt['search'],
+					'login' => $txt['login'],
+					'register' => $txt['register']
+				),
+				'subtext' => $this->text('menu_position_sub')
+			),
+			array('text', $this->name .'_download_path'),
+		);
+
+		if ($return_config)
+			return $config_vars;
+
+		$context['post_url'] = $this->scriptUrl . '?action=admin;area=modsettings;save;sa=modsite';
+		$context['settings_title'] = $this->text('title_main');
+
+		if (empty($config_vars))
+		{
+			$context['settings_save_dont_show'] = true;
+			$context['settings_message'] = '<div align="center">' . $txt['modification_no_misc_settings'] . '</div>';
+
+			return prepareDBSettingContext($config_vars);
+		}
+
+		if ($this->data('save'))
+		{
+			checkSession();
+
+			// Should put some checks here but then again, this mod isn't intended for the regular "noob" user...
+			saveDBSettings($config_vars);
+			redirectexit('action=admin;area=modsettings;sa=modsite');
+		}
+		prepareDBSettingContext($config_vars);
+	}
+
+	// Should really build a function on Ohara to handle adding permissions and avoid building redundant code...
+	function permissions(&$permissionGroups, &$permissionList)
+	{
+		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
+		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
+
+		$permissionList['membergroup'][$this->name .'_view'] = array(
+			false,
+			$this->name .'_classic',
+			$this->name .'_per_simple');
+
+		$permissionList['membergroup'][$this->name .'_delete'] = array(
+			false,
+			$this->name .'_per_classic',
+			$this->name .'_per_simple');
+		$permissionList['membergroup'][$this->name .'_add'] = array(
+			false,
+			$this->name .'_per_classic',
+			$this->name .'_simple');
+		$permissionList['membergroup'][$this->name .'_edit'] = array(
+			false,
+			$this->name .'_per_classic',
+			$this->name .'_per_simple');
 	}
 
 	function call()
@@ -265,92 +333,5 @@ class ModSite extends ModSiteTools
 			exit;
 		}
 	}
-
-	protected function adminAreas(&$areas)
-	{
-		$areas['config']['areas']['modsettings']['subsections']['modsite'] = array($this->text('title_main'));
-	}
-
-	function modifications(&$sub_actions)
-	{
-		global $context;
-
-		$sub_actions['modsite'] = 'modify_modsite_post_settings';
-		$context[$context['admin_menu_name']]['tab_data']['tabs']['modsite'] = array();
-	}
-
-	function settings(&$return_config = false)
-	{
-		global $context, $txt;
-
-		$config_vars = array(
-			array('desc', $this->name .'_admin_sub'),
-			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub')),
-			array('int', $this->name .'_latest_limit', 'subtext' => $this->text('latest_limit_sub'), 'size' => 3),
-			array('int', $this->name .'_pag_limit', 'subtext' => $this->text('pag_limit_sub'), 'size' => 3),
-			array('text', $this->name .'_json_dir', 'subtext' => $this->text('json_dir_sub')),
-			array('text', $this->name .'_github_username', 'subtext' => $this->text('github_username_sub')),
-			array(
-				'select',
-				$this->name .'_menu_position',
-				array(
-					'home' => $txt['home'],
-					'help' => $txt['help'],
-					'search' => $txt['search'],
-					'login' => $txt['login'],
-					'register' => $txt['register']
-				),
-				'subtext' => $this->text('menu_position_sub')
-			),
-			array('text', $this->name .'_download_path'),
-		);
-
-		if ($return_config)
-			return $config_vars;
-
-		$context['post_url'] = $this->scriptUrl . '?action=admin;area=modsettings;save;sa=modsite';
-		$context['settings_title'] = $this->text('title_main');
-
-		if (empty($config_vars))
-		{
-			$context['settings_save_dont_show'] = true;
-			$context['settings_message'] = '<div align="center">' . $txt['modification_no_misc_settings'] . '</div>';
-
-			return prepareDBSettingContext($config_vars);
-		}
-
-		if ($this->data('save'))
-		{
-			checkSession();
-
-			// Should put some checks here but then again, this mod isn't intended for the regular "noob" user...
-			saveDBSettings($config_vars);
-			redirectexit('action=admin;area=modsettings;sa=modsite');
-		}
-		prepareDBSettingContext($config_vars);
-	}
-
-	function permissions(&$permissionGroups, &$permissionList)
-	{
-		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
-		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
-
-		$permissionList['membergroup'][$this->name .'_view'] = array(
-			false,
-			$this->name .'_classic',
-			$this->name .'_per_simple');
-
-		$permissionList['membergroup'][$this->name .'_delete'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_per_simple');
-		$permissionList['membergroup'][$this->name .'_add'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_simple');
-		$permissionList['membergroup'][$this->name .'_edit'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_per_simple');
-	}
+}
 }
