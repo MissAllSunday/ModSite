@@ -14,324 +14,278 @@ if (!defined('SMF'))
 class ModSiteTools extends Suki\Ohara
 {
 	public $name = 'ModSite';
+	protected $_useConfig = true;
 
-	function actions(&$actions)
+	protected $_table = array(
+		'name' => 'mod_site',
+		'columns' => array('id', 'name', 'cat', 'downloads'),
+	);
+	protected static $_count = 0;
+
+	public function __construct()
 	{
-		$actions['modsite'] = array($this->name .'.php', $this->name .'::call#');
+		parent::__construct();
 	}
 
-	function menu(&$menu_buttons)
+	public function countMods()
 	{
-		$insert = $this->setting('menu_position') ? $this->setting('menu_position') : 'home';
-		$counter = 0;
+		global $smcFunc;
 
-		foreach ($menu_buttons as $area => $dummy)
-			if (++$counter && $area == $insert )
-				break;
+		// Don't need to do this that often.
+		if (!empty(static::$_count))
+			return static::$_count;
 
-		$menu_buttons = array_merge(
-			array_slice($menu_buttons, 0, $counter),
-			array('modsite' => array(
-				'title' => $this->text('title_main'),
-				'href' => $this->scriptUrl . '?action=modsite',
-				'show' => $this->setting('enable') ? true : false,
-			)),
-			array_slice($menu_buttons, $counter)
+		$request = $smcFunc['db_query']('', '
+			SELECT id
+			FROM {db_prefix}' . $this->_table['name'],
+			array()
+		);
+
+		static::$_count =  $smcFunc['db_num_rows']($request);
+		$smcFunc['db_free_result']($request);
+
+		return static::$_count;
+	}
+
+	public function add($data)
+	{
+		global $smcFunc;
+
+		if (empty($data))
+			return false;
+
+		$smcFunc['db_insert']('',
+			'{db_prefix}'. $this->_table['name'],
+			array('name' => 'string-255'),
+			$data,
+			array('id')
+		);
+
+		return $id = $smcFunc['db_insert_id']('{db_prefix}'. $this->_table['name'], 'id');
+	}
+
+	public function edit($data)
+	{
+		global $smcFunc;
+
+		if (empty($data))
+			return false;
+
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}' . ($this->_table['name']) . '
+			SET name = {string:name}
+			WHERE id = {int:id}',
+			$data
 		);
 	}
 
-	function modifications(&$sub_actions)
+	public function doesExists($id)
 	{
-		global $context;
+		global $smcFunc;
 
-		$sub_actions['modsite'] = 'modify_modsite_post_settings';
-		$context[$context['admin_menu_name']]['tab_data']['tabs']['modsite'] = array();
+		$query = $smcFunc['db_query']('', '
+			SELECT id
+			FROM {db_prefix}' . ($this->_table['name']) . '
+			WHERE id = '. ($id) .'
+		');
+
+		return $smcFunc['db_num_rows']($query);
 	}
 
-	function settings(&$return_config = false)
+	public function getAll($start, $maxIndex)
 	{
-		global $context, $txt;
+		global $smcFunc;
 
-		$config_vars = array(
-			array('desc', $this->name .'_admin_sub'),
-			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub')),
-			array('int', $this->name .'_latest_limit', 'subtext' => $this->text('latest_limit_sub'), 'size' => 3),
-			array('int', $this->name .'_pag_limit', 'subtext' => $this->text('pag_limit_sub'), 'size' => 3),
-			array('text', $this->name .'_json_dir', 'subtext' => $this->text('json_dir_sub')),
-			array('text', $this->name .'_github_username', 'subtext' => $this->text('github_username_sub')),
+		$result = $smcFunc['db_query']('', '
+			SELECT '. (implode(', ', $this->_table['columns'])) .'
+			FROM {db_prefix}' . ($this->_table['name']) . '
+			ORDER BY {literal:name DESC}
+			LIMIT {int:start}, {int:maxIndex}',
 			array(
-				'select',
-				$this->name .'_menu_position',
-				array(
-					'home' => $txt['home'],
-					'help' => $txt['help'],
-					'search' => $txt['search'],
-					'login' => $txt['login'],
-					'register' => $txt['register']
-				),
-				'subtext' => $this->text('menu_position_sub')
-			),
-			array('text', $this->name .'_download_path'),
+				'start' => !empty($start) ? $start : 0,
+				'maxIndex' => !empty($maxIndex) ? $maxIndex : 0,
+			)
 		);
 
-		if ($return_config)
-			return $config_vars;
-
-		$context['post_url'] = $this->scriptUrl . '?action=admin;area=modsettings;save;sa=modsite';
-		$context['settings_title'] = $this->text('title_main');
-
-		if (empty($config_vars))
-		{
-			$context['settings_save_dont_show'] = true;
-			$context['settings_message'] = '<div align="center">' . $txt['modification_no_misc_settings'] . '</div>';
-
-			return prepareDBSettingContext($config_vars);
-		}
-
-		if ($this->data('save'))
-		{
-			checkSession();
-
-			// Should put some checks here but then again, this mod isn't intended for the regular "noob" user...
-			saveDBSettings($config_vars);
-			redirectexit('action=admin;area=modsettings;sa=modsite');
-		}
-		prepareDBSettingContext($config_vars);
-	}
-
-	// Should really build a function on Ohara to handle adding permissions and avoid building redundant code...
-	function permissions(&$permissionGroups, &$permissionList)
-	{
-		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
-		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
-
-		$permissionList['membergroup'][$this->name .'_view'] = array(
-			false,
-			$this->name .'_classic',
-			$this->name .'_per_simple');
-
-		$permissionList['membergroup'][$this->name .'_delete'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_per_simple');
-		$permissionList['membergroup'][$this->name .'_add'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_simple');
-		$permissionList['membergroup'][$this->name .'_edit'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_per_simple');
-	}
-
-	function call()
-	{
-		global $context;
-
-		// Load both language and template files.
-		loadLanguage($this->name);
-		loadtemplate($this->name, 'gh-fork-ribbon');
-
-		$context['linktree'][] = array(
-			'url' => $this->scriptUrl .'?action=modsite',
-			'name' => $this->text('title_main'),
-		);
-
-		// Set some JavaScript to hide blocks.
-		$context['html_headers'] .= '
-		<script language="JavaScript"  type="text/javascript">
-		<!--
-		function toggleDiv(divid, obj){
-			if(document.getElementById(divid).style.display == \'none\'){
-				obj.innerHTML= "Hide";
-				document.getElementById(divid).style.display = \'block\';
-			}
-			else{
-				obj.innerHTML= "Expand";
-				document.getElementById(divid).style.display = \'none\';
-			}
-		}
-		//-->
-		</script>';
-
-		// Get the right subaction.
-		$call = $this->data('sa') && in_array($this->data('sa'), $this->subActions) ?  $this->data('sa') : 'main';
-
-		// Call the appropriate method.
-		if (!empty($this->setting('enable')) && allowedTo($this->name .'_view'))
-		{
-			// Use the default template unless a method says otherwise.
-			$context['sub_template'] = $this->name .'main';
-
-			// Set a nice canonical page.
-			$context['canonical_url'] = $this->scriptUrl . '?action=modsite;' .($call != 'main' ? ('sa='. $call) : '');
-
-			// Prepare the pagination vars.
-			$this->maxIndex = 10;
-			$this->start = $this->data('start') ? $this->data('start') : 0;
-
-			$this->$call();
-		}
-
-		// Ain't nobody got time for that!
-		else
-			fatal_lang_error($this->name .'_error_enable', false);
-	}
-
-	protected function main()
-	{
-		global $context;
-
-		// Get stuff.
-		$context[$this->name]['data'] = $this->getAll($start, $maxIndex);
-
-		// Pagination.
-		$context['pagination'] = constructPageIndex($this->scriptUrl . '?action=modsite', $this->start, $this->countMods(), $this->maxIndex, false);
-	}
-
-	protected function category()
-	{
-		global $context, $txt, $modSettings;
-
-
-		// We need a valid ID.
-		$catID = $this->data('mid');
-
-		if (!$catID)
-			fatal_lang_error($this->name .'_error_no_valid_id', false);
-
-		// Get the cat name.
-		$cat = $this->getSingleCat($catID);
-
-		// Get all mods within category X, we are gonna reuse the main template ^-^
-		$context[$this->name]['data'] = $this->getBy('cat', $catID);
-	}
-
-	function single()
-	{
-		global $context, $txt, $user_info;
-
-		// Kinda need an ID.
-		if (!$this->data('mid'))
-			fatal_lang_error('ModSite_error_no_valid_id', false);
-
-		// Get the data, getSingle() uses cache when possible.
-		$context[$this->name]['data'] = $pages->getSingle($id);
-
-		// Set all we need.
-		$context['sub_template'] = $this->name .'_single';
-		$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa=single;mid=' . $id;
-		$context['page_title'] = $context[$this->name]['data']['info']['publicName'];
-		$context['linktree'][] = array(
-			'url' => $context['canonical_url'],
-			'name' => $context['page_title'],
-		);
-	}
-
-	function listing()
-	{
-		global $context, $txt;
-
-		// Page stuff.
-		$context['sub_template'] = $this->name .'_list';
-		$context['page_title'] = $this->text('list_title');
-		$context['linktree'][] = array(
-			'url' => $this->scriptUrl. '?action=modsite;sa=list',
-			'name' => $context['page_title'],
-		);
-
-		// No letter? then show the main page.
-		if (!$this->data('lidletter'))
-			$context[$this->name]['data'] = $this->getAll();
-
-		// Show a list of modsite starting with X letter.
-		elseif (isset($_GET['lidletter']))
-		{
-			$midletter = $pages->clean($_GET['lidletter']);
-
-			// Replace the linktree and title with something more specific.
-			$context['page_title'] = $txt['ModSite_list_title_by_letter'] . $midletter;
-			$context['linktree'][] = array(
-				'url' => $this->scriptUrl. '?action=modsite;sa=list;lidletter='. $midletter,
-				'name' => $txt['ModSite_list_title_by_letter'] . $midletter,
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$return[$row['id']] = array(
+				'id' => $row['id'],
+				'name' => $row['name'],
+				'info' => $this->parse($row['name']),
+				'category' => $this->getSingleCat($row['cat']),
+				'downloads' => $row['downloads'],
 			);
 
-			$context['modSite']['list'] = $pages->getBy('title', $midletter .'%');
+		$smcFunc['db_free_result']($result);
 
-			if (empty($context['modSite']['list']))
-				fatal_lang_error('ModSite_no_modsite_with_letter', false);
-		}
-
-		// Pass the object to the template.
-		$context['modSite']['object'] = $pages;
+		// Done!
+		return $return;
 	}
 
-	function download()
+	public function getSingle($id)
 	{
-		global $context, $boarddir, $modSettings, $user_info;
+		global $smcFunc;
 
-		// We need a valid ID and a valid downloads dir.
-		if (!$this->data('mid') || !$this->setting('download_path'))
-			return fatal_lang_error('ModSite_error_no_valid_id', false);
+		if (empty($id))
+			return array();
 
-		// You're not welcome here Mr. Roboto...
-		if (true == $user_info['possibly_robot'])
-			redirectexit();
+		$result = $smcFunc['db_query']('', '
+			SELECT '. (implode(', ', $this->_table['columns'])) .'
+			FROM {db_prefix}' . ($this->_table['name']) . '
+			WHERE id = {int:id}',
+			array(
+				'id' => $id,
+			)
+		);
 
-		// All good, get the file info.
-		$mod = $pages->getSingle((int) $pages->clean($_GET['mid']));
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$return = array(
+				'id' => $row['id'],
+				'name' => $row['name'],
+				'info' => $this->parse($row['name']),
+				'category' => $this->getSingleCat($row['cat']),
+				'downloads' => $row['downloads'],
+			);
 
-		// Build a correct path, the downloads dir ideally should be outside the web-accessible dir.
-		$file_path = $boarddir .'/'. $modSettings['ModSite_download_path'] .'/'. $mod['name'] .'.zip';
+		$smcFunc['db_free_result']($result);
 
-		// Oops!.
-		if(!file_exists($file_path))
-		{
-			global $txt;
-
-			loadLanguage('Errors');
-			header('HTTP/1.0 404 ' . $txt['attachment_not_found']);
-			header('Content-Type: text/plain; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
-
-			// Nothing more to say really.
-			die('404 - ' . $txt['attachment_not_found']);
-		}
-
-		else
-		{
-			// Update the downloads stat.
-			$pages->updateCount($mod['id']);
-
-			// Get the file's extension
-			$ext = substr($file_path, strrpos($file_path, '.') + 1);
-
-			// Turn off gzip for IE browsers
-			if(ini_get('zlib.output_compression'))
-				ini_set('zlib.output_compression', 'Off');
-
-			// clear anything that is in the buffers
-			while (@ob_get_level() > 0)
-				@ob_end_clean();
-
-			// Set headers to force file download
-			header('Pragma: ');
-			if (!$context['browser']['is_gecko'])
-				header('Content-Transfer-Encoding: binary');
-			header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($file_path)) . ' GMT');
-			header('Accept-Ranges: bytes');
-			header('Content-Length: ' . filesize($file_path));
-			header('Content-Encoding: none');
-			header('Connection: close');
-			header('ETag: ' . md5_file($file_path));
-			header('Content-Type: application/octet-stream');
-			header('Content-Disposition: attachment; filename="' . basename($file_path) .'"');
-
-			// Read the file and write it to the output buffer
-			readfile($file_path);
-
-			// done so we need to end
-			exit;
-		}
+		// Done!
+		return $return;
 	}
-}
+
+	public function getBy($column, $value)
+	{
+		global $smcFunc, $scripturl, $txt;
+
+		// We need both.
+		if (empty($column) || empty($value))
+			return false;
+
+		// Get the data as requested.
+		$result = $smcFunc['db_query']('', '
+			SELECT '. (implode(', ', $this->_table['columns'])) .'
+			FROM {db_prefix}' . ($this->_table['name']) . '
+			WHERE '. ($column) .' = '. ($value) .'',
+			array()
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$return[$row['id']] = array(
+				'id' => $row['id'],
+				'name' => $row['name'],
+				'info' => $this->parse($row['name']),
+				'category' => $this->getSingleCat($row['cat']),
+				'downloads' => $row['downloads'],
+			);
+
+		$smcFunc['db_free_result']($result);
+
+		// Done!
+		return $return;
+	}
+
+	public function updateCount($id)
+	{
+		global $smcFunc;
+
+		if (empty($id))
+			return false;
+
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}' . ($this->_table['name']) . '
+			SET downloads = downloads + 1
+			WHERE id = {int:id}',
+			array(
+				'id' => $id,
+			)
+		);
+	}
+
+	public function delete($id)
+	{
+		global $smcFunc;
+
+		// Do not waste my time...
+		if (empty($id))
+			return false;
+
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}' . ($this->_table['table']) .'
+			WHERE id = {int:id}',
+			array(
+				'id' => (int) $id,
+			)
+		);
+	}
+
+	public function getPermissions($type, $fatal_error = false)
+	{
+		global $modSettings;
+
+		$type = is_array($type) ? array_unique($type) : array($type);
+		$allowed = array();
+
+		if (empty($type))
+			return false;
+
+		// The mod must be enable.
+		if (empty($this->setting('enable')))
+			fatal_lang_error($this->name .'_error_enable', false);
+
+		// collect the permissions.
+		foreach ($type as $t)
+				$allowed[] = (allowedTo($this->name .'_'. $t) == true ? 1 : 0);
+
+		// You need at least 1 permission to be true.
+		if ($fatal_error == true && !in_array(1, $allowed))
+			isAllowedTo($this->name .'_'. $t);
+
+		elseif ($fatal_error == false && !in_array(1, $allowed))
+			return false;
+
+		elseif ($fatal_error == false && in_array(1, $allowed))
+			return true;
+	}
+
+	public function github()
+	{
+		global $githubClient, $githubPass;
+
+		$this->client = new Github\Client(
+			new Github\HttpClient\CachedHttpClient(array('cache_dir' => $this->boardDir .'/cache/github-api-cache'))
+		);
+
+		// Make this an authenticate call.
+		$this->client->authenticate($githubClient, $githubPass, Github\Client::AUTH_URL_CLIENT_ID);
+
+		return $this->client;
+	}
+
+	public function getAPIStatus()
+	{
+		if ($return = cache_get_data($this->name .'_status', 600) == null)
+		{
+			// Github API url check.
+			$apiUrl = 'https://status.github.com/api/status.json';
+
+			// Get the data./
+			$check = $this->fetch_web_data($apiUrl);
+
+			// Site is down :(
+			if (empty($check))
+			{
+				cache_put_data($this->name .'_status', 'major', 600);
+				$return = 'major';
+			}
+
+			elseif(!empty($check))
+			{
+				$check = json_decode($check);
+				cache_put_data($this->name .'_status', $check->status, 600);
+				$return = $check->status;
+			}
+		}
+
+		return $return;
+	}
 }

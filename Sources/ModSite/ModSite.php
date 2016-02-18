@@ -48,7 +48,7 @@ class ModSite extends ModSiteTools
 		$menu_buttons = array_merge(
 			array_slice($menu_buttons, 0, $counter),
 			array('modsite' => array(
-				'title' => $this->text('title_main'),
+				'title' => $this->text('modName'),
 				'href' => $this->scriptUrl . '?action=modsite',
 				'show' => $this->setting('enable') ? true : false,
 			)),
@@ -66,7 +66,7 @@ class ModSite extends ModSiteTools
 
 		$context['linktree'][] = array(
 			'url' => $this->scriptUrl .'?action=modsite',
-			'name' => $this->text('title_main'),
+			'name' => $this->text('modName'),
 		);
 
 		// Set some JavaScript to hide blocks.
@@ -266,12 +266,40 @@ class ModSite extends ModSiteTools
 		}
 	}
 
-	protected function adminAreas(&$areas)
+	public function addAdminArea(&$areas)
 	{
-		$areas['config']['areas']['modsettings']['subsections']['modsite'] = array($this->text('title_main'));
+		$areas['config']['areas'][$this->name] = array(
+			'label' => $this->text('modName'),
+			'file' => $this->name .'.php',
+			'function' => $this->name .'::adminCall#',
+			'icon' => 'posts',
+			'subsections' => array(
+				'settings' => array($this->text('modName')),
+			),
+		);
+		$areas['maintenance']['areas']['logs']['subsections']['topicsolvedlog'] = array($this->text('modName'), 'TopicSolved::displayLog#', 'disabled' => !$this->enable('master'));
 	}
 
-	function modifications(&$sub_actions)
+	public function adminCall()
+	{
+		global $context;
+		require_once($this->sourceDir . '/ManageSettings.php');
+		$context['page_title'] = $this->text('modName');
+		// Redundant much!?
+		$subActions = array(
+			'settings' => 'settings',
+		);
+		loadGeneralSettingParameters($subActions, 'settings');
+		$context[$context['admin_menu_name']]['tab_data'] = array(
+			'tabs' => array(
+				'settings' => array(),
+			),
+		);
+		$this->_sa = isset($subActions[$this->data('sa')]) ? $subActions[$this->data('sa')] : 'settings';
+		$this->{$this->_sa}();
+	}
+
+	function addModifications(&$sub_actions)
 	{
 		global $context;
 
@@ -309,7 +337,7 @@ class ModSite extends ModSiteTools
 			return $config_vars;
 
 		$context['post_url'] = $this->scriptUrl . '?action=admin;area=modsettings;save;sa=modsite';
-		$context['settings_title'] = $this->text('title_main');
+		$context['settings_title'] = $this->text('modName');
 
 		if (empty($config_vars))
 		{
@@ -319,7 +347,7 @@ class ModSite extends ModSiteTools
 			return prepareDBSettingContext($config_vars);
 		}
 
-		if ($this->data('save'))
+		if ($this->validate('save'))
 		{
 			checkSession();
 
@@ -328,29 +356,5 @@ class ModSite extends ModSiteTools
 			redirectexit('action=admin;area=modsettings;sa=modsite');
 		}
 		prepareDBSettingContext($config_vars);
-	}
-
-	function permissions(&$permissionGroups, &$permissionList)
-	{
-		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
-		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
-
-		$permissionList['membergroup'][$this->name .'_view'] = array(
-			false,
-			$this->name .'_classic',
-			$this->name .'_per_simple');
-
-		$permissionList['membergroup'][$this->name .'_delete'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_per_simple');
-		$permissionList['membergroup'][$this->name .'_add'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_simple');
-		$permissionList['membergroup'][$this->name .'_edit'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_per_simple');
 	}
 }

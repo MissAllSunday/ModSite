@@ -3,7 +3,7 @@
 global $txt, $scripturl;
 
 // Add/Edit strings
-$txt['ModSite_title_main'] = 'Mod Site';
+$txt['ModSite_modName'] = 'Mod Site';
 $txt['ModSite_mods'] = 'Mods';
 $txt['ModSite_edit_name'] = 'Name: ';
 $txt['ModSite_edit_add'] = 'Add this mod';
@@ -53,7 +53,7 @@ $txt['cannot_ModSite_edit'] = 'I\'m sorry you cannot edit the modsite';
 $txt['cannot_ModSite_add'] = 'I\'m sorry you cannot add new items to the modsite';
 $txt['cannot_ModSite_delete'] = 'I\'m sorry you cannot delete items from the modsite';
 
-/* UI */
+// UI.
 $txt['ModSite_ui_github'] = 'Github repo';
 $txt['ModSite_ui_cat'] = 'Category';
 $txt['ModSite_ui_download'] = 'Download';
