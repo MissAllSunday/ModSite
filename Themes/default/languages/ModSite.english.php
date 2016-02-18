@@ -23,8 +23,8 @@ $txt['ModSite_time_year'] = 'year';
 
 // Admin strings
 $txt['ModSite_admin_sub'] = 'Some description here';
-$txt['ModSite_menu_position'] = 'Select the button position';
-$txt['ModSite_menu_position_sub'] = 'bla bl bla';
+$txt['ModSite_menuPosition'] = 'Select the button position';
+$txt['ModSite_menuPosition_sub'] = 'bla bl bla';
 $txt['ModSite_enable'] = 'Enable the mode site';
 $txt['ModSite_enable_sub'] = 'bla bla bla';
 $txt['ModSite_latest_limit'] = 'Latest limit';

@@ -92,7 +92,7 @@ class ModSiteTools extends Suki\Ohara
 		return $smcFunc['db_num_rows']($query);
 	}
 
-	public function getAll($start, $maxIndex)
+	public function getAll($start = 0, $maxIndex = 10)
 	{
 		global $smcFunc;
 
@@ -102,8 +102,8 @@ class ModSiteTools extends Suki\Ohara
 			ORDER BY {literal:name DESC}
 			LIMIT {int:start}, {int:maxIndex}',
 			array(
-				'start' => !empty($start) ? $start : 0,
-				'maxIndex' => !empty($maxIndex) ? $maxIndex : 0,
+				'start' => $start,
+				'maxIndex' => $maxIndex,
 			)
 		);
 

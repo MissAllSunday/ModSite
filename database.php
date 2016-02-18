@@ -29,16 +29,20 @@
 					'default' => '',
 				),
 				array(
-					'name' => 'downloads',
-					'type' => 'int',
-					'size' => 5,
-					'null' => false,
+					'name' => 'cat',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
 				),
 				array(
-					'name' => 'cat',
-					'type' => 'int',
-					'size' => 5,
-					'null' => false,
+					'name' => 'body',
+					'type' => 'text',
+					'default' => '',
+				),
+				array(
+					'name' => 'info',
+					'type' => 'text',
+					'default' => '',
 				),
 			),
 			'indexes' => array(

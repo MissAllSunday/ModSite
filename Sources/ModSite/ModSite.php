@@ -38,7 +38,7 @@ class ModSite extends ModSiteTools
 
 	function menu(&$menu_buttons)
 	{
-		$insert = $this->setting('menu_position') ? $this->setting('menu_position') : 'home';
+		$insert = $this->setting('menuPosition') ? $this->setting('menuPosition') : 'home';
 		$counter = 0;
 
 		foreach ($menu_buttons as $area => $dummy)
@@ -62,47 +62,42 @@ class ModSite extends ModSiteTools
 
 		// Load both language and template files.
 		loadLanguage($this->name);
-		loadtemplate($this->name, 'gh-fork-ribbon');
+		loadtemplate($this->name);
+
+		$this->_sa = $this->data('sa');
+		$this->_mid = $this->data('sa');
 
 		$context['linktree'][] = array(
-			'url' => $this->scriptUrl .'?action=modsite',
+			'url' => $this->scriptUrl .'?action='. $this->name,
 			'name' => $this->text('modName'),
 		);
 
-		// Set some JavaScript to hide blocks.
-		$context['html_headers'] .= '
-		<script language="JavaScript"  type="text/javascript">
-		<!--
-		function toggleDiv(divid, obj){
-			if(document.getElementById(divid).style.display == \'none\'){
-				obj.innerHTML= "Hide";
-				document.getElementById(divid).style.display = \'block\';
-			}
-			else{
-				obj.innerHTML= "Expand";
-				document.getElementById(divid).style.display = \'none\';
-			}
-		}
-		//-->
-		</script>';
-
 		// Get the right subaction.
-		$call = $this->data('sa') && in_array($this->data('sa'), $this->subActions) ?  $this->data('sa') : 'main';
+		$call = $this->_sa && in_array($this->_sa, $this->subActions) ?  $this->_sa : 'main';
 
 		// Call the appropriate method.
-		if (!empty($this->setting('enable')) && allowedTo($this->name .'_view'))
+		if ($this->enable('master'))
 		{
 			// Use the default template unless a method says otherwise.
-			$context['sub_template'] = $this->name .'main';
+			$context['sub_template'] = $this->name .'_'. $call;
 
 			// Set a nice canonical page.
 			$context['canonical_url'] = $this->scriptUrl . '?action=modsite;' .($call != 'main' ? ('sa='. $call) : '');
 
 			// Prepare the pagination vars.
 			$this->maxIndex = 10;
-			$this->start = $this->data('start') ? $this->data('start') : 0;
+			$this->start = (int) $this->data('start');
 
-			$this->$call();
+			// Re-declare all the context stuff.
+			$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa='. $call . ($this->_mid ? ';mid='. $this->_mid : '');
+			$context['page_title'] = $this->text('action_'. $call);
+			$context['linktree'][] = array(
+				'url' => $context['canonical_url'],
+				'name' => $context['page_title'],
+			);
+
+			// To infinity and beyond!
+			$this->{$call}();
 		}
 
 		// Ain't nobody got time for that!
@@ -115,7 +110,7 @@ class ModSite extends ModSiteTools
 		global $context;
 
 		// Get stuff.
-		$context[$this->name]['data'] = $this->getAll($start, $maxIndex);
+		$context['data'] = $this->getAll($start, $maxIndex);
 
 		// Pagination.
 		$context['pagination'] = constructPageIndex($this->scriptUrl . '?action=modsite', $this->start, $this->countMods(), $this->maxIndex, false);
@@ -124,7 +119,6 @@ class ModSite extends ModSiteTools
 	protected function category()
 	{
 		global $context, $txt, $modSettings;
-
 
 		// We need a valid ID.
 		$catID = $this->data('mid');
@@ -152,12 +146,6 @@ class ModSite extends ModSiteTools
 
 		// Set all we need.
 		$context['sub_template'] = $this->name .'_single';
-		$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa=single;mid=' . $id;
-		$context['page_title'] = $context[$this->name]['data']['info']['publicName'];
-		$context['linktree'][] = array(
-			'url' => $context['canonical_url'],
-			'name' => $context['page_title'],
-		);
 	}
 
 	function listing()
@@ -320,7 +308,7 @@ class ModSite extends ModSiteTools
 			array('text', $this->name .'_github_username', 'subtext' => $this->text('github_username_sub')),
 			array(
 				'select',
-				$this->name .'_menu_position',
+				$this->name .'_menuPosition',
 				array(
 					'home' => $txt['home'],
 					'help' => $txt['help'],
@@ -328,7 +316,7 @@ class ModSite extends ModSiteTools
 					'login' => $txt['login'],
 					'register' => $txt['register']
 				),
-				'subtext' => $this->text('menu_position_sub')
+				'subtext' => $this->text('menuPosition_sub')
 			),
 			array('text', $this->name .'_download_path'),
 		);
