@@ -29,9 +29,8 @@
 					'default' => '',
 				),
 				array(
-					'name' => 'cat',
-					'type' => 'varchar',
-					'size' => 255,
+					'name' => 'tags',
+					'type' => 'text',
 					'default' => '',
 				),
 				array(
@@ -42,6 +41,34 @@
 				array(
 					'name' => 'info',
 					'type' => 'text',
+					'default' => '',
+				),
+			),
+			'indexes' => array(
+				array(
+					'type' => 'primary',
+					'columns' => array('id')
+				),
+			),
+			'if_exists' => 'ignore',
+			'error' => 'fatal',
+			'parameters' => array(),
+		);
+
+		$tables[] = array(
+			'table_name' => 'mod_tags',
+			'columns' => array(
+				array(
+					'name' => 'id',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+					'auto' => true
+				),
+				array(
+					'name' => 'name',
+					'type' => 'varchar',
+					'size' => 255,
 					'default' => '',
 				),
 			),

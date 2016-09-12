@@ -18,8 +18,13 @@ class ModSiteTools extends Suki\Ohara
 
 	protected $_table = array(
 		'name' => 'mod_site',
-		'columns' => array('id', 'name', 'cat', 'downloads'),
+		'columns' => array('id', 'name', 'tags', 'body', 'info'),
 	);
+	protected $_tagsTable = array(
+		'name' => 'mod_tags',
+		'columns' => array('id', 'name'),
+	);
+	protected static $_tags = array();
 	protected static $_count = 0;
 
 	public function __construct()
@@ -92,6 +97,42 @@ class ModSiteTools extends Suki\Ohara
 		return $smcFunc['db_num_rows']($query);
 	}
 
+	public function getTags($string = '')
+	{
+		global $smcFunc;
+
+		$return = array();
+
+		if (empty($string)
+			return false;
+
+		$array = implode(',', $this->commaSeparated($string, $type = 'numeric'));
+
+		// Need an array...
+		if (!is_array($array))
+			return false;
+
+		// Get the tags.
+		if (empty(static::$_tags))
+		{
+			$result = $smcFunc['db_query']('', '
+				SELECT '. (implode(', ', $this->_tagsTable['columns'])) .'
+				FROM {db_prefix}' . ($this->_tagsTable['name']) . '',
+				array()
+			);
+
+			while ($row = $smcFunc['db_fetch_assoc']($result))
+				static::$_tags[$row['id']] = $row['name'];
+
+			$smcFunc['db_free_result']($result);
+		}
+
+		foreach ($array as $tagID)
+			$return[$tagID] = static::$_tags[$tagID];
+
+		return $return;
+	}
+
 	public function getAll($start = 0, $maxIndex = 10)
 	{
 		global $smcFunc;
@@ -112,7 +153,7 @@ class ModSiteTools extends Suki\Ohara
 				'id' => $row['id'],
 				'name' => $row['name'],
 				'info' => $this->parse($row['name']),
-				'category' => $this->getSingleCat($row['cat']),
+				'category' => $this->getTags($row['tags']),
 				'downloads' => $row['downloads'],
 			);
 
@@ -143,7 +184,7 @@ class ModSiteTools extends Suki\Ohara
 				'id' => $row['id'],
 				'name' => $row['name'],
 				'info' => $this->parse($row['name']),
-				'category' => $this->getSingleCat($row['cat']),
+				'category' => $this->getTags($row['cat']),
 				'downloads' => $row['downloads'],
 			);
 
@@ -174,7 +215,7 @@ class ModSiteTools extends Suki\Ohara
 				'id' => $row['id'],
 				'name' => $row['name'],
 				'info' => $this->parse($row['name']),
-				'category' => $this->getSingleCat($row['cat']),
+				'category' => $this->getTags($row['cat']),
 				'downloads' => $row['downloads'],
 			);
 

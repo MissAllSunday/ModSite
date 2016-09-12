@@ -19,11 +19,12 @@ class ModSite extends ModSiteTools
 {
 	public $name = __CLASS__;
 	public $subActions = array(
-		'listing',
-		'search',
 		'single',
-		'download',
-		'category',
+		'tags',
+		'tag',
+		'create',
+		'update',
+		'delete',
 	);
 
 	public function __construct()
@@ -31,14 +32,9 @@ class ModSite extends ModSiteTools
 		parent::__construct();
 	}
 
-	function actions(&$actions)
-	{
-		$actions['modsite'] = array($this->name .'.php', $this->name .'::call#');
-	}
-
 	function menu(&$menu_buttons)
 	{
-		$insert = $this->setting('menuPosition') ? $this->setting('menuPosition') : 'home';
+		$insert = $this->enable('menuPosition') ? $this->setting('menuPosition') : 'home';
 		$counter = 0;
 
 		foreach ($menu_buttons as $area => $dummy)
@@ -49,7 +45,7 @@ class ModSite extends ModSiteTools
 			array_slice($menu_buttons, 0, $counter),
 			array('modsite' => array(
 				'title' => $this->text('modName'),
-				'href' => $this->scriptUrl . '?action=modsite',
+				'href' => $this->scriptUrl . '?action='. $this->name,
 				'show' => $this->setting('enable') ? true : false,
 			)),
 			array_slice($menu_buttons, $counter)
@@ -65,7 +61,7 @@ class ModSite extends ModSiteTools
 		loadtemplate($this->name);
 
 		$this->_sa = $this->data('sa');
-		$this->_mid = $this->data('sa');
+		$this->_mid = $this->data('mid');
 
 		$context['linktree'][] = array(
 			'url' => $this->scriptUrl .'?action='. $this->name,
@@ -82,14 +78,14 @@ class ModSite extends ModSiteTools
 			$context['sub_template'] = $this->name .'_'. $call;
 
 			// Set a nice canonical page.
-			$context['canonical_url'] = $this->scriptUrl . '?action=modsite;' .($call != 'main' ? ('sa='. $call) : '');
+			$context['canonical_url'] = $this->scriptUrl . '?action='. $this->name .';' .($call != 'main' ? ('sa='. $call) : '');
 
 			// Prepare the pagination vars.
 			$this->maxIndex = 10;
 			$this->start = (int) $this->data('start');
 
 			// Re-declare all the context stuff.
-			$context['canonical_url'] = $this->scriptUrl . '?action=modsite;sa='. $call . ($this->_mid ? ';mid='. $this->_mid : '');
+			$context['canonical_url'] = $this->scriptUrl . '?action='. $this->name .';sa='. $call . ($this->_mid ? ';mid='. $this->_mid : '');
 			$context['page_title'] = $this->text('action_'. $call);
 			$context['linktree'][] = array(
 				'url' => $context['canonical_url'],
@@ -113,24 +109,24 @@ class ModSite extends ModSiteTools
 		$context['data'] = $this->getAll($start, $maxIndex);
 
 		// Pagination.
-		$context['pagination'] = constructPageIndex($this->scriptUrl . '?action=modsite', $this->start, $this->countMods(), $this->maxIndex, false);
+		$context['pagination'] = constructPageIndex($this->scriptUrl . '?action='. $this->name .'', $this->start, $this->countMods(), $this->maxIndex, false);
 	}
 
-	protected function category()
+	protected function tag()
 	{
 		global $context, $txt, $modSettings;
 
 		// We need a valid ID.
-		$catID = $this->data('mid');
+		$tagID = $this->data('tag');
 
-		if (!$catID)
-			fatal_lang_error($this->name .'_error_no_valid_id', false);
+		if (!$tagID)
+			return fatal_lang_error($this->name .'_error_no_valid_id', false);
 
 		// Get the cat name.
-		$cat = $this->getSingleCat($catID);
+		$tagName = $this->getSingleTag($tagID);
 
-		// Get all mods within category X, we are gonna reuse the main template ^-^
-		$context[$this->name]['data'] = $this->getBy('cat', $catID);
+		// Get all mods within tag X, we are gonna reuse the main template ^-^
+		$context[$this->name]['data'] = $this->getBy('tag', $tagID);
 	}
 
 	function single()
@@ -138,52 +134,14 @@ class ModSite extends ModSiteTools
 		global $context, $txt, $user_info;
 
 		// Kinda need an ID.
-		if (!$this->data('mid'))
-			fatal_lang_error('ModSite_error_no_valid_id', false);
+		if (!$this->_mid)
+			return fatal_lang_error('ModSite_error_no_valid_id', false);
 
 		// Get the data, getSingle() uses cache when possible.
 		$context[$this->name]['data'] = $pages->getSingle($id);
 
 		// Set all we need.
 		$context['sub_template'] = $this->name .'_single';
-	}
-
-	function listing()
-	{
-		global $context, $txt;
-
-		// Page stuff.
-		$context['sub_template'] = $this->name .'_list';
-		$context['page_title'] = $this->text('list_title');
-		$context['linktree'][] = array(
-			'url' => $this->scriptUrl. '?action=modsite;sa=list',
-			'name' => $context['page_title'],
-		);
-
-		// No letter? then show the main page.
-		if (!$this->data('lidletter'))
-			$context[$this->name]['data'] = $this->getAll();
-
-		// Show a list of modsite starting with X letter.
-		elseif (isset($_GET['lidletter']))
-		{
-			$midletter = $pages->clean($_GET['lidletter']);
-
-			// Replace the linktree and title with something more specific.
-			$context['page_title'] = $txt['ModSite_list_title_by_letter'] . $midletter;
-			$context['linktree'][] = array(
-				'url' => $this->scriptUrl. '?action=modsite;sa=list;lidletter='. $midletter,
-				'name' => $txt['ModSite_list_title_by_letter'] . $midletter,
-			);
-
-			$context['modSite']['list'] = $pages->getBy('title', $midletter .'%');
-
-			if (empty($context['modSite']['list']))
-				fatal_lang_error('ModSite_no_modsite_with_letter', false);
-		}
-
-		// Pass the object to the template.
-		$context['modSite']['object'] = $pages;
 	}
 
 	function download()
